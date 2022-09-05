@@ -5,7 +5,18 @@ import './Login.scss';
 function Login(props) {
     const [timerHandle, setTimerHandle] = useState(null);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+        const loginButton = document.querySelector('.btn.login');
+
+        if (loginButton) {
+            if (credentials.password.length > 0 && credentials.username.length > 0) {
+                loginButton.classList.remove('disabled');
+            } else {
+                loginButton.classList.add('disabled');
+            }
+        }
+    }, [credentials]);
 
     function handleChange(event) {
         const target = event.currentTarget;
@@ -23,6 +34,7 @@ function Login(props) {
             }
 
             setCredentials(newCredentials);
+
             clearTimeout(timerHandle);
             setTimerHandle(null);
         }, 250));
@@ -66,7 +78,7 @@ function Login(props) {
     return (
         <div className="login-container">
             <div className="login-form">
-                <h1>Please Log In</h1>
+                <h1 className="login-header">Please Log In</h1>
                 <div className="info">
                     <div>
                         <div className="label">Username</div>
@@ -82,7 +94,7 @@ function Login(props) {
                 </div>
                 <div className="controls">
                     <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
-                    <div className="login btn" onClick={login}>Login</div>
+                    <div className="login btn disabled" onClick={login}>Login</div>
                 </div>
             </div>
         </div>

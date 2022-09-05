@@ -5,10 +5,27 @@ input {
 }
 
 .btn {
+    text-align: center;
+    padding: 0 5px;
     background-color: rgb(32, 32, 32);
     color: white;
     height: 25px;
     line-height: 25px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(80, 75, 227);
+    }
+
+    &.disabled {
+        background-color: rgb(128, 128, 128);
+        pointer-events: none;
+        cursor: auto;
+    }
+}
+
+.login-header {
+    text-align: center;
 }
 
 .login-container {
@@ -48,7 +65,7 @@ input {
         width: 50px;
         position: absolute;
         top: 4px;
-        right: 10px;
+        right: 25px;
     }
 }
 
@@ -56,8 +73,8 @@ input {
     width: 600px;
     height: 400px;
     position: relative;
-    top: calc(50vh - 200px);
-    left: calc(50vw - 300px);
+    top: calc(50% - 200px);
+    left: calc(50% - 300px);
     background: white;
     padding-top: 60px;
 
