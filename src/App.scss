@@ -1,0 +1,72 @@
+$header-background-color: rgba(94, 72, 69, 1);
+$header_color: rgba(250, 250, 250, 1);
+$messaging-background-color: rgba(125, 93, 91, 1);
+$messaging-color: rgba(250, 250, 250, 1);
+$navigation-background-color: rgba(151, 152, 187, 1);
+$navigation-color: black;
+$sidebar-background-color: $navigation-background-color;
+$sidebar-color: $navigation-color;
+
+@mixin areaLayout($area, $bgColor, $fgColor, $width: 100%, $height: 100%, $top: 0, $left: 0, $right: null, $bottom: null) {
+  grid-area: $area;
+  position: relative;
+
+  @if ($bottom == null) {
+    top: $top;
+  } @else {
+    bottom: $bottom;
+  }
+
+  @if ($right == null) {
+    left: $left;
+  } @else {
+    right: $right;
+  }
+
+  width: $width;
+  height: $height;
+  background-color: $bgColor;
+  color: $fgColor;
+}
+
+.App {
+  width: 100%;
+  height: 100%;
+  min-width: 800px;
+  min-height: 500px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 150px auto 50px;
+  grid-template-rows: 60px 30px auto 30px;
+  grid-template-areas:
+    "header header header"
+    "navigation navigation navigation"
+    "filters content accessories"
+    "footer footer footer";
+
+  .header-bar {
+    @include areaLayout(header, $header-background-color, $header-color, $height: 60px);
+  }
+
+  .navigation {
+    @include areaLayout(navigation, $navigation-background-color, $navigation-color, $height: 30px);
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .filters {
+    @include areaLayout(filters, $sidebar-background-color, $sidebar-color, 150px);
+  }
+
+  .content {
+    @include areaLayout(content, white, black, $left: 150px);
+  }
+
+  .accessories {
+    @include areaLayout(accessories, $sidebar-background-color, $sidebar-color, 50px, $right: 0);
+  }
+
+  .footer {
+    @include areaLayout(footer, $header-background-color, $header-color, $height: 30px);
+  }
+}
