@@ -1,5 +1,7 @@
 import { useState, useContext } from 'react';
 
+import './HeaderBar.scss';
+
 import BombayContext from '../BombayContext';
 
 // Dummy elements for testing

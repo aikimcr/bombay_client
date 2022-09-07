@@ -1,11 +1,4 @@
-$header-background-color: rgba(94, 72, 69, 1);
-$header_color: rgba(250, 250, 250, 1);
-$messaging-background-color: rgba(125, 93, 91, 1);
-$messaging-color: rgba(250, 250, 250, 1);
-$navigation-background-color: rgba(151, 152, 187, 1);
-$navigation-color: black;
-$sidebar-background-color: $navigation-background-color;
-$sidebar-color: $navigation-color;
+@import './global.scss';
 
 @mixin areaLayout($area, $bgColor, $fgColor, $width: 100%, $height: 100%, $top: 0, $left: 0, $right: null, $bottom: null) {
   grid-area: $area;

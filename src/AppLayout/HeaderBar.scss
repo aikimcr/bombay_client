@@ -1,0 +1,24 @@
+@import '../global.scss';
+
+$header-bar-parts-background-color: rgba(125, 93, 91, 1);
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+        background-color: $header-bar-parts-background-color;
+        width: 100%;
+        flex-grow: 2;
+        font-size: 50px;
+        line-height: 50px;
+        text-align: center;
+    }
+
+    .login-status {
+        background-color: $header-bar-parts-background-color;
+        width: 145px;
+        margin-left: 5px;
+        flex-grow: 0;
+    }
+}
