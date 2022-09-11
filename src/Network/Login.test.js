@@ -16,7 +16,7 @@ jest.mock('./Network', () => {
     };
 });
 
-import { loginStatus, login } from  './Loader.js';
+import { loginStatus, login } from  './Login.js';
 
 beforeEach(() => {
     mockPromise = new Promise((resolve, reject) => {
