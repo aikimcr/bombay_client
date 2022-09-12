@@ -84,7 +84,6 @@ export function getFromPath(path, query = {}) {
     xhr.open('GET', requestUrl);
     xhr.withCredentials = true;
     xhr.onload = function() {
-      debugger;
       if (xhr.status === 200) {
         resolve(xhr.response);
       } else {
@@ -104,7 +103,6 @@ export function postToPath(path, body = {}, query = {}) {
     xhr.withCredentials = true;
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.onload = function() {
-      debugger;
       if (xhr.status === 200) {
         resolve(xhr.response);
       } else {

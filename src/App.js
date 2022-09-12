@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 
 import './App.scss';
 
-import BombayContext from './BombayContext';
+import BombayLoginContext from './Context/BombayLoginContext';
+import BombayModeContext from './Context/BombayModeContext';
+import BombayUtilityContext from './Context/BombayUtilityContext';
 
 import HeaderBar from './AppLayout/HeaderBar';
 import Navigation from './AppLayout/Navigation';
@@ -14,21 +16,17 @@ import Footer from './AppLayout/Footer';
 import { loginStatus } from './Network/Login';
 
 function App() {
-  const [appState, setAppState] = useState({
-    title: 'Bombay Band Management System',
-    loggedIn: false,
-    mode: 'artist',
-  });
+  const [loginState, setLoginState] = useState(false);
+  const [modeState, setModeState] = useState('artist');
 
   const checkLoginState = useCallback(async () => {
-    debugger;
     const result = await loginStatus();
-    const newState = {
-      ...appState,
-      loggedIn: result.loggedIn,
-    }
-    setAppState(newState);
-  }, [appState]);
+    setLoginState(result.loggedIn);
+  }, []);
+
+  const setMode = useCallback((newMode) => {
+    setModeState(newMode);
+  }, []);
 
   useEffect(() => {
     // ToDo: Make the interval configurable, don't check if logged out.
@@ -39,18 +37,27 @@ function App() {
     return () => {
       clearInterval(intervalHandle);
     };
-  }, [checkLoginState]);
+  });
+
+  const utilities = {
+    checkLoginState,
+    setMode,
+  }
 
   return (
     <div className="App">
-      <BombayContext.Provider value={appState}>
-        <HeaderBar />
-        <Navigation />
-        <Filters />
-        <Content checkLoginState={checkLoginState}/>
-        <Accessories />
-        <Footer />
-      </BombayContext.Provider>
+      <BombayLoginContext.Provider value={loginState}>
+        <BombayModeContext.Provider value={modeState}>
+          <BombayUtilityContext.Provider value={utilities}>
+            <HeaderBar />
+            <Navigation />
+            <Filters />
+            <Content />
+            <Accessories />
+            <Footer />
+          </BombayUtilityContext.Provider>
+        </BombayModeContext.Provider>
+      </BombayLoginContext.Provider>
     </div >
   );
 }

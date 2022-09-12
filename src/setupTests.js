@@ -6,27 +6,34 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 import { useState } from 'react';
-import BombayContext from './BombayContext';
+import BombayLoginContext from './Context/BombayLoginContext';
+import BombayModeContext from './Context/BombayModeContext';
 
 // Use this to turn the crank on context changes.
-globalThis.ContextChanger = function(props) {
-    const [currentSet, setCurrentSet] = useState(props.context);
+globalThis.ContextChanger = function (props) {
+    const [loginState, setLoginState] = useState(props.loginState);
+    const [modeState, setModeState] = useState(props.modeState);
 
     function toggleLogin() {
-        const newSet = { ...currentSet };
-        newSet.loggedIn = !newSet.loggedIn;
-        setCurrentSet(newSet);
+        setLoginState(!loginState);
+    }
+
+    function updateModeState(evt) {
+        setModeState(evt.currentTarget.value);
     }
 
     return (
-        <BombayContext.Provider value={currentSet}>
-            {props.children}
-            <button className="change-test-login" onClick={toggleLogin}>Change Login</button>
-        </BombayContext.Provider>
+        <BombayLoginContext.Provider value={loginState}>
+            <BombayModeContext.Provider value={modeState}>
+                {props.children}
+                <button className="change-test-login" onClick={toggleLogin}>Change Login</button>
+                <input className="change-test-mode" type='text' onChange={updateModeState} />
+            </BombayModeContext.Provider>
+        </BombayLoginContext.Provider>
     );
 }
 
-globalThis.toggleLogin = function() {
+globalThis.toggleLogin = function () {
     const changeButton = document.querySelector('.change-test-login');
     userEvent.click(changeButton);
 }
