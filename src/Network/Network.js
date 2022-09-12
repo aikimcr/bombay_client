@@ -1,9 +1,14 @@
 // Manage XHR request calls.  This is the low-level stuff.
+import serverConfig from './serverConfig';
 
-// This should really come from a configuration file.
-export const serverHost = 'mriehle.com';
-export const basePath = 'bombay_server';
+function setConfigOption(key, defaultConfig) {
+  return serverConfig.hasOwnProperty(key) ? serverConfig[key] : defaultConfig;
+}
 
+export const serverProtocol = setConfigOption('serverProtocol', 'http');
+export const serverHost = setConfigOption('serverHost', 'localhost');
+export const basePath = setConfigOption('basePath', '');
+export const serverPort = setConfigOption('serverPort', null);
 
 export function normalizeAndJoinPath(...pathParts) {
   const newPath = pathParts.reduce((memo, part) => {
@@ -30,8 +35,8 @@ export function buildURL(args = {}) {
   let { hostname, path, protocol, port } = {
     hostname: serverHost,
     path: '/',
-    protocol: 'https',
-    port: null,
+    protocol: serverProtocol,
+    port: serverPort,
     ...args,
   }
 
@@ -77,7 +82,9 @@ export function getFromPath(path, query = {}) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.open('GET', requestUrl);
+    xhr.withCredentials = true;
     xhr.onload = function() {
+      debugger;
       if (xhr.status === 200) {
         resolve(xhr.response);
       } else {
@@ -94,8 +101,10 @@ export function postToPath(path, body = {}, query = {}) {
   return new Promise((resolve, reject) => {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', requestUrl);
+    xhr.withCredentials = true;
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.onload = function() {
+      debugger;
       if (xhr.status === 200) {
         resolve(xhr.response);
       } else {

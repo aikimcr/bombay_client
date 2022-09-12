@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import './App.scss';
 
@@ -20,21 +20,26 @@ function App() {
     mode: 'artist',
   });
 
+  const checkLoginState = useCallback(async () => {
+    debugger;
+    const result = await loginStatus();
+    const newState = {
+      ...appState,
+      loggedIn: result.loggedIn,
+    }
+    setAppState(newState);
+  }, [appState]);
+
   useEffect(() => {
     // ToDo: Make the interval configurable, don't check if logged out.
     const intervalHandle = setInterval(async () => {
-      const result = await loginStatus();
-      const newState = {
-        ...appState,
-        loggedIn: result.loggedIn,
-      }
-      setAppState(newState);
+      checkLoginState();
     }, 10 * 60 * 1000); // Ten minutes.
 
     return () => {
       clearInterval(intervalHandle);
     };
-  }, [appState]);
+  }, [checkLoginState]);
 
   return (
     <div className="App">
@@ -42,7 +47,7 @@ function App() {
         <HeaderBar />
         <Navigation />
         <Filters />
-        <Content />
+        <Content checkLoginState={checkLoginState}/>
         <Accessories />
         <Footer />
       </BombayContext.Provider>
