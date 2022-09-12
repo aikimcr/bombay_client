@@ -52,7 +52,7 @@
   }
 
   .content {
-    @include areaLayout(content, white, black, $left: 150px);
+    @include areaLayout(content, white, black);
   }
 
   .accessories {

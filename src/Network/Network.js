@@ -94,6 +94,7 @@ export function postToPath(path, body = {}, query = {}) {
   return new Promise((resolve, reject) => {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', requestUrl);
+    xhr.setRequestHeader('content-type', 'application/json');
     xhr.onload = function() {
       if (xhr.status === 200) {
         resolve(xhr.response);
@@ -101,6 +102,6 @@ export function postToPath(path, body = {}, query = {}) {
         reject({status: xhr.status, message: xhr.responseText});
       }
     };
-    xhr.send(body);
+    xhr.send(JSON.stringify(body));
   });
 }

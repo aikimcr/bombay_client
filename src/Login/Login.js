@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import './Login.scss';
 
+import { login } from "../Network/Login";
+
 function Login(props) {
     const [timerHandle, setTimerHandle] = useState(null);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -51,13 +53,14 @@ function Login(props) {
         setCredentials({ username: '', password: '' });
     }
 
-    function login(event) {
+    function doLogin(event) {
         if (timerHandle) {
             clearTimeout(timerHandle);
             setTimerHandle(null);
         }
 
         debugger;
+        login(credentials.username, credentials.password);
     }
 
     function togglePassword(evt) {
@@ -94,7 +97,7 @@ function Login(props) {
                 </div>
                 <div className="controls">
                     <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
-                    <div className="login btn disabled" onClick={login}>Login</div>
+                    <div className="login btn disabled" onClick={doLogin}>Login</div>
                 </div>
             </div>
         </div>
