@@ -1,4 +1,22 @@
-import { render } from '@testing-library/react';
+import { useContext } from 'react';
+import { act, render } from '@testing-library/react';
+import { loginStatus } from './Network/Login';
+
+import BombayContext from './BombayContext';
+
+let mockLoggedIn = false;
+
+jest.mock('./Network/Login', () => {
+  const originalModule = jest.requireActual('./Network/Login');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: async () => {
+      return { loggedIn: mockLoggedIn };
+    }
+  }
+});
 
 // Mock the top classes here, before importing the App.
 import HeaderBar from './AppLayout/HeaderBar';
@@ -27,9 +45,48 @@ jest.mock('./AppLayout/Navigation', () => {
   }
 });
 
+import Filters from './AppLayout/Filters';
+jest.mock('./AppLayout/Filters', () => {
+  const originalModule = jest.requireActual('./AppLayout/Filters');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => {
+      return (<div className="filters"></div>);
+    },
+  }
+});
+
+function MockContextConsumer(props) {
+  const ctx = useContext(BombayContext);
+  const lgsText = ctx.loggedIn ? 'Logged In' : 'Logged Out';
+
+  return (
+    <div>
+      <div className="lgs">{lgsText}</div>
+    </div>
+  );
+}
+
+import Content from './AppLayout/Content';
+jest.mock('./AppLayout/Content', () => {
+  const originalModule = jest.requireActual('./AppLayout/Content');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => {
+      return (<div className="content"><MockContextConsumer /></div>);
+    },
+  }
+});
+
 import App from './App';
 
-test('Renders App Framework', () => {
+jest.useFakeTimers();
+
+test('Renders App Framework', async () => {
   const result = render(<App />);
 
   const index = result.container;
@@ -45,4 +102,15 @@ test('Renders App Framework', () => {
   expect(app.children[3].className).toBe('content');
   expect(app.children[4].className).toBe('accessories');
   expect(app.children[5].className).toBe('footer');
+
+  let lgs = app.querySelector('.lgs');
+  expect(lgs.textContent).toBe('Logged Out');
+
+  mockLoggedIn = true;
+  await act(async function() {
+    jest.advanceTimersByTime(10 * 61 * 1000);
+  });
+
+  lgs = app.querySelector('.lgs');
+  expect(lgs.textContent).toBe('Logged In');
 });

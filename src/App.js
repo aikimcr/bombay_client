@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-import logo from './logo.svg';
 import './App.scss';
 
 import BombayContext from './BombayContext';
@@ -12,12 +11,35 @@ import Content from './AppLayout/Content';
 import Accessories from './AppLayout/Accessories';
 import Footer from './AppLayout/Footer';
 
+import { loginStatus } from './Network/Login';
+
 function App() {
   const [appState, setAppState] = useState({
     title: 'Bombay Band Management System',
     loggedIn: false,
-    mode: 'login',
-  });  
+    mode: 'artist',
+  });
+
+  const checkLoginState = useCallback(async () => {
+    debugger;
+    const result = await loginStatus();
+    const newState = {
+      ...appState,
+      loggedIn: result.loggedIn,
+    }
+    setAppState(newState);
+  }, [appState]);
+
+  useEffect(() => {
+    // ToDo: Make the interval configurable, don't check if logged out.
+    const intervalHandle = setInterval(async () => {
+      checkLoginState();
+    }, 10 * 60 * 1000); // Ten minutes.
+
+    return () => {
+      clearInterval(intervalHandle);
+    };
+  }, [checkLoginState]);
 
   return (
     <div className="App">
@@ -25,11 +47,11 @@ function App() {
         <HeaderBar />
         <Navigation />
         <Filters />
-        <Content />
+        <Content checkLoginState={checkLoginState}/>
         <Accessories />
         <Footer />
       </BombayContext.Provider>
-    </div>
+    </div >
   );
 }
 

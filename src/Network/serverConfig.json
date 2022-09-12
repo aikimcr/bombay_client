@@ -1,0 +1,7 @@
+{
+    "serverProtocol": "http",
+    "serverHost": "localhost",
+    "basePath": "",
+    "serverPort": 2001,
+    "description": "Configure some common values needed to talk to the server. Each key represents a configurable value.  All keys are optional. Missing keys will use a default value\nValid keys are:\nserverProtocol: Either 'http' or 'https'. Defaults to 'https'.\nserverHost    : The name of the server host.  Defaults to 'localhost'.\nbasePath      : An addition path part to prefix to all route paths. Defaults to ''.\nserverPort    : The server port to connect to.  Defaults to null."
+}

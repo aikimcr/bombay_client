@@ -1,11 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import './Login.scss';
+
+import BombayContext from '../BombayContext';
+
+import { login } from "../Network/Login";
 
 function Login(props) {
     const [timerHandle, setTimerHandle] = useState(null);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
 
+    const bombayContext = useContext(BombayContext);
+    
     useEffect(() => {
         const loginButton = document.querySelector('.btn.login');
 
@@ -51,13 +57,15 @@ function Login(props) {
         setCredentials({ username: '', password: '' });
     }
 
-    function login(event) {
+    async function doLogin(event) {
         if (timerHandle) {
             clearTimeout(timerHandle);
             setTimerHandle(null);
         }
 
+        await login(credentials.username, credentials.password);
         debugger;
+        props.checkLoginState();
     }
 
     function togglePassword(evt) {
@@ -94,7 +102,7 @@ function Login(props) {
                 </div>
                 <div className="controls">
                     <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
-                    <div className="login btn disabled" onClick={login}>Login</div>
+                    <div className="login btn disabled" onClick={doLogin}>Login</div>
                 </div>
             </div>
         </div>
