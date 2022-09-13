@@ -2,26 +2,26 @@ import { useState, useContext } from 'react';
 
 import './HeaderBar.scss';
 
-import BombayContext from '../BombayContext';
+import BombayLoginContext from '../Context/BombayLoginContext';
 
 // Dummy elements for testing
 function LoggedInState(props) {
-    return (<div className="logged-in"></div>);
+    return (<div className="logged-in">Logged In</div>);
 }
 
 function LoggedOutState(props) {
-    return (<div className="logged-out"></div>);
+    return (<div className="logged-out">Logged Out</div>);
 }
 
 function HeaderBar(props) {
-    const context = useContext(BombayContext);
-
+    const loggedIn = useContext(BombayLoginContext);
+    const title=props.title || "Bombay Band Management System";
 
     return (
         <div className="header-bar">
-            <div className="title">{context.title}</div>
+            <div className="title">{title}</div>
             <div className="login-status">
-                {context.loggedIn ? <LoggedInState /> : <LoggedOutState />}
+                {loggedIn ? <LoggedInState /> : <LoggedOutState />}
             </div>
         </div>
     );

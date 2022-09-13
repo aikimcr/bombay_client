@@ -1,18 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import HeaderBar from './HeaderBar';
 
-import BombayContext from '../BombayContext';
+import BombayLoginContext from '../Context/BombayLoginContext';
 
 test('renders the HeaderBar with the title from context', () => {
-    const dummyContext = {
-        title: 'The Title',
-        loggedIn: false,
-        mode: 'login',
-    };
-
     const result = render(
-        <ContextChanger context={dummyContext}>
-            <HeaderBar />
+        <ContextChanger loginState={false} modeState="artist">
+            <HeaderBar title="The Title" />
         </ContextChanger>
     );
 
@@ -37,15 +31,9 @@ test('renders the HeaderBar with the title from context', () => {
 })
 
 test('changes the login status when the context changes', () => {
-    const dummyContext = {
-        title: 'The Title',
-        loggedIn: false,
-        mode: 'login',
-    };
-
     const result = render(
-        <ContextChanger context={dummyContext}>
-            <HeaderBar />
+        <ContextChanger loginState={false} modeState="artist">
+            <HeaderBar title="The Title"/>
         </ContextChanger>
     );
 

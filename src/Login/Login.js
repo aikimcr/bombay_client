@@ -1,17 +1,24 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
 
-import BombayContext from '../BombayContext';
+import BombayLoginContext from '../Context/BombayLoginContext';
+import BombayModeContext from '../Context/BombayModeContext';
+import BombayUtilityContext from '../Context/BombayUtilityContext';
 
 import { login } from "../Network/Login";
 
 function Login(props) {
+    const navigate = useNavigate();
+
     const [timerHandle, setTimerHandle] = useState(null);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
 
-    const bombayContext = useContext(BombayContext);
-    
+    const loggedIn = useContext(BombayLoginContext);
+    const mode = useContext(BombayModeContext);
+    const { checkLoginState } = useContext(BombayUtilityContext);
+
     useEffect(() => {
         const loginButton = document.querySelector('.btn.login');
 
@@ -23,6 +30,12 @@ function Login(props) {
             }
         }
     }, [credentials]);
+
+    useEffect(() => {
+        if (loggedIn) {
+            navigate(`/${mode}`);
+        }
+    }, [loggedIn, mode, navigate]);
 
     function handleChange(event) {
         const target = event.currentTarget;
@@ -64,8 +77,7 @@ function Login(props) {
         }
 
         await login(credentials.username, credentials.password);
-        debugger;
-        props.checkLoginState();
+        checkLoginState();
     }
 
     function togglePassword(evt) {
@@ -83,30 +95,34 @@ function Login(props) {
         }
     }
 
-    return (
-        <div className="login-container">
-            <div className="login-form">
-                <h1 className="login-header">Please Log In</h1>
-                <div className="info">
-                    <div>
-                        <div className="label">Username</div>
-                        <div className="input"><input className="username" type="text" onChange={handleChange} /></div>
-                    </div>
-                    <div>
-                        <div className="label">Password</div>
-                        <div className="input">
-                            <input className="password" type="password" onChange={handleChange} />
-                            <div className="toggle btn" data-hidden="true" onClick={togglePassword}>Show</div>
+    if (loggedIn) {
+        return '';
+    } else {
+        return (
+            <div className="login-container">
+                <div className="login-form">
+                    <h1 className="login-header">Please Log In</h1>
+                    <div className="info">
+                        <div>
+                            <div className="label">Username</div>
+                            <div className="input"><input className="username" type="text" onChange={handleChange} /></div>
+                        </div>
+                        <div>
+                            <div className="label">Password</div>
+                            <div className="input">
+                                <input className="password" type="password" onChange={handleChange} />
+                                <div className="toggle btn" data-hidden="true" onClick={togglePassword}>Show</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="controls">
-                    <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
-                    <div className="login btn disabled" onClick={doLogin}>Login</div>
+                    <div className="controls">
+                        <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
+                        <div className="login btn disabled" onClick={doLogin}>Login</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default Login;

@@ -19,7 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:debug": "react-scripts --inspect-brk=mriehle.com:3001 test --runInBand --no-cache",
+    "test:debug": "react-scripts --inspect-brk=127.0.0.1:3001 test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

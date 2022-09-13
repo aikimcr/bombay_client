@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { act, render } from '@testing-library/react';
 import { loginStatus } from './Network/Login';
 
-import BombayContext from './BombayContext';
+import BombayLoginContext from './Context/BombayLoginContext';
 
 let mockLoggedIn = false;
 
@@ -59,8 +59,8 @@ jest.mock('./AppLayout/Filters', () => {
 });
 
 function MockContextConsumer(props) {
-  const ctx = useContext(BombayContext);
-  const lgsText = ctx.loggedIn ? 'Logged In' : 'Logged Out';
+  const loggedIn = useContext(BombayLoginContext);
+  const lgsText = loggedIn ? 'Logged In' : 'Logged Out';
 
   return (
     <div>
