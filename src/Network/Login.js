@@ -10,3 +10,7 @@ export function loginStatus()  {
 export function login(username, password) {
   return postToPath('login', {username, password});
 }
+
+export function logout() {
+  return postToPath('logout');
+}

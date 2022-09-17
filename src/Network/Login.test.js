@@ -16,7 +16,7 @@ jest.mock('./Network', () => {
     };
 });
 
-import { loginStatus, login } from  './Login.js';
+import { loginStatus, login,  logout } from  './Login.js';
 
 beforeEach(() => {
     mockPromise = new Promise((resolve, reject) => {
@@ -44,5 +44,12 @@ it('should post credentials to login', async () => {
     const loginPromise = login('fred', 'friendly');
     mockResolver('');
     const result = await loginPromise;
+    expect(result).toBe('');
+});
+
+it('should post to logout', async () => {
+    const logoutPromise = logout();
+    mockResolver('');
+    const result = await logoutPromise;
     expect(result).toBe('');
 });
