@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
@@ -12,24 +12,13 @@ import { login } from "../Network/Login";
 function Login(props) {
     const navigate = useNavigate();
 
-    const [timerHandle, setTimerHandle] = useState(null);
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    let timerHandle = null;
+
+    const [error, setError] = useState(null);
 
     const loggedIn = useContext(BombayLoginContext);
     const mode = useContext(BombayModeContext);
     const { checkLoginState } = useContext(BombayUtilityContext);
-
-    useEffect(() => {
-        const loginButton = document.querySelector('.btn.login');
-
-        if (loginButton) {
-            if (credentials.password.length > 0 && credentials.username.length > 0) {
-                loginButton.classList.remove('disabled');
-            } else {
-                loginButton.classList.add('disabled');
-            }
-        }
-    }, [credentials]);
 
     useEffect(() => {
         if (loggedIn) {
@@ -37,46 +26,62 @@ function Login(props) {
         }
     }, [loggedIn, mode, navigate]);
 
-    function handleChange(event) {
-        const target = event.currentTarget;
+    function getCredentials() {
+        // TODO: THere has to be a better way to do what these two lines are doing.
+        const usernameInput = document.querySelector('.username');
+        const passwordInput = document.querySelector('.password');
 
+        return { username: usernameInput.value, password: passwordInput.value };
+    }
+
+    function clearTimer() {
         if (timerHandle) {
             clearTimeout(timerHandle);
-            setTimerHandle(null);
+            timerHandle = null;
         }
+    }
 
-        setTimerHandle(setTimeout(() => {
-            const key = target.className;
-            const newCredentials = {
-                ...credentials,
-                [key]: target.value,
+    function handleChange(event) {
+        timerHandle = setTimeout(() => {
+            const loginButton = document.querySelector('.btn.login');
+
+            clearTimer();
+
+            const { username, password } = getCredentials();
+
+            if (username.length > 0 && password.length > 0) {
+                loginButton.classList.remove('disabled');
+            } else {
+                loginButton.classList.add('disabled');
             }
-
-            setCredentials(newCredentials);
-
-            clearTimeout(timerHandle);
-            setTimerHandle(null);
-        }, 250));
+        }, 250);
     }
 
     function clearAllFields(event) {
-        if (timerHandle) {
-            clearTimeout(timerHandle);
-            setTimerHandle(null);
-        }
+        const loginButton = document.querySelector('.btn.login');
+
+        clearTimer();
 
         document.querySelector('input.username').value = '';
         document.querySelector('input.password').value = '';
-        setCredentials({ username: '', password: '' });
+        loginButton.classList.add('disabled');
+        setError(null);
     }
 
     async function doLogin(event) {
-        if (timerHandle) {
-            clearTimeout(timerHandle);
-            setTimerHandle(null);
-        }
+        const { username, password } = getCredentials();
 
-        await login(credentials.username, credentials.password);
+        clearTimer();
+
+        await login(username, password)
+            .catch(err => {
+                if (err.status === 401) {
+                    setError('Username or password is incorrect.');
+                } else {
+                    setError(`${err.status}: ${err.message}`);
+                }
+            });
+
         checkLoginState();
     }
 
@@ -105,7 +110,9 @@ function Login(props) {
                     <div className="info">
                         <div>
                             <div className="label">Username</div>
-                            <div className="input"><input className="username" type="text" onChange={handleChange} /></div>
+                            <div className="input">
+                                <input className="username" type="text" onChange={handleChange} />
+                            </div>
                         </div>
                         <div>
                             <div className="label">Password</div>
@@ -115,6 +122,7 @@ function Login(props) {
                             </div>
                         </div>
                     </div>
+                    {error && <div className="error">{error}</div>}
                     <div className="controls">
                         <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
                         <div className="login btn disabled" onClick={doLogin}>Login</div>

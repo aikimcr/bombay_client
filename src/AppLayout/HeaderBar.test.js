@@ -24,7 +24,7 @@ test('renders the HeaderBar with the title from context', () => {
     expect(loginStatusNode.className).toBe('login-status');
 
     expect(loginStatusNode.firstChild.tagName).toBe('DIV');
-    expect(loginStatusNode.firstChild.className).toBe('logged-out');
+    expect(loginStatusNode.firstChild.className).toBe('label');
     expect(loginStatusNode.firstChild.nextSibling).toBe(null);
 
     expect(loginStatusNode.nextSibling).toBe(null);
@@ -41,7 +41,7 @@ test('changes the login status when the context changes', () => {
     let loginStatusNode = headerTitleNode.nextSibling;
 
     expect(loginStatusNode.firstChild.tagName).toBe('DIV');
-    expect(loginStatusNode.firstChild.className).toBe('logged-out');
+    expect(loginStatusNode.firstChild.className).toBe('label');
     expect(loginStatusNode.firstChild.nextSibling).toBe(null);
 
     toggleLogin();
@@ -50,6 +50,6 @@ test('changes the login status when the context changes', () => {
     loginStatusNode = headerTitleNode.nextSibling;
 
     expect(loginStatusNode.firstChild.tagName).toBe('DIV');
-    expect(loginStatusNode.firstChild.className).toBe('logged-in');
+    expect(loginStatusNode.firstChild.className).toBe('logout btn');
     expect(loginStatusNode.firstChild.nextSibling).toBe(null);
 })

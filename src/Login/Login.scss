@@ -1,35 +1,4 @@
-body,
-div,
-input {
-    box-sizing: border-box;
-}
-
-.btn {
-    text-align: center;
-    padding: 0 5px;
-    background-color: rgb(32, 32, 32);
-    color: white;
-    height: 25px;
-    line-height: 25px;
-    cursor: pointer;
-    border-radius: 12px;
-
-    &:hover {
-        background-color: rgb(80, 75, 227);
-    }
-
-    &:active {
-        background-color: rgb(128, 128, 128);
-        border-style: inset;
-        border-color: black;
-    }
-
-    &.disabled {
-        background-color: rgb(128, 128, 128);
-        pointer-events: none;
-        cursor: auto;
-    }
-}
+@import '../global.scss';
 
 .login-header {
     text-align: center;
@@ -42,38 +11,6 @@ input {
     width: 100%;
     height: 100%;
     background: black;
-}
-
-.label {
-    height: 30px;
-    line-height: 30px;
-    width: 100px;
-    overflow: hidden;
-}
-
-.input {
-    position: relative;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 30px;
-
-    input {
-        position: relative;
-        top: 3px;
-        width: calc(100% - 20px);
-        padding: 5px;
-        border: 1px solid black;
-    }
-
-    .toggle {
-        width: 50px;
-        position: absolute;
-        top: 4px;
-        right: 25px;
-    }
 }
 
 .login-form {
@@ -92,11 +29,19 @@ input {
     }
 
     .info,
+    .error,
     .controls {
         position: relative;
         left: 100px;
         width: 400px;
         margin-top: 20px;
+    }
+
+    .error {
+        border: thin solid red;
+        color: red;
+        font-weight: bold;
+        padding: 10px;
     }
 
     .controls {
