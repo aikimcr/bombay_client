@@ -1,7 +1,7 @@
 // Load the data from the server.  Handle all the boilerplate for xhr
 // correctly.
 
-import { getFromPath, postToPath } from './Network.js';
+import { getFromPath, postToPath } from './Network';
 
 export function loginStatus()  {
   return getFromPath('login');

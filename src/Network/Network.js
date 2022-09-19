@@ -61,7 +61,7 @@ export function buildURL(args = {}) {
   return result;
 }
 
-function prepareURLFromArgs(path, query) {
+export function prepareURLFromArgs(path, query) {
   const requestUrl = new URL(buildURL());
   requestUrl.pathname = normalizeAndJoinPath(basePath, path);
 
@@ -74,27 +74,24 @@ function prepareURLFromArgs(path, query) {
 
 export function getFromPath(path, query = {}) {
   const requestUrl = prepareURLFromArgs(path, query);
+  return getFromURLString(requestUrl.toString());
+}
 
-  // I tried using fetch.  It's probably a good idea.  But
-  // it forces me to deal with CORS considerations that I'm
-  // not prepared for at this point.
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.open('GET', requestUrl);
-    xhr.withCredentials = true;
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        resolve(xhr.response);
-      } else {
-        reject({status: xhr.status, message: xhr.responseText});
-      }
-    };
-    xhr.send();
+export async function getFromURLString(urlString) {
+  const response = await fetch(urlString, {
+    mode: 'cors',
+    credentials: 'include',
   });
+
+  if (response.ok) {
+    return response.json();
+  }
+
+  return Promise.reject({status: response.status, message: response.statusText});
 }
 
 export function postToPath(path, body = {}, query = {}) {
+  // TODO: Make this use fetch as well.
   const requestUrl = prepareURLFromArgs(path, query);
 
   return new Promise((resolve, reject) => {
