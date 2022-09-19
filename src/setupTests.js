@@ -6,9 +6,24 @@ import '@testing-library/jest-dom';
 import { act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import casual from 'casual';
+
 import { useState } from 'react';
 import BombayLoginContext from './Context/BombayLoginContext';
 import BombayModeContext from './Context/BombayModeContext';
+
+import { buildURL, prepareURLFromArgs } from './Network/Network';
+
+globalThis.makeResolvablePromise = function() {
+    let resolver;
+    let rejecter;
+    let promise = new Promise((resolve, reject) => {
+        resolver = resolve;
+        rejecter = reject;
+    });
+
+    return [promise, resolver, rejecter];
+}
 
 // Use this to turn the crank on context changes.
 globalThis.ContextChanger = function (props) {
@@ -74,4 +89,56 @@ globalThis.nextTick = function() {
     });
 }
 
+const allNames = {};
+casual.define('uniqueName', function(nameType, clear) {
+    if (!allNames[nameType]) allNames[nameType] = new Set();
 
+    const oldSize = allNames[nameType].size;
+    let newName;
+
+    while(allNames[nameType].size === oldSize) {
+        newName = casual.full_name;
+        allNames[nameType].add(newName);
+    }
+
+    return newName;
+});
+
+const idSequences = {};
+casual.define('nextId', function(sequenceName) {
+    const nextOne = (idSequences[sequenceName] ?? 0) + 1;
+    idSequences[sequenceName] = nextOne;
+    return nextOne;
+});
+
+globalThis.makeAnArtist = function(id) {
+    id = id ?? casual.nextId('artist');
+    const name = casual.uniqueName('artist');
+    const url = buildURL({path: `/artist/${id}`});
+
+    return { id, name, url };
+}
+
+globalThis.makeArtistList = function(length = 10, query={}) {
+    const result = {
+        data: [],
+    };
+
+    while (result.data.length < length) {
+        result.data.push(makeAnArtist());
+    }
+
+    let offset = (query.offset || 0) - length;
+    let limit = query.limit || length;
+
+    if (offset >= 0) {
+        result.prevPage = prepareURLFromArgs('/artist', { offset, limit }).toString();
+    }
+
+    if (limit <= length) {
+        offset = (query.offset || 0) + length;
+        result.nextPage = prepareURLFromArgs('/artist', { offset, limit}).toString();
+    }
+
+    return result;
+}
