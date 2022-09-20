@@ -17,7 +17,7 @@ import { loginStatus } from './Network/Login';
 
 function App() {
   const [loginState, setLoginState] = useState(false);
-  const [modeState, setModeState] = useState('artist');
+  const [modeState, setModeState] = useState('artistList');
 
   const checkLoginState = useCallback(async () => {
     const result = await loginStatus();

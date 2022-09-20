@@ -1,0 +1,5 @@
+@import '../global.scss';
+
+.artist-list-container {
+    @include scrollListContainer;
+}

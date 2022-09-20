@@ -75,3 +75,36 @@ input {
         right: 25px;
     }
 }
+
+// Parent element must have height specificed.  100% should work.
+@mixin scrollListContainer {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.card-list {
+    background-color: black;
+        list-style: decimal;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: flex-start;
+        align-content: flex-start;
+        padding: 5px;
+}
+
+.card {
+    font-size: 35px;
+        line-height: 1em;
+        background: white;
+        width: 15em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        border-radius: .5em;
+        padding: 0 1em;
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: 16em;
+}
