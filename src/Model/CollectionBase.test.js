@@ -78,24 +78,23 @@ function makeModels(length = 10, query = {}) {
     }
 
     expect(JSON.stringify(result.data)).toStrictEqual(JSON.stringify(models));
-
+    
     return [result, models];
 }
 
-it('should instantiate an empty collection', async () => {
-    const collection = new CollectionBase('https://fakeit.com/table1');
-    expect(collection.idUrl()).toBe('https://fakeit.com/table1');
-    expect(collection.modelClass()).toBe(ModelBase);
-    expect(collection.length()).toBe(0);
-    expect(collection.models()).toEqual([]);
-});
-
-it('should return a completed URL', async () => {
-    expect(CollectionBase.buildUrl('https://fakeit.com/table1')).toBe('https://fakeit.com/table1');
-    expect(CollectionBase.buildUrl('/table1')).toBe(Network.prepareURLFromArgs('table1').toString());
+it('should fetch the first page', async () => {
+    setupMocks();
+    
+    const collection = new CollectionBase('/table');
+    const [fetchBody, models] = makeModels(10);
+    mockResolver(fetchBody);
+    const fetchedModels = await collection.ready();
+    expect(CollectionBase.isCollection(collection)).toBeTruthy();
+    expect(collection.models()).toEqual(models);
 });
 
 it('should instantiate with a set of models', async () => {
+    // In this case, paging may not be possible.
     const collection = new CollectionBase('/table1', {
         models: [{
             id: 1,
@@ -106,6 +105,8 @@ it('should instantiate with a set of models', async () => {
         }],
     });
 
+    // The promise should already be resolved
+    const fetchedModels = await collection.ready();
     expect(collection.length()).toBe(2);
     expect(collection.models()).toEqual([
         new ModelBase({id: 1, name: 'Herkimer P Jones'}),
@@ -113,50 +114,23 @@ it('should instantiate with a set of models', async () => {
     ]);
 });
 
-it('should fetch the first page', async () => {
-    setupMocks();
-    const [fetchBody, models] = makeModels(10);
-
-    const fetchPromise = CollectionBase.fetch('/table');
-    mockResolver(fetchBody);
-    const collection = await fetchPromise;
-    expect(CollectionBase.isCollection(collection)).toBeTruthy();
-    expect(collection.models()).toEqual(models);
-});
-
-async function fetchNewCollection(url, query = {}) {
-    const [fetchBody, models] = makeModels(10, query);
-    const fetchPromise = CollectionBase.fetch('/table1', query);
-    mockResolver(fetchBody);
-    const collection = await fetchPromise;
-    expect(CollectionBase.isCollection(collection)).toBeTruthy();
-    expect(JSON.stringify(collection.models())).toEqual(JSON.stringify(models));
-
-    return [collection, models, fetchBody];
-}
-
-it('should get a new list with no duplicate models', async () => {
-    setupMocks();
-    const [collection1, models1] = await fetchNewCollection('/table1');
-
-    setupMockPromise();
-    const [collection2, models2] = await fetchNewCollection('/table1');
-
-    expect(models1.toString()).not.toEqual(models2.toString());
-});
-
 it('should fetch another page', async () => {
     setupMocks();
 
-    const [collection, models1] = await fetchNewCollection('/table1');
+    const collection = new CollectionBase('/table1');
+
+    const [fetchBody1, models1] = makeModels(10, {});
+    mockResolver(fetchBody1);
+    const fetchedModels1 = await collection.ready();
 
     setupMockPromise();
-    const [fetchBody2, models2] = makeModels(10, {offset: 10, limit: 10});
     const fetchPromise2 = collection.fetchNextPage();
+    const [fetchBody2, models2] = makeModels(10, {offset: 10, limit: 10});
     mockResolver(fetchBody2);
+    
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual([...models1, ...models2]);
+    expect(collection.models()).toEqual(fetchModels2);
 });
 
 it('should fetch the next page and not add duplicates', async () => {
@@ -164,50 +138,65 @@ it('should fetch the next page and not add duplicates', async () => {
     // not easy to handle.  This strategy really only works if the data
     // doesn't change often.
     setupMocks();
-    const [collection, models1, fetchBody1] = await fetchNewCollection('/table1');
+    const collection = new CollectionBase('/table1');
+
+    const [fetchBody1, models1] = makeModels(10, {});
+    mockResolver(fetchBody1);
+    await collection.ready();
 
     setupMockPromise();
+    const fetchPromise2 = collection.fetchNextPage();
     const [fetchBody2, models2] = makeModels(8, { offset: 10, limit: 10 });
     fetchBody2.data.unshift(...fetchBody1.data.slice(-2));
     models2.unshift(...models1.slice(-2));
-    const fetchPromise2 = collection.fetchNextPage();
     mockResolver(fetchBody2);
+
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models1, ...models2.slice(2)]);
-    expect(collection.models()).toEqual([...models1, ...models2.slice(2)]);
+    expect(collection.models()).toEqual(fetchModels2);
 });
 
 it('should handle a 404 at the end of the last page gracefully', async () => {
     setupMocks();
-    const [collection, models1] = await fetchNewCollection('/table1');
+    const collection = new CollectionBase('/table1');
+
+    const [fetchBody1, models1] = makeModels(10, {});
+    mockResolver(fetchBody1);
+    await collection.ready();
 
     setupMockPromise();
-    const [fetchBody2, models2] = makeModels(10, { offset: 10, limit: 10 });
     const fetchPromise2 = collection.fetchNextPage();
+
+    const [fetchBody2, models2] = makeModels(10, { offset: 10, limit: 10 });
     mockResolver(fetchBody2);
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual([...models1, ...models2]);
+    expect(collection.models()).toEqual(fetchModels2);
 
     setupMockPromise();
     const fetchPromise3 = collection.fetchNextPage();
     mockRejector({status: 404, message: 'Not Found'});
     const fetchModels3 = await fetchPromise3;
-    expect(fetchModels3).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual([...models1, ...models2]);
+    expect(fetchModels3).toEqual(fetchModels2);
+    expect(collection.models()).toEqual(fetchModels2);
 });
 
 it('should fetch the previous page', async () => {
     setupMocks();
-    const [collection, models1] = await fetchNewCollection('/table1', { offset: 30, limit: 10});
+    const collection = new CollectionBase('/table1');
+
+    const [fetchBody1, models1] = makeModels(10, {offset: 30, limit: 10});
+    mockResolver(fetchBody1);
+    await collection.ready();
 
     setupMockPromise();
-    const [fetchBody2, models2] = makeModels(10, { offset: 20, limit: 10 });
     const fetchPromise2 = collection.fetchPrevPage();
+
+    const [fetchBody2, models2] = makeModels(10, { offset: 20, limit: 10 });
     mockResolver(fetchBody2);
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models2, ...models1]);
-    expect(collection.models()).toEqual([...models2, ...models1]);
+    expect(collection.models()).toEqual(fetchModels2);
 });
 
 if('should fetch the previous page and not add duplicates', async () => {
@@ -215,24 +204,30 @@ if('should fetch the previous page and not add duplicates', async () => {
     // not easy to handle.  This strategy really only works if the data
     // doesn't change often.
     setupMocks();
-    const [collection, models1] = await fetchNewCollection('/table1', { offset: 20, limit: 10 });
+    const collection = new CollectionBase('/table1');
+
+    const [fetchBody1, models1] = makeModels(10, { offset: 20, limit: 10 });
+    mockResolver(fetchBody1);
+    await collection.ready();
 
     setupMockPromise();
+    const fetchPromise2 = collection.fetchPrevPage();
+
     const [fetchBody2, models2] = makeModels(8, { offset: 10, limit: 10 });
     fetchBody2.data.push(...fetchBody1.data.slice(-2));
     models2.push(...models1.slice(-2));
-    const fetchPromise2 = collection.fetchPrevPage();
     mockResolver(fetchBody2);
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models2.slice(2), ...models1]);
-    expect(collection.models()).toEqual([...models2.slice(2), ...models1]);
+    expect(collection.models()).toEqual(fetchModels2);
 });
 
-// Other test cases I should write once I consider how I should handle them:
-// - 404 on the first page.
-// - 404 on the previous page.
-// - 50x on any page.
-// - 304 (unchanged) on any page.
-// - The models list actually being trimmed at the front or back.
-// - POST a new model to the collection.
-// - DELETE a model from the collection.
+// // Other test cases I should write once I consider how I should handle them:
+// // - 404 on the first page.
+// // - 404 on the previous page.
+// // - 50x on any page.
+// // - 304 (unchanged) on any page.
+// // - The models list actually being trimmed at the front or back.
+// // - POST a new model to the collection.
+// // - DELETE a model from the collection.
+// // - Test the array functions on the models

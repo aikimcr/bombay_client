@@ -3,6 +3,7 @@
 @mixin areaLayout($area, $bgColor, $fgColor, $width: 100%, $height: 100%, $top: 0, $left: 0, $right: null, $bottom: null) {
   grid-area: $area;
   position: relative;
+  overflow: hidden;
 
   @if ($bottom == null) {
     top: $top;

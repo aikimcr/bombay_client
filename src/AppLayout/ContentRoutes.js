@@ -3,7 +3,8 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import Login from "../Login/Login";
 
-import Artist from "../Mode/Artist";
+import Top from '../Mode/Top';
+import ArtistList from "../Mode/ArtistList";
 
 import BombayLoginContext from '../Context/BombayLoginContext';
 import BombayModeContext from '../Context/BombayModeContext';
@@ -21,8 +22,8 @@ function Content(props) {
     if (loggedIn) {
         return (
             <Routes>
-                <Route path="/" element={<Artist />} />
-                <Route path="/artist" element={<Artist />} />
+                <Route path="/" element={<Top />} />
+                <Route path="/artistList" element={<ArtistList />} />
             </Routes>
         );
     } else {

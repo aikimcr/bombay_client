@@ -2,6 +2,8 @@ import { getFromURLString, prepareURLFromArgs } from '../Network/Network.js';
 
 import ModelBase from './ModelBase.js';
 
+const singleton = {};
+
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class CollectionBase {
     static isCollection(collection) {
@@ -20,34 +22,30 @@ class CollectionBase {
         }
     }
 
-    static async fetch(url) {
-        const body = await getFromURLString(this.buildUrl(url).toString());
-
-        return new this(url, {
-            models: body.data,
-            prevPage: body.prevPage,
-            nextPage: body.nextPage,
-        });
-    }
-
     #idUrl;
     #modelClass;
     #models = [];
     #prevPage;
     #nextPage;
+    #readyPromise;
     #maxModels = 1000; // Trim the model list if it gets longer than this.
     // #pages = [];
 
     constructor(url, options = {}) {
+        console.count('construct model');
         this.#idUrl = this.constructor.buildUrl(url);
+
         this.#modelClass = options.modelClass ?? ModelBase;
-        const models = options.models ?? [];
-        this.#prevPage = options.prevPage;
-        this.#nextPage = options.nextPage;
 
-        this.#nextPage = this.#idUrl;
-
-        models.forEach(model => this.add(model));
+        if (options.models != null) {
+            const models = options.models;
+            this.#prevPage = options.prevPage;
+            this.#nextPage = options.nextPage;
+            models.forEach(model => this.add(model));
+            this.#readyPromise = Promise.resolve(this.#models);
+        } else {
+            this.#readyPromise = this.#fetch(this.#idUrl);
+        }
     }
 
     idUrl() {
@@ -63,52 +61,96 @@ class CollectionBase {
     }
 
     length() {
-        return this.models().length;
+        return this.#models.length;
+    }
+
+    ready() {
+        return this.#readyPromise;
     }
 
     add(model) {
         this.#models.push(this.#modelClass.from(model));
     }
 
-    async fetchNextPage() {
-        if (this.#nextPage) {
-            const body = await getFromURLString(this.#nextPage)
-                .catch((err) => {
-                    if (err.status !== 404) {
-                        console.error(err.status, err.message);
-                    }
+    forEach(callback) {
+        return this.#models.forEach((model, index, list) => {
+            return callback(model, index, list);
+        });
+    }
 
-                    return Promise.resolve({
-                        data: [],
-                        prevPage: this.prevPage,
-                        nextPage: undefined,
-                    });
-                });
+    map(callback) {
+        return this.#models.map((model, index, list) => {
+            return callback(model, index, list);
+        });
+    }
 
-            this.#prevPage = body.prevPage;
-            this.#nextPage = body.nextPage;
+    reduce(callback, start) {
+        return this.#models.reduce((memo, model, index, list) => {
+            return callback(memo, model, index, list)
+        }, start);
+    }
+
+    #mergeModels(data, {reset, append} = {reset: true, append: true}) {
+        if (reset) {
+            this.#models = [];
+        }
+
+        if (data.length > 0) {
             const currentIds = this.#models.map(model => model.get('id'));
-            const newModels = body.data
+            const newModels = data
                 .filter(def => !currentIds.includes(def.id))
                 .map(def => this.#modelClass.from(def));
 
-            this.#models = [...this.#models, ...newModels].slice(-this.#maxModels);
+            if (append) {
+                this.#models = [...this.#models, ...newModels].slice(-this.#maxModels);
+            } else {
+                this.#models = [...newModels, ...this.#models].slice(0, this.#maxModels);
+            }
+        }
+    }
+
+    async #fetch(url, options) {
+        const body = await getFromURLString(url)
+            .catch((err) => {
+                if (err.status !== 404) {
+                    console.error(err.status, err.message);
+                }
+
+                this.#prevPage = undefined;
+                this.#nextPage = undefined;
+
+                return Promise.resolve({
+                    data: [],
+                    prevPage: null,
+                    nextPage: null,
+                });
+            });
+
+        this.#mergeModels(body.data, options);
+        this.#prevPage = body.prevPage;
+        this.#nextPage = body.nextPage;
+        return this.#models;
+    }
+
+    hasNextPage() {
+        return !!this.#nextPage;
+    }
+
+    async fetchNextPage() {
+        if (this.#nextPage) {
+            await this.#fetch(this.#nextPage, {reset: false, append: true});
         }
 
         return this.#models;
     }
 
+    hasPrevPage() {
+        return !!this.#prevPage;
+    }
+
     async fetchPrevPage() {
         if (this.#prevPage) {
-            const body = await getFromURLString(this.#prevPage);
-            this.#prevPage = body.prevPage;
-            this.#nextPage = body.nextPage;
-            const currentIds = this.#models.map(model => model.get('id'));
-            const newModels = body.data
-                .filter(def => !currentIds.includes(def.id))
-                .map(def => this.#modelClass.from(def));
-
-            this.#models = [...newModels, ...this.#models].slice(-this.#maxModels);
+            await this.#fetch(this.#prevPage, {reset: false, append: false});
         }
 
         return this.#models;

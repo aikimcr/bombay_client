@@ -1,5 +1,5 @@
 import { createContext } from 'react';
 
-const BombayLoginContext = createContext('artist');
+const BombayLoginContext = createContext('artistList');
 
 export default BombayLoginContext;

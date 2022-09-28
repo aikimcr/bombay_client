@@ -17,6 +17,7 @@ let mockResolver;
 let mockRejector;
 
 import * as Network from "../Network/Network";
+
 jest.mock('../Network/Network', () => {
     const originalModule = jest.requireActual('../Network/Network');
 
@@ -81,40 +82,12 @@ function makeModels(length = 10, query = {}) {
     return [result, models];
 }
 
-it('should instantiate an empty collection', async () => {
-    const collection = new ArtistCollection('https://fakeit.com/table1');
-    expect(collection.idUrl()).toBe('https://fakeit.com/table1');
-    expect(collection.modelClass()).toBe(ArtistModel);
-    expect(collection.length()).toBe(0);
-    expect(collection.models()).toEqual([]);
-});
-
-it('should instantiate a collection based on a path', async () => {
-    const collection = new ArtistCollection('/table1');
-    expect(collection.idUrl()).toBe(Network.prepareURLFromArgs('table1').toString());
-});
-
-it('should instantiate with a set of models', async () => {
-    const collection = new ArtistCollection('/table1', {
-        models: [{
-            id: 1,
-            name: 'Herkimer P Jones',
-        }, {
-            id: 2,
-            name: 'Agathea S Reese',
-        }],
-    });
-
-    expect(collection.length()).toBe(2);
-    expect(collection.models()).toEqual([
-        new ArtistModel({ id: 1, name: 'Herkimer P Jones' }),
-        new ArtistModel({ id: 2, name: 'Agathea S Reese' }),
-    ]);
-});
-
 it('should not recognize a base model as an artist model', async () => {
     // If the class extension is done correctly, Javascript should just handle this.
+    setupMocks();
     const baseCollection = new CollectionBase({});
+
+    setupMockPromise();
     const artistCollection = new ArtistCollection({});
 
     expect(CollectionBase.isCollection(baseCollection)).toBeTruthy();
