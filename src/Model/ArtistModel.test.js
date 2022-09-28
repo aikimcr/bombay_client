@@ -1,30 +1,5 @@
 import * as Network from '../Network/Network';
-
-let mockPromise;
-let mockResolver;
-let mockRejector;
-
-jest.mock('../Network/Network', () => {
-    const originalModule = jest.requireActual('../Network/Network');
-
-    return {
-        __esModule: true,
-        ...originalModule,
-        getFromPath: (path, query) => { expect('').toBe('Did Your forget to mock something?'); },
-        getFromURLString: (path, query) => { expect('').toBe('Did Your forget to mock something?'); },
-        postToPath: (path, body, query) => { expect('').toBe('Did Your forget to mock something?'); },
-    };
-});
-
-function setupMockPromise() {
-    [mockPromise, mockResolver, mockRejector] = makeResolvablePromise();
-}
-
-function setupMocks() {
-    setupMockPromise();
-    Network.getFromPath = jest.fn((path, query) => mockPromise);
-    Network.getFromURLString = jest.fn((urlString, query) => mockPromise);
-}
+jest.mock('../Network/Network');
 
 import ModelBase from './ModelBase';
 import ArtistModel from './ArtistModel';
