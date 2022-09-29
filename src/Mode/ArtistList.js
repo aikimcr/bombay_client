@@ -1,6 +1,7 @@
 // import React from 'react';
 
 import { useEffect, useState, useRef, createRef } from 'react';
+import useIntersectionObserver from '../Hooks/useIntersectionObserver';
 
 import './ArtistList.scss';
 
@@ -11,37 +12,52 @@ function ArtistList(props) {
     const topRef = createRef();
 
     const artistCollection = useRef(null);
-    const observer = useRef(null);
+    const observer = useIntersectionObserver(topRef, (entries, observer) => {
+        console.count('intersect changed');
+
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                console.count('isIntersecting');
+                setShouldPage(true);
+                observer.unobserve(entry.target);
+            }
+
+            if (entry.isVisible) {
+                console.count('isVisible');
+            }
+        });
+    });
 
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        console.count('observer/topref');
+    // useEffect(() => {
+    //     console.count('observer/topref');
 
-        if (observer.current == null) {
-            console.count('Make an observer');
-            observer.current = new IntersectionObserver((entries, observer) => {
-                console.count('intersect changed');
+    //     if (observer.current == null) {
+    //         console.count('Make an observer');
+    //         debugger;
+    //         observer.current = useIntersectionObserver((entries, observer) => {
+    //             console.count('intersect changed');
 
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        console.count('isIntersecting');
-                        setShouldPage(true);
-                        observer.unobserve(entry.target);
-                    }
+    //             entries.forEach(entry => {
+    //                 if (entry.isIntersecting) {
+    //                     console.count('isIntersecting');
+    //                     setShouldPage(true);
+    //                     observer.unobserve(entry.target);
+    //                 }
 
-                    if (entry.isVisible) {
-                        console.count('isVisible');
-                    }
-                });
-            }, {
-                root: topRef.current.parentElement,
-            });
-        }
+    //                 if (entry.isVisible) {
+    //                     console.count('isVisible');
+    //                 }
+    //             });
+    //         }, {
+    //             root: topRef.current.parentElement,
+    //         });
+    //     }
 
-        return () => { observer.current.disconnect(); }
-    }, [observer.current, topRef.current]);
+    //     return () => { observer.current.disconnect(); }
+    // }, [observer.current, topRef.current]);
 
     useEffect(() => {
         if (artistCollection.current == null) {

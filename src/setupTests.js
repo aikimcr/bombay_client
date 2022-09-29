@@ -14,6 +14,8 @@ import BombayModeContext from './Context/BombayModeContext';
 
 import { buildURL, prepareURLFromArgs } from './Network/Network';
 
+import ModelBase from './Model/ModelBase';
+
 globalThis.makeResolvablePromise = function() {
     let resolver;
     let rejecter;
@@ -141,4 +143,43 @@ globalThis.makeArtistList = function(length = 10, query={}) {
     }
 
     return result;
+}
+
+globalThis.makeAModel = function(tableName = '/table1') {
+    const id = casual.nextId(tableName);
+    const name = casual.uniqueName(tableName);
+    const url = buildURL({ path: `/{tableName}/${id}` });
+
+    const def = { id, name, url };
+    return [def, ModelBase.from(def)];
+}
+
+globalThis.makeModels = function(length = 10, query = {}, tableName = '/table1') {
+    const result = {
+        data: [],
+    };
+
+    const models = [];
+
+    while (result.data.length < length) {
+        const [def, model] = makeAModel(tableName);
+        result.data.push(def);
+        models.push(model);
+    }
+
+    let offset = (query.offset || 0) - length;
+    let limit = query.limit || length;
+
+    if (offset >= 0) {
+        result.prevPage = prepareURLFromArgs(tableName, { offset, limit }).toString();
+    }
+
+    if (limit <= length) {
+        offset = (query.offset || 0) + length;
+        result.nextPage = prepareURLFromArgs(tableName, { offset, limit }).toString();
+    }
+
+    expect(JSON.stringify(result.data)).toStrictEqual(JSON.stringify(models));
+
+    return [result, models];
 }

@@ -2,8 +2,6 @@ import { getFromURLString, prepareURLFromArgs } from '../Network/Network.js';
 
 import ModelBase from './ModelBase.js';
 
-const singleton = {};
-
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class CollectionBase {
     static isCollection(collection) {

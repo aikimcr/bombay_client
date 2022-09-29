@@ -15,6 +15,7 @@ class ModelBase {
     }
 
     static async fetch(url) {
+        debugger;
         const body = await getFromURLString(url);
         return this.from(body);
     }
