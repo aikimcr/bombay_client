@@ -15,6 +15,7 @@ import BombayModeContext from './Context/BombayModeContext';
 import { buildURL, prepareURLFromArgs } from './Network/Network';
 
 import ModelBase from './Model/ModelBase';
+import ArtistModel from './Model/ArtistModel';
 
 globalThis.makeResolvablePromise = function() {
     let resolver;
@@ -146,12 +147,19 @@ globalThis.makeArtistList = function(length = 10, query={}) {
 }
 
 globalThis.makeAModel = function(tableName = '/table1') {
-    const id = casual.nextId(tableName);
-    const name = casual.uniqueName(tableName);
-    const url = buildURL({ path: `/{tableName}/${id}` });
+    const def = {};
+    def.id = casual.nextId(tableName);
+    let modelClass = ModelBase;
 
-    const def = { id, name, url };
-    return [def, ModelBase.from(def)];
+    switch (tableName) {
+        case '/artist':
+            modelClass = ArtistModel;
+        default:
+            def.name = casual.uniqueName(tableName);
+    }
+
+    def.url = buildURL({ path: `/${tableName}/${def.id}` });
+    return [def, modelClass.from(def)];
 }
 
 globalThis.makeModels = function(length = 10, query = {}, tableName = '/table1') {

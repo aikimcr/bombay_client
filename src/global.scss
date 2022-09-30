@@ -11,46 +11,64 @@ $navigation-color: black;
 $sidebar-background-color: $navigation-background-color;
 $sidebar-color: $navigation-color;
 
+
+$standard-font-size: 20px;
+$button-font-size: $standard-font-size + 10px;
+
 body,
 div,
 input {
     box-sizing: border-box;
-}
+    font-size: $standard-font-size;
+    line-height: $standard-font-size;
+}    
 
+// input {
+//     position: relative;
+//     top: 3px;
+//     width: calc(100% - 20px);
+//     padding: 5px;
+//     border: 1px solid black;
+// }
+
+input[type="submit"],
+input[type="button"],
 .btn {
     text-align: center;
-    padding: 0 5px;
+    padding: 0 10px;
     background-color: rgb(32, 32, 32);
     color: white;
-    height: 25px;
-    line-height: 25px;
+    height: $button-font-size;
+    line-height: $button-font-size - 5px; // Subtract 5px to account for the padding
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: $button-font-size / 2;
 
     &:hover {
         background-color: rgb(80, 75, 227);
-    }
+    }    
 
     &:active {
         background-color: rgb(128, 128, 128);
         border-style: inset;
         border-color: black;
-    }
+    }    
 
     &.disabled {
         background-color: rgb(128, 128, 128);
         pointer-events: none;
         cursor: auto;
-    }
-}
+    }    
+}    
 
+label,
 .label {
-    height: 30px;
-    line-height: 30px;
+    height: $standard-font-size;
+    line-height: $standard-font-size;
     width: 100px;
     overflow: hidden;
-}
+}    
 
+input
 .input {
     position: relative;
     top: 0;
@@ -58,15 +76,7 @@ input {
     left: 0;
     right: 0;
     width: 100%;
-    height: 30px;
-
-    input {
-        position: relative;
-        top: 3px;
-        width: calc(100% - 20px);
-        padding: 5px;
-        border: 1px solid black;
-    }
+    height: $standard-font-size;
 
     .toggle {
         width: 50px;
@@ -83,28 +93,30 @@ input {
 }
 
 .card-list {
-    background-color: black;
-        list-style: decimal;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: flex-start;
-        align-content: flex-start;
-        padding: 5px;
+    background: linear-gradient(160deg, rgb(64, 64, 60), rgb(64, 60, 64), rgb(60, 64, 64));
+    list-style: none;
+    padding: 5px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
 
 .card {
-    font-size: 35px;
-        line-height: 1em;
-        background: white;
-        width: 15em;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        border-radius: .5em;
-        padding: 0 1em;
-        flex-grow: 0;
-        flex-shrink: 1;
-        flex-basis: 16em;
+    background: linear-gradient(rgb(250, 250, 250), rgb(200, 200, 200));
+    box-shadow: 5px 5px 10px 1px rgb(0, 0, 0);
+    font-size: $standard-font-size;
+    line-height: $standard-font-size;
+    width: 15em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: .5em;
+    padding: 0 1em;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: 16em;
 }

@@ -37,10 +37,7 @@ export function useIntersectionObserver(topRef, callback, options = {}) {
     const observer = useRef(null);
     
     useEffect(() => {
-        console.count('mock observer/topref');
-
         if (observer.current == null) {
-            console.count('mock Make an observer');
             observer.current = new mockObserver(callback, { ...options, root: topRef.current.parentElement });
         }
 

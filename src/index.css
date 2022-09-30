@@ -28,3 +28,16 @@ code {
   height: 100%;
   width: 100%;
 }
+
+#modal-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-root:empty {
+  display: none;
+}

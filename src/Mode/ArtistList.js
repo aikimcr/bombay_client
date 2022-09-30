@@ -1,5 +1,3 @@
-// import React from 'react';
-
 import { useEffect, useState, useRef, createRef } from 'react';
 import useIntersectionObserver from '../Hooks/useIntersectionObserver';
 
@@ -7,57 +5,27 @@ import './ArtistList.scss';
 
 import ArtistCollection from '../Model/ArtistCollection';
 
+import ArtistListItem from './ArtistListItem';
+
 function ArtistList(props) {
     // const [loadTries, setLoadTries] = useState(0);
     const topRef = createRef();
 
     const artistCollection = useRef(null);
     const observer = useIntersectionObserver(topRef, (entries, observer) => {
-        console.count('intersect changed');
-
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                console.count('isIntersecting');
                 setShouldPage(true);
                 observer.unobserve(entry.target);
             }
 
-            if (entry.isVisible) {
-                console.count('isVisible');
-            }
+            // if (entry.isVisible) {
+            // }
         });
     });
 
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    // useEffect(() => {
-    //     console.count('observer/topref');
-
-    //     if (observer.current == null) {
-    //         console.count('Make an observer');
-    //         debugger;
-    //         observer.current = useIntersectionObserver((entries, observer) => {
-    //             console.count('intersect changed');
-
-    //             entries.forEach(entry => {
-    //                 if (entry.isIntersecting) {
-    //                     console.count('isIntersecting');
-    //                     setShouldPage(true);
-    //                     observer.unobserve(entry.target);
-    //                 }
-
-    //                 if (entry.isVisible) {
-    //                     console.count('isVisible');
-    //                 }
-    //             });
-    //         }, {
-    //             root: topRef.current.parentElement,
-    //         });
-    //     }
-
-    //     return () => { observer.current.disconnect(); }
-    // }, [observer.current, topRef.current]);
 
     useEffect(() => {
         if (artistCollection.current == null) {
@@ -74,7 +42,6 @@ function ArtistList(props) {
         if (!shouldPage) { return; }
         if (loading) { return; }
 
-        console.count('shouldPage');
         setShouldPage(false);
 
         if (artistCollection.current.hasNextPage()) {
@@ -104,7 +71,7 @@ function ArtistList(props) {
             <ul className="artist-list card-list">
                 {artistCollection?.current == null ? '' : artistCollection.current.map(artist => {
                     const key = `artist-list-${artist.get('id')}`;
-                    return <li className="card" key={key}>{artist.get('name')}</li>
+                    return <ArtistListItem className key={key} artist={artist} />
                 })}
             </ul>
         </div>
