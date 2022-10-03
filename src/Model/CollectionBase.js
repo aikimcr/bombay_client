@@ -30,7 +30,6 @@ class CollectionBase {
     // #pages = [];
 
     constructor(url, options = {}) {
-        console.count('construct model');
         this.#idUrl = this.constructor.buildUrl(url);
 
         this.#modelClass = options.modelClass ?? ModelBase;
