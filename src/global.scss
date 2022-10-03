@@ -42,7 +42,7 @@ input[type="button"],
     line-height: $button-font-size - 5px; // Subtract 5px to account for the padding
     cursor: pointer;
     border-radius: $button-font-size / 2;
-
+    
     &:hover {
         background-color: rgb(80, 75, 227);
     }    
@@ -77,13 +77,6 @@ input
     right: 0;
     width: 100%;
     height: $standard-font-size;
-
-    .toggle {
-        width: 50px;
-        position: absolute;
-        top: 4px;
-        right: 25px;
-    }
 }
 
 // Parent element must have height specificed.  100% should work.

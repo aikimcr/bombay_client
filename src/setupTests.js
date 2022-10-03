@@ -59,10 +59,7 @@ globalThis.toggleLogin = function () {
 
 globalThis.changeInput = async function(root, selector, newValue, timerAdvance = -1) {
     const inputField = root.querySelector(`input${selector}`);
-    // const changeEvent = new Event('change');
-    // inputField.value = newValue;
     fireEvent.change(inputField, {target: {value: newValue}});
-    // inputField.dispatchEvent(changeEvent);
 
     if (timerAdvance >= 0) {
         await act(async function () {
