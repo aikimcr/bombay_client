@@ -105,16 +105,16 @@ function verifyModeStructure(mode, options = {}) {
         expect(error.textContent).toBe(options.error);
     }
 
-    // const controls = form.lastChild;
-    // expect(controls.className).toBe('controls');
-    // expect(controls.childElementCount).toBe(2);
-    // verifyClassList(controls.firstChild, ['clear', 'btn']);
+    const controls = form.lastChild;
+    expect(controls.className).toBe('controls');
+    expect(controls.childElementCount).toBe(2);
+    verifyClassList(controls.firstChild, ['clear', 'btn']);
 
-    // if (username.length === 0 || password.length === 0) {
-    //     verifyClassList(controls.lastChild, ['login', 'btn', 'disabled']);
-    // } else {
-    //     verifyClassList(controls.lastChild, ['login', 'btn'], ['disabled']);
-    // }
+    if (username.length === 0 || password.length === 0) {
+        verifyClassList(controls.lastChild, ['login', 'btn', 'disabled']);
+    } else {
+        verifyClassList(controls.lastChild, ['login', 'btn'], ['disabled']);
+    }
 }
 
 beforeEach(() => {
@@ -133,22 +133,6 @@ it('should render the login mode', async () => {
     verifyModeStructure(index.firstChild);
 });
 
-// it('should hide and show the password', async () => {
-//     const result = render(<FakeContent>
-//         <Login />
-//     </FakeContent>);
-
-//     const index = result.container;
-//     expect(index.childElementCount).toBe(1);
-
-//     verifyModeStructure(index.firstChild, {hideState: true });
-    
-//     index.querySelector('.toggle').click();
-//     verifyModeStructure(index.firstChild, { hideState: false });
-
-//     index.querySelector('.toggle').click();
-//     verifyModeStructure(index.firstChild, { hideState: true });
-// });
 
 it('should enable and disable the login button', async () => {
     const result = render(<FakeContent>
@@ -213,59 +197,59 @@ it('should show error on failed login', async () => {
     verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones', error: 'Username or password is incorrect.' });
 });
 
-// it('should show error on call error', async () => {
-//     const result = render(<FakeContent>
-//         <Login />
-//     </FakeContent>);
+it('should show error on call error', async () => {
+    const result = render(<FakeContent>
+        <Login />
+    </FakeContent>);
 
-//     const index = result.container;
-//     verifyModeStructure(index.firstChild);
+    const index = result.container;
+    verifyModeStructure(index.firstChild);
 
-//     const usernameInput = await changeInput(index, '.username', 'herkimer', 250);
-//     const passwordInput = await changeInput(index, '.password', 'jones', 250);
-//     verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones' });
+    const usernameInput = await changeInput(index.querySelector('[data-fieldname="username"]'), '', 'herkimer', 250);
+    const passwordInput = await changeInput(index.querySelector('[data-fieldname="password"]'), '', 'jones', 250);
+    verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones' });
 
-//     mockLoginResult = [500, 'Server Failure'];
-//     const loginButton = index.querySelector('.login.btn');
+    mockLoginResult = [500, 'Server Failure'];
+    const loginButton = index.querySelector('.login.btn');
 
-//     // Wait for the component to rerender.
-//     await act(async () => {
-//         loginButton.click();
-//     });
+    // Wait for the component to rerender.
+    await act(async () => {
+        loginButton.click();
+    });
 
-//     expect(mockLogin.mock.calls).toEqual([['herkimer', 'jones']]);
-//     expect(result.container.firstChild).not.toBe(null);
-//     verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones', error: '500: Server Failure' });
-// });
+    expect(mockLogin.mock.calls).toEqual([['herkimer', 'jones']]);
+    expect(result.container.firstChild).not.toBe(null);
+    verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones', error: '500: Server Failure' });
+});
 
-// it('should clear the inputs and error on clear all fields', async () => {
-//     const result = render(<FakeContent>
-//         <Login />
-//     </FakeContent>);
+it('should clear the inputs and error on clear all fields', async () => {
+    const result = render(<FakeContent>
+        <Login />
+    </FakeContent>);
 
-//     const index = result.container;
-//     verifyModeStructure(index.firstChild);
+    const index = result.container;
+    verifyModeStructure(index.firstChild);
 
-//     const usernameInput = await changeInput(index, '.username', 'herkimer', 250);
-//     const passwordInput = await changeInput(index, '.password', 'jones', 250);
-//     verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones' });
+    const usernameInput = await changeInput(index.querySelector('[data-fieldname="username"]'), '', 'herkimer', 250);
+    const passwordInput = await changeInput(index.querySelector('[data-fieldname="password"]'), '', 'jones', 250);
+    verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones' });
 
-//     mockLoginResult = [401, 'Unauthorized'];
-//     const loginButton = index.querySelector('.login.btn');
+    mockLoginResult = [401, 'Unauthorized'];
+    const loginButton = index.querySelector('.login.btn');
 
-//     // Wait for the component to rerender.
-//     await act(async () => {
-//         loginButton.click();
-//     });
+    // Wait for the component to rerender.
+    await act(async () => {
+        loginButton.click();
+    });
 
-//     verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones', error: 'Username or password is incorrect.' });
+    verifyModeStructure(index.firstChild, { username: 'herkimer', password: 'jones', error: 'Username or password is incorrect.' });
 
-//     const clearButton = index.querySelector('.clear.btn');
+    const clearButton = index.querySelector('.clear.btn');
 
-//     // Wait for the component to rerender.
-//     await act(async () => {
-//         clearButton.click();
-//     });
+    // Wait for the component to rerender.
+    await act(async () => {
+        clearButton.click();
+    });
 
-//     verifyModeStructure(index.firstChild);
-// });
+    verifyModeStructure(index.firstChild);
+});
