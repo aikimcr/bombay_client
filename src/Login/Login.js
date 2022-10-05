@@ -8,6 +8,7 @@ import BombayModeContext from '../Context/BombayModeContext';
 import BombayUtilityContext from '../Context/BombayUtilityContext';
 
 import { login } from "../Network/Login";
+import LabeledInput from '../Widgets/LabeledInput';
 
 function Login(props) {
     const navigate = useNavigate();
@@ -28,8 +29,8 @@ function Login(props) {
 
     function getCredentials() {
         // TODO: THere has to be a better way to do what these two lines are doing.
-        const usernameInput = document.querySelector('.username');
-        const passwordInput = document.querySelector('.password');
+        const usernameInput = document.querySelector('[data-fieldname="username"] input');
+        const passwordInput = document.querySelector('[data-fieldname="password"] input');
 
         return { username: usernameInput.value, password: passwordInput.value };
     }
@@ -62,8 +63,8 @@ function Login(props) {
 
         clearTimer();
 
-        document.querySelector('input.username').value = '';
-        document.querySelector('input.password').value = '';
+        document.querySelector('[data-fieldname="username"] input').value = '';
+        document.querySelector('[data-fieldname="password"] input').value = '';
         loginButton.classList.add('disabled');
         setError(null);
     }
@@ -85,21 +86,6 @@ function Login(props) {
         checkLoginState();
     }
 
-    function togglePassword(evt) {
-        const el = evt.currentTarget;
-        const pwd = el.parentElement.querySelector('.password');
-
-        if (el.dataset.hidden === 'true') {
-            el.dataset.hidden = false;
-            el.textContent = 'Hide';
-            pwd.setAttribute('type', 'text');
-        } else {
-            el.dataset.hidden = true;
-            el.textContent = 'Show';
-            pwd.setAttribute('type', 'password');
-        }
-    }
-
     if (loggedIn) {
         return '';
     } else {
@@ -108,19 +94,19 @@ function Login(props) {
                 <div className="login-form">
                     <h1 className="login-header">Please Log In</h1>
                     <div className="info">
-                        <div>
-                            <div className="label">Username</div>
-                            <div className="input">
-                                <input className="username" type="text" onChange={handleChange} />
-                            </div>
-                        </div>
-                        <div>
-                            <div className="label">Password</div>
-                            <div className="input">
-                                <input className="password" type="password" onChange={handleChange} />
-                                <div className="toggle btn" data-hidden="true" onClick={togglePassword}>Show</div>
-                            </div>
-                        </div>
+                        <LabeledInput
+                            modelName='login'
+                            fieldName='username'
+                            labelText='User Name'
+                            onChange={handleChange}
+                        />
+                        <LabeledInput
+                            modelName='login'
+                            fieldName='password'
+                            labelText='Password'
+                            type='password'
+                            onChange={handleChange}
+                        />
                     </div>
                     {error && <div className="error">{error}</div>}
                     <div className="controls">
