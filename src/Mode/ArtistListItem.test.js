@@ -29,3 +29,18 @@ it('should open the editor modal', async () => {
     const modalRoot = document.getElementById('modal-root');
     expect(modalRoot.childElementCount).toBe(1);
 });
+
+it('should save changes to the model', async () => {
+    const [modelDef, model] = makeAModel('/artist');
+
+    const result = render(<ArtistListItem artist={model} />);
+
+    const index = result.container;
+
+    await act(async () => {
+        index.firstChild.click();
+    });
+
+    const modalRoot = document.getElementById('modal-root');
+    debugger;
+});

@@ -7,8 +7,6 @@ let mockStatus = 200;
 let mockStatusText = 'OK'; 
 let mockJSON = {};
 
-
-
 beforeEach(() => {
     // fetch.mockClear();
     mockOk = true;
@@ -152,4 +150,86 @@ it('Should post the body to the login', async () => {
     } finally {
         server.remove();
     }
+});
+
+it('Should post the body to the URL', async () => {
+    const requestUrl = Network.buildURL({ path: [Network.basePath, 'table'] });
+    mockJSON = {
+        id: 1,
+        name: 'xyzzy',
+        url: `${requestUrl}/1`,
+    };
+
+    // https://stackoverflow.com/questions/73683195/jest-fn-not-registering-mock-implementation
+    //
+    // For reasons that are not clear to me, this mock must be done in each test that
+    // uses it.  I tried doing it outside the test scope and it ignores the 
+    // mockImplementation.
+    global.fetch = jest.fn(() => {
+        return Promise.resolve({
+            ok: mockOk,
+            status: mockStatus,
+            statusText: mockStatusText,
+            json: () => Promise.resolve(mockJSON),
+        });
+    });
+
+    const data = await Network.postToURLString(requestUrl, {
+        name: 'xyzzy',
+    });
+
+    expect(global.fetch.mock.calls.length).toBe(1);
+    expect(global.fetch.mock.calls[0]).toEqual([requestUrl, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: '{"name":"xyzzy"}',
+        mode: 'cors',
+        credentials: 'include',
+    }]);
+
+    expect(data).toEqual(mockJSON);
+});
+
+it('Should put the body to the URL', async () => {
+    const requestUrl = Network.buildURL({ path: [Network.basePath, 'table', '1'] });
+    mockJSON = {
+        id: 1,
+        name: 'xyzzy',
+        url: requestUrl,
+    };
+
+    // https://stackoverflow.com/questions/73683195/jest-fn-not-registering-mock-implementation
+    //
+    // For reasons that are not clear to me, this mock must be done in each test that
+    // uses it.  I tried doing it outside the test scope and it ignores the 
+    // mockImplementation.
+    global.fetch = jest.fn(() => {
+        return Promise.resolve({
+            ok: mockOk,
+            status: mockStatus,
+            statusText: mockStatusText,
+            json: () => Promise.resolve(mockJSON),
+        });
+    });
+
+    const data = await Network.putToURLString(requestUrl, {
+        id: 1,
+        name: 'xyzzy',
+        url: requestUrl,
+    });
+
+    expect(global.fetch.mock.calls.length).toBe(1);
+    expect(global.fetch.mock.calls[0]).toEqual([requestUrl, {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: '{"name":"xyzzy"}',
+        mode: 'cors',
+        credentials: 'include',
+    }]);
+
+    expect(data).toEqual(mockJSON);
 });

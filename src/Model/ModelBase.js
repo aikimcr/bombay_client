@@ -1,4 +1,4 @@
-import { getFromURLString } from "../Network/Network";
+import { getFromURLString, putToURLString } from '../Network/Network';
 
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class ModelBase {
@@ -8,28 +8,42 @@ class ModelBase {
 
     static from(model) {
         if (model instanceof this) {
-            return model;
+            return new this(null, model.getJSON());
         } else {
-            return new this(model);
+            return new this(null, model);
         }
     }
 
-    static async fetch(url) {
-        debugger;
-        const body = await getFromURLString(url);
-        return this.from(body);
-    }
-
     #idUrl;
+    #readyPromise = Promise.resolve({});
     #data = {};
 
-    constructor(data, options) {
-        this.#idUrl = data.url ?? '';
-        this.#data = data;
+    constructor(url, data, options) {
+        if (data) {
+            this.#data = {...data};
+            if (this.#data.url) {
+                this.#idUrl = this.#data.url;
+            }
+
+            this.#readyPromise = Promise.resolve(this.#data);
+        } else if (url) {
+            this.#idUrl = url;
+            this.#readyPromise = getFromURLString(this.#idUrl)
+                .then((fetchedData) => {
+                    this.#data = fetchedData;
+                    return Promise.resolve(fetchedData);
+                });
+        } else {
+            this.#data = {};
+        }
     }
 
     idUrl() {
         return this.#idUrl;
+    }
+
+    ready() {
+        return this.#readyPromise;
     }
 
     get(fieldName) {
@@ -39,9 +53,21 @@ class ModelBase {
 
         throw new Error(`No field "${fieldName}" is set`);
     }
+    
+    async save() {
+        const newDef = await putToURLString(this.#idUrl, this.#data);
+        this.#data = { ...this.#data, ...newDef };
+        return this.#data;
+    }
 
     set(fieldName, value) {
-        this.#data[fieldName] = value;
+        if(typeof fieldName === 'object' && fieldName !== null) {
+            this.#data = { ...this.#data, ...fieldName};
+        } else {
+            this.#data[fieldName] = value;
+        }
+
+        return this;
     }
 
     // Handy to have ana also helps with testing

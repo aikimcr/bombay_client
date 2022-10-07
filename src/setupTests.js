@@ -143,7 +143,7 @@ globalThis.makeArtistList = function(length = 10, query={}) {
     return result;
 }
 
-globalThis.makeAModel = function(tableName = '/table1') {
+globalThis.makeAModel = function(tableName = 'table1') {
     const def = {};
     def.id = casual.nextId(tableName);
     let modelClass = ModelBase;
@@ -159,7 +159,7 @@ globalThis.makeAModel = function(tableName = '/table1') {
     return [def, modelClass.from(def)];
 }
 
-globalThis.makeModels = function(length = 10, query = {}, tableName = '/table1') {
+globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1') {
     const result = {
         data: [],
     };
