@@ -6,9 +6,10 @@ import './ArtistList.scss';
 import ArtistCollection from '../Model/ArtistCollection';
 
 import ArtistListItem from './ArtistListItem';
+import Artist from './Artist';
+import { FormModal } from '../Modal/FormModal';
 
 function ArtistList(props) {
-    // const [loadTries, setLoadTries] = useState(0);
     const topRef = createRef();
 
     const artistCollection = useRef(null);
@@ -19,23 +20,28 @@ function ArtistList(props) {
                 observer.unobserve(entry.target);
             }
 
+            // I haven't found a case where this is actually needed, but I haven't ruled it out.
             // if (entry.isVisible) {
             // }
         });
     });
 
+    const [showAdd, setShowAdd] = useState(false);
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (artistCollection.current == null) {
-            artistCollection.current = new ArtistCollection();
-        }
+        const intervalHandle = setInterval(refreshCollection, 300000);
 
-        artistCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
+        return () => {
+            clearInterval(intervalHandle);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (artistCollection.current == null) {
+            refreshCollection()
+        }
     }, [artistCollection.current]);
 
     useEffect(() => {
@@ -66,14 +72,42 @@ function ArtistList(props) {
         }
     }, [loading]);
 
+    function refreshCollection() {
+        setLoading(true);
+
+        artistCollection.current = new ArtistCollection();
+        artistCollection.current.ready()
+            .then(() => {
+                setLoading(false);
+            });
+    }
+
+    async function submitNewArtist(artistDef) {
+        await artistCollection.current.save(artistDef);
+        refreshCollection();
+    }
+
     return (
-        <div className="artist-list-container" ref={topRef}>
-            <ul className="artist-list card-list">
-                {artistCollection?.current == null ? '' : artistCollection.current.map(artist => {
-                    const key = `artist-list-${artist.get('id')}`;
-                    return <ArtistListItem className key={key} artist={artist} />
-                })}
-            </ul>
+        <div className="list-component">
+            <div className="list-controls">
+                <button className="btn" onClick={() => setShowAdd(true)}>New</button>
+                <button className="btn" onClick={refreshCollection}>Refresh</button>
+                <FormModal
+                    title="Add Artist"
+                    onClose={() => setShowAdd(false)}
+                    onSubmit={submitNewArtist}
+                    open={showAdd}>
+                    <Artist />
+                </FormModal>
+            </div>
+            <div className="artist-list-container" ref={topRef}>
+                <ul className="artist-list card-list">
+                    {artistCollection?.current == null ? '' : artistCollection.current.map(artist => {
+                        const key = `artist-list-${artist.get('id')}`;
+                        return <ArtistListItem className key={key} artist={artist} />
+                    })}
+                </ul>
+            </div>
         </div>
     );
 }

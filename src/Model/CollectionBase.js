@@ -1,4 +1,4 @@
-import { getFromURLString, prepareURLFromArgs } from '../Network/Network';
+import { getFromURLString, postToURLString, prepareURLFromArgs } from '../Network/Network';
 
 import ModelBase from './ModelBase';
 
@@ -66,7 +66,9 @@ class CollectionBase {
     }
 
     add(model) {
-        this.#models.push(this.#modelClass.from(model));
+        const newModel = this.#modelClass.from(model);
+        this.#models.push(newModel);
+        return newModel;
     }
 
     forEach(callback) {
@@ -127,6 +129,11 @@ class CollectionBase {
         this.#prevPage = body.prevPage;
         this.#nextPage = body.nextPage;
         return this.#models;
+    }
+
+    async save(modelDef) {
+        const newDef = await postToURLString(this.#idUrl, modelDef);
+        return this.add(newDef);
     }
 
     hasNextPage() {

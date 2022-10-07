@@ -74,7 +74,6 @@ it('should save changes to the model', async () => {
     expect(model.toJSON()).toEqual(oldBody);
 
     const newName = casual.uniqueName('table1');
-    debugger;
     model.set('name', newName);
     expect(model.toJSON()).not.toEqual(oldBody);
     expect(model.get('name')).toEqual(newName);

@@ -43,6 +43,14 @@ export function postToPath(path, body, query) {
     throw new Error('postToPath has not been mocked properly');
 }
 
+export async function postToURLString(urlString, body) {
+    throw new Error('postToURLString has not been mocked properly');
+}
+
+export async function putToURLString(urlString, body) {
+    throw new Error('putToURLString has not been mocked properly');
+}
+
 // Test Utilities not found in the original
 let mockPromise;
 let mockResolve;
@@ -62,6 +70,8 @@ export function _setupMocks() {
     this.getFromPath = jest.fn((path, query) => mockPromise);
     this.getFromURLString = jest.fn((urlString, query) => mockPromise);
     this.postToPath = jest.fn((path, body, query) => mockPromise);
+    this.postToURLString = jest.fn((urlString, body) => mockPromise);
+    this.putToURLString = jest.fn((urlString, body) => mockPromise);
 
     return {
         resolve: mockResolve,
