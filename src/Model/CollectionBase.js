@@ -1,6 +1,6 @@
-import { getFromURLString, prepareURLFromArgs } from '../Network/Network.js';
+import { getFromURLString, prepareURLFromArgs } from '../Network/Network';
 
-import ModelBase from './ModelBase.js';
+import ModelBase from './ModelBase';
 
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class CollectionBase {

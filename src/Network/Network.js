@@ -109,3 +109,48 @@ export function postToPath(path, body = {}, query = {}) {
     xhr.send(JSON.stringify(body));
   });
 }
+
+function buildJSON(body) {
+  const sendBody = { ...body };
+  delete sendBody.id;
+  delete sendBody.url;
+  return JSON.stringify(sendBody);
+}
+
+export async function postToURLString(urlString, body) {
+  const sendJSON = buildJSON(body);
+  const response = await fetch(urlString, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: sendJSON,
+    mode: 'cors',
+    credentials: 'include',
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+
+  return Promise.reject({ status: response.status, message: response.statusText });
+}
+
+export async function putToURLString(urlString, body) {
+  const sendJSON = buildJSON(body);
+  const response = await fetch(urlString, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: sendJSON,
+    mode: 'cors',
+    credentials: 'include',
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+
+  return Promise.reject({ status: response.status, message: response.statusText });
+}
