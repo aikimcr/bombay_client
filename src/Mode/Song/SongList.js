@@ -32,7 +32,6 @@ function SongList(props) {
 
     useEffect(() => {
         if (songCollection.current == null) {
-            console.count('Init Songlist');
             refreshCollection();
         }
 

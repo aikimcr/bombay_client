@@ -16,6 +16,7 @@ import { buildURL, prepareURLFromArgs } from './Network/Network';
 
 import ModelBase from './Model/ModelBase';
 import ArtistModel from './Model/ArtistModel';
+import SongModel from './Model/SongModel';
 
 globalThis.makeResolvablePromise = function() {
     let resolver;
@@ -146,13 +147,25 @@ globalThis.makeArtistList = function(length = 10, query={}) {
 globalThis.makeAModel = function(tableName = 'table1') {
     const def = {};
     def.id = casual.nextId(tableName);
+    def.name = casual.uniqueName(tableName);
     let modelClass = ModelBase;
 
     switch (tableName) {
-        case '/artist':
+        case 'artist':
             modelClass = ArtistModel;
+            break;
+
+        case 'song':
+            modelClass = SongModel;
+            def.key_signature = 'C';
+            def.tempo = '120';
+            def.lyrics = 'O Solo Mio! The troubles I have seen';
+            const [artist] = makeAModel('artist');
+            def.artist_id = artist.id;
+            def.artist = artist;
+            break;
+
         default:
-            def.name = casual.uniqueName(tableName);
     }
 
     def.url = buildURL({ path: `/${tableName}/${def.id}` });
@@ -183,8 +196,6 @@ globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1') 
         offset = (query.offset || 0) + length;
         result.nextPage = prepareURLFromArgs(tableName, { offset, limit }).toString();
     }
-
-    expect(JSON.stringify(result.data)).toStrictEqual(JSON.stringify(models));
 
     return [result, models];
 }
