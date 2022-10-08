@@ -18,22 +18,45 @@ afterEach(() => {
     modalRoot.remove();
 });
 
+function getAreas(result) {
+    const index = result.container;
+    expect(index.childElementCount).toEqual(1);
+
+    const listElement = index.firstChild;
+    expect(listElement.tagName).toEqual('LI');
+    expect(listElement).toHaveClass('card');
+    expect(listElement.childElementCount).toEqual(3);
+
+    const headerElement = listElement.firstChild;
+    expect(headerElement).toHaveClass('header');
+    expect(headerElement).toHaveTextContent('Song');
+    expect(headerElement.childElementCount).toEqual(0);
+
+    const nameElement = listElement.children[1];
+    expect(nameElement).toHaveClass('name');
+
+    const detailsElement = listElement.lastChild;
+    expect(detailsElement).toHaveClass('details');
+    expect(detailsElement.childElementCount).toBe(8);
+
+    return [detailsElement, nameElement, headerElement, listElement, index];
+}
 
 it ('should render a list item', async () => {
-    const [ modelDef, model ] = makeAModel('/song');
-
+    const [ modelDef, model ] = makeAModel('song');
     const result = render(<SongListItem song={model} />);
+    const [detailsElement, nameElement] = getAreas(result);
 
-    const index = result.container;
+    expect(nameElement).toHaveTextContent(modelDef.name);
 
-    expect(index.childElementCount).toBe(1);
-    expect(index.firstChild.tagName).toBe('LI');
-    expect(index.firstChild.className).toBe('card');
-    expect(index.firstChild.textContent).toBe(modelDef.name);
+    expect(detailsElement.children[1]).toHaveTextContent(modelDef.artist.name);
+    expect(detailsElement.children[3]).toHaveTextContent(modelDef.key_signature);
+    expect(detailsElement.children[5]).toHaveTextContent(modelDef.tempo);
+    expect(detailsElement.children[7]).toHaveTextContent(modelDef.lyrics);
 });
 
 it('should open the editor modal', async () => {
-    const [modelDef, model] = makeAModel('/song');
+    const [modelDef, model] = makeAModel('song');
 
     const result = render(<SongListItem song={model} />);
 
@@ -44,7 +67,7 @@ it('should open the editor modal', async () => {
     });
 
     const modalRoot = document.getElementById('modal-root');
-    expect(modalRoot.childElementCount).toBe(1);
+    expect(modalRoot.childElementCount).toEqual(1);
 });
 
 it('should save changes to the model', async () => {
@@ -54,7 +77,9 @@ it('should save changes to the model', async () => {
         return mockPromise;
     });
 
-    const [modelDef, model] = makeAModel('/song');
+    const [modelDef, model] = makeAModel('song');
+    const songModelDef = {...modelDef};
+    delete songModelDef.artist;
 
     const result = render(<SongListItem song={model} />);
 
@@ -80,5 +105,5 @@ it('should save changes to the model', async () => {
     });
 
     expect(Network.putToURLString).toBeCalledTimes(1);
-    expect(Network.putToURLString).toBeCalledWith(modelDef.url, { ...modelDef, name: 'Herkimer' });
+    expect(Network.putToURLString).toBeCalledWith(modelDef.url, { ...songModelDef, name: 'Herkimer' });
 });

@@ -162,7 +162,7 @@ it('should stop when it runs out of data', async () => {
     expect(listElement.childElementCount).toBe(models.length);
 });
 
-it('should add an song', async () => {
+it('should add a song', async () => {
     const modalRoot = document.getElementById('modal-root');
 
     const { resolve } = Network._setupMocks();

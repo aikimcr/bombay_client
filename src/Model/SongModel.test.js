@@ -5,34 +5,24 @@ import ModelBase from './ModelBase';
 import SongModel from './SongModel';
 
 it('should instantiate a model', async () => {
-    const model = new SongModel(null, {
-        id: 119,
-        name: 'xyzzy',
-    });
+    const [def] = makeAModel('song');
+    const model = SongModel.from(def);
 
     expect(SongModel.isModel(model)).toBeTruthy();
-    expect(model.get('id')).toBe(119)
-    expect(model.get('name')).toBe('xyzzy');
+    expect(model.get('id')).toEqual(def.id)
+    expect(model.get('name')).toEqual(def.name);
+    expect(model.get('artist_id')).toEqual(def.artist_id);
+    expect(model.idUrl()).toEqual(def.url);
 
-    // Method under test must be wrapped in a function or the throw is not caught.
-    expect(() => model.get('shoesize')).toThrowError('No field "shoesize" is set');
-    model.set('shoesize', 36);
-    expect(model.get('shoesize')).toBe(36);
+    expect(model.artist).toBeDefined();
+    const artist = model.artist();
+    expect(artist).toBeDefined();
+    expect(artist.get('id')).toEqual(model.get('artist_id'));
+    expect(artist.get('name')).toEqual(def.artist.name);
+    expect(artist.idUrl()).toEqual(def.artist.url);
 })
 
-it('should create a model from a definition', async () => {
-    const model = SongModel.from({
-        id: 63,
-        name: 'Plover',
-    });
-
-
-    expect(SongModel.isModel(model)).toBeTruthy();
-    expect(model.get('id')).toBe(63)
-    expect(model.get('name')).toBe('Plover');
-});
-
-it('should not recognize a base model as an song model', async () => {
+it('should not recognize a base model as a song model', async () => {
     // If the class extension is done correctly, Javascript should just handle this.
     const baseModel = new ModelBase({});
     const songModel = new SongModel({});

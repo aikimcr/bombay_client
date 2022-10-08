@@ -16,12 +16,12 @@ it('should show a simple labeled input', async () => {
     
     const label = component.firstChild;
     expect(label.tagName).toBe('LABEL');
-    expect(label.attributes.getNamedItem('for').value).toBe(`xyzzy-isNew-${Date.now()}`);
+    expect(label.attributes.getNamedItem('for').value).toBe(`xyzzy-plover-isNew-${Date.now()}`);
     expect(label.textContent).toBe('plugh');
 
     const input = component.lastChild;
     expect(input.tagName).toBe('INPUT');
-    expect(input.id).toBe(`xyzzy-isNew-${Date.now()}`);
+    expect(input.id).toBe(`xyzzy-plover-isNew-${Date.now()}`);
     expect(input.type).toBe('text');
     expect(input.defaultValue).toBe('');
 });

@@ -18,23 +18,40 @@ afterEach(() => {
     modalRoot.remove();
 });
 
+function getAreas(result) {
+    const index = result.container;
+    expect(index.childElementCount).toEqual(1);
+
+    const listElement = index.firstChild;
+    expect(listElement.tagName).toEqual('LI');
+    expect(listElement).toHaveClass('card');
+    expect(listElement.childElementCount).toEqual(3);
+
+    const headerElement = listElement.firstChild;
+    expect(headerElement).toHaveClass('header');
+    expect(headerElement).toHaveTextContent('Artist');
+    expect(headerElement.childElementCount).toEqual(0);
+
+    const nameElement = listElement.children[1];
+    expect(nameElement).toHaveClass('name');
+
+    const detailsElement = listElement.lastChild;
+    expect(detailsElement).toHaveClass('details');
+    expect(detailsElement.childElementCount).toBe(0);
+
+    return [detailsElement, nameElement, headerElement, listElement, index];
+}
 
 it ('should render a list item', async () => {
     const [ modelDef, model ] = makeAModel('/artist');
-
     const result = render(<ArtistListItem artist={model} />);
+    const [, nameElement] = getAreas(result);
 
-    const index = result.container;
-
-    expect(index.childElementCount).toBe(1);
-    expect(index.firstChild.tagName).toBe('LI');
-    expect(index.firstChild.className).toBe('card');
-    expect(index.firstChild.textContent).toBe(modelDef.name);
+    expect(nameElement).toHaveTextContent(modelDef.name);
 });
 
 it('should open the editor modal', async () => {
     const [modelDef, model] = makeAModel('/artist');
-
     const result = render(<ArtistListItem artist={model} />);
 
     const index = result.container;
