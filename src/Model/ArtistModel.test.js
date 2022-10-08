@@ -5,7 +5,7 @@ import ModelBase from './ModelBase';
 import ArtistModel from './ArtistModel';
 
 it('should instantiate a model', async () => {
-    const model = new ArtistModel({
+    const model = new ArtistModel(null, {
         id: 119,
         name: 'xyzzy',
     });
