@@ -7,7 +7,7 @@ import SongCollection from '../../Model/SongCollection';
 
 import SongListItem from './SongListItem';
 import Song from './Song';
-import { FormModal } from '../../Modal/FormModal';
+import FormModal from '../../Modal/FormModal';
 
 function SongList(props) {
     const topRef = createRef();

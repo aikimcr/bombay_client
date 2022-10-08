@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './ArtistList.scss';
 
 import Artist from './Artist';
-import { FormModal } from '../../Modal/FormModal';
+import FormModal from '../../Modal/FormModal';
 
 function ArtistListItem(props) {
     const [showEdit, setShowEdit] = useState(false);

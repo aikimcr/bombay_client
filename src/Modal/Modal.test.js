@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { useState } from 'react';
 
-import Modal2 from './Modal2';
+import Modal from './Modal';
 
 beforeEach(() => {
     const modalRoot = document.createElement('div');
@@ -29,9 +29,9 @@ function ModalWrapper(props) {
     return (
         <>
             <button onClick={() => setShow(true)}>open</button>
-            <Modal2 open={show} onClose={handleClose} title='Test Modal'>
+            <Modal open={show} onClose={handleClose} title='Test Modal'>
                 <div>Hello Modal</div>
-            </Modal2>
+            </Modal>
         </>        
     );
 }    
