@@ -7,7 +7,7 @@ import ArtistCollection from '../../Model/ArtistCollection';
 
 import ArtistListItem from './ArtistListItem';
 import Artist from './Artist';
-import { FormModal } from '../../Modal/FormModal';
+import FormModal from '../../Modal/FormModal';
 
 function ArtistList(props) {
     const topRef = createRef();

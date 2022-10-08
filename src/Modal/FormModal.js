@@ -3,8 +3,7 @@
 
 import PropTypes from 'prop-types';
 
-import { useModal } from "./Modal";
-import Modal2 from "./Modal2";
+import Modal from "./Modal";
 
 export function FormModal(props) {
     function closeForm(evt) {
@@ -29,7 +28,7 @@ export function FormModal(props) {
     }
 
     return (
-        <Modal2 title={props.title} onClose={closeForm} open={props.open}>
+        <Modal title={props.title} onClose={closeForm} open={props.open}>
             <form action="" className='modal-form' onSubmit={submitData}>
                 <div className="form-content">{props.children}</div>
                 <div className="controls">
@@ -37,7 +36,7 @@ export function FormModal(props) {
                     <input type='button' onClick={closeForm} value='Cancel' />
                 </div>
             </form>
-        </Modal2>
+        </Modal>
     );
 }
 
@@ -48,43 +47,4 @@ FormModal.propTypes = {
     open: PropTypes.bool.isRequired,
 }
 
-export function useFormModal(args = {}) {
-    const [openModal, closeModal, Modal] = useModal();
-
-    function submitData(evt) {
-        evt.preventDefault();
-        const formData = new FormData(evt.currentTarget);
-
-        const data = {};
-        const entries = formData.entries();
-        let entry = entries.next();
-
-        while (!entry.done) {
-            data[entry.value[0]] = entry.value[1];
-            entry = entries.next();
-        }
-
-        closeModal(data);
-    }
-
-    function closeForm(evt) {
-        evt.preventDefault();
-        closeModal(false);
-    }
-
-    function FormModal(props) {
-        return <Modal title={props.title}>
-            <form action="" className='modal-form' onSubmit={submitData}>
-                <div className="form-content">{props.children}</div>
-                <div className="controls">
-                    <input type='submit' />
-                    <input type='button' onClick={closeForm} value='Cancel' />
-                </div>
-            </form>
-        </Modal>
-    }
-
-    return [openModal, closeModal, FormModal];
-}
-
-export default useFormModal;
+export default FormModal;

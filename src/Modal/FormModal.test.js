@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { useState } from 'react';
 
-import { FormModal } from './FormModal';
+import FormModal from './FormModal';
 
 jest.useFakeTimers();
 
