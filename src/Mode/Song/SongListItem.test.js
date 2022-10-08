@@ -1,0 +1,84 @@
+import { act, render } from '@testing-library/react';
+
+import * as Network from '../../Network/Network';
+// jest.mock('../../Network/Network'); // This doesn't actually  work here.
+
+import SongListItem from './SongListItem';
+
+jest.useFakeTimers();
+
+beforeEach(() => {
+    const modalRoot = document.createElement('div');
+    modalRoot.id = 'modal-root';
+    document.body.append(modalRoot);
+})
+
+afterEach(() => {
+    const modalRoot = document.getElementById('modal-root');
+    modalRoot.remove();
+});
+
+
+it ('should render a list item', async () => {
+    const [ modelDef, model ] = makeAModel('/song');
+
+    const result = render(<SongListItem song={model} />);
+
+    const index = result.container;
+
+    expect(index.childElementCount).toBe(1);
+    expect(index.firstChild.tagName).toBe('LI');
+    expect(index.firstChild.className).toBe('card');
+    expect(index.firstChild.textContent).toBe(modelDef.name);
+});
+
+it('should open the editor modal', async () => {
+    const [modelDef, model] = makeAModel('/song');
+
+    const result = render(<SongListItem song={model} />);
+
+    const index = result.container;
+
+    await act(async () => {
+        index.firstChild.click();
+    });
+
+    const modalRoot = document.getElementById('modal-root');
+    expect(modalRoot.childElementCount).toBe(1);
+});
+
+it('should save changes to the model', async () => {
+    const [mockPromise, mockResolve] = makeResolvablePromise();
+    // The mock is not recognized unless it is done this way.
+    Network.putToURLString = jest.fn((url, body) => {
+        return mockPromise;
+    });
+
+    const [modelDef, model] = makeAModel('/song');
+
+    const result = render(<SongListItem song={model} />);
+
+    const index = result.container;
+
+    await act(async () => {
+        index.firstChild.click();
+    });
+
+    const modalRoot = document.getElementById('modal-root');
+    expect(modalRoot.childElementCount).toEqual(1);
+
+    const submitButton = modalRoot.querySelector('[type="submit"]');
+
+    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), '', 'Herkimer', 250);
+
+    act(() => {
+        submitButton.click();
+    });
+
+    await act(async () => {
+        mockResolve({...modelDef, name: 'Herkimer'});
+    });
+
+    expect(Network.putToURLString).toBeCalledTimes(1);
+    expect(Network.putToURLString).toBeCalledWith(modelDef.url, { ...modelDef, name: 'Herkimer' });
+});

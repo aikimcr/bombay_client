@@ -1,18 +1,18 @@
 import { useEffect, useState, useRef, createRef } from 'react';
-import useIntersectionObserver from '../Hooks/useIntersectionObserver';
+import useIntersectionObserver from '../../Hooks/useIntersectionObserver';
 
-import './ArtistList.scss';
+import './SongList.scss';
 
-import ArtistCollection from '../Model/ArtistCollection';
+import SongCollection from '../../Model/SongCollection';
 
-import ArtistListItem from './ArtistListItem';
-import Artist from './Artist';
-import { FormModal } from '../Modal/FormModal';
+import SongListItem from './SongListItem';
+import Song from './Song';
+import { FormModal } from '../../Modal/FormModal';
 
-function ArtistList(props) {
+function SongList(props) {
     const topRef = createRef();
 
-    const artistCollection = useRef(null);
+    const songCollection = useRef(null);
     const observer = useIntersectionObserver(topRef, (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -31,6 +31,11 @@ function ArtistList(props) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (songCollection.current == null) {
+            console.count('Init Songlist');
+            refreshCollection();
+        }
+
         const intervalHandle = setInterval(refreshCollection, 300000);
 
         return () => {
@@ -39,51 +44,45 @@ function ArtistList(props) {
     }, []);
 
     useEffect(() => {
-        if (artistCollection.current == null) {
-            refreshCollection()
-        }
-    }, [artistCollection.current]);
-
-    useEffect(() => {
         if (!shouldPage) { return; }
         if (loading) { return; }
 
         setShouldPage(false);
 
-        if (artistCollection.current.hasNextPage()) {
+        if (songCollection.current.hasNextPage()) {
             setLoading(true);
 
-            artistCollection.current.fetchNextPage()
+            songCollection.current.fetchNextPage()
                 .then(() => {
                     setLoading(false);
                 });
         }
-    }, [shouldPage]);
+    }, [shouldPage, loading]);
 
     useEffect(() => {
         if (loading) { return; }
 
-        if (artistCollection.current && artistCollection.current.hasNextPage()) {
+        if (songCollection.current && songCollection.current.hasNextPage()) {
             const myElement = topRef.current.querySelector('li:last-child');
 
             if (myElement) {
                 observer.current.observe(myElement);
             }
         }
-    }, [loading]);
+    }, [loading, observer, topRef]);
 
     function refreshCollection() {
         setLoading(true);
 
-        artistCollection.current = new ArtistCollection();
-        artistCollection.current.ready()
+        songCollection.current = new SongCollection();
+        songCollection.current.ready()
             .then(() => {
                 setLoading(false);
             });
     }
 
-    async function submitNewArtist(artistDef) {
-        await artistCollection.current.save(artistDef);
+    async function submitNewSong(songDef) {
+        await songCollection.current.save(songDef);
         refreshCollection();
     }
 
@@ -93,18 +92,18 @@ function ArtistList(props) {
                 <button className="btn" onClick={() => setShowAdd(true)}>New</button>
                 <button className="btn" onClick={refreshCollection}>Refresh</button>
                 <FormModal
-                    title="Add Artist"
+                    title="Add Song"
                     onClose={() => setShowAdd(false)}
-                    onSubmit={submitNewArtist}
+                    onSubmit={submitNewSong}
                     open={showAdd}>
-                    <Artist />
+                    <Song />
                 </FormModal>
             </div>
-            <div className="artist-list-container" ref={topRef}>
-                <ul className="artist-list card-list">
-                    {artistCollection?.current == null ? '' : artistCollection.current.map(artist => {
-                        const key = `artist-list-${artist.get('id')}`;
-                        return <ArtistListItem className key={key} artist={artist} />
+            <div className="song-list-container" ref={topRef}>
+                <ul className="song-list card-list">
+                    {songCollection?.current == null ? '' : songCollection.current.map(song => {
+                        const key = `song-list-${song.get('id')}`;
+                        return <SongListItem className key={key} song={song} />
                     })}
                 </ul>
             </div>
@@ -112,4 +111,4 @@ function ArtistList(props) {
     );
 }
 
-export default ArtistList;
+export default SongList;

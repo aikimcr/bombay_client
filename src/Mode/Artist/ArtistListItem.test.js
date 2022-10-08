@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 
-import * as Network from '../Network/Network';
-// jest.mock('../Network/Network'); // This doesn't actually  work here.
+import * as Network from '../../Network/Network';
+// jest.mock('../../Network/Network'); // This doesn't actually  work here.
 
 import ArtistListItem from './ArtistListItem';
 

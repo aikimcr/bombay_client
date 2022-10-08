@@ -7,7 +7,7 @@ function LabeledInput(props) {
     const topRef = useRef(null);
 
     const modelId = props.model ? props.model.get('id') : `isNew-${Date.now()}`;
-    const inputId = `${props.modelName}-${modelId}`;
+    const inputId = `${props.modelName}-${props.fieldName}-${modelId}`;
     const defaultValue = props.model ? props.model.get(props.fieldName) : '';
     const type = props.type ? props.type : 'text';
     const isPassword = type === 'password';
