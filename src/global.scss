@@ -1,5 +1,5 @@
 $header-background-color: rgba(94, 72, 69, 1);
-$header_color: rgba(250, 250, 250, 1);
+$header-color: rgba(250, 250, 250, 1);
 $header-bar-parts-background-color: rgba(125, 93, 91, 1);
 
 $messaging-background-color: rgba(125, 93, 91, 1);
@@ -10,7 +10,6 @@ $navigation-color: black;
 
 $sidebar-background-color: $navigation-background-color;
 $sidebar-color: $navigation-color;
-
 
 $standard-font-size: 20px;
 $button-font-size: $standard-font-size + 10px;
@@ -90,8 +89,9 @@ input
     align-content: flex-start;
 }
 
+$card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
 .card {
-    background: linear-gradient(rgb(250, 250, 250), rgb(200, 200, 200));
+    background: $card-background;
     box-shadow: 5px 5px 10px 1px rgb(0, 0, 0);
     font-size: $standard-font-size;
     line-height: $standard-font-size;
@@ -100,8 +100,44 @@ input
     white-space: nowrap;
     text-overflow: ellipsis;
     border-radius: .5em;
-    padding: 0 1em;
+    padding: 0;
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: 16em;
+
+    .header {
+        border-bottom: thin black solid;
+        background-color: $header-background-color;
+        color: $header-color;
+    }
+    .name {
+        padding: 0 1em;
+        border: thin black solid;
+        background-color: $sidebar-background-color;
+        color: $sidebar-color;
+    }
+
+    .details {
+        margin: 1em 0;
+        padding: 0 1em;
+
+        display: grid;
+        grid-template-columns: minmax(5em, 20em) auto;
+        width: min-content;
+
+        .label, .text, .longText {
+            margin: .5em .5em 0 0;
+        }
+
+        .label {
+            background-color: rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .text, .longText {
+            &:empty {
+                background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(0, 0, 0, .1));
+            }
+        }
+    }
 }

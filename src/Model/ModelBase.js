@@ -17,33 +17,51 @@ class ModelBase {
     #idUrl;
     #readyPromise = Promise.resolve({});
     #data = {};
+    #refModels = {};
 
     constructor(url, data, options) {
         if (data) {
-            this.#data = {...data};
-            if (this.#data.url) {
-                this.#idUrl = this.#data.url;
-            }
-
+            this.createRefmodels(data);
             this.#readyPromise = Promise.resolve(this.#data);
         } else if (url) {
             this.#idUrl = url;
             this.#readyPromise = getFromURLString(this.#idUrl)
-                .then((fetchedData) => {
-                    this.#data = fetchedData;
-                    return Promise.resolve(fetchedData);
-                });
+            .then((fetchedData) => {
+                this.createRefmodels(fetchedData);
+                return Promise.resolve(fetchedData);
+            });
         } else {
             this.#data = {};
         }
     }
-
+    
     idUrl() {
         return this.#idUrl;
     }
-
+    
     ready() {
         return this.#readyPromise;
+    }
+    
+    createRefmodels(data) {
+        this.#data = {...data};
+        if (this.#data.url) {
+            this.#idUrl = this.#data.url;
+        }
+    }
+
+    addRef(modelName, refModel) {
+        this.#refModels[refModel.url] = refModel;
+
+        this[modelName] = function(url) {
+            return this.#refModels[url];
+        }.bind(this, refModel.url);
+
+        return refModel.url;
+    }
+
+    getRef(url) {
+        return this.#refModels[url];
     }
 
     get(fieldName) {

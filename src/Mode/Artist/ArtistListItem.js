@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './ArtistList.scss';
 
 import Artist from './Artist';
-import { FormModal } from '../Modal/FormModal';
+import { FormModal } from '../../Modal/FormModal';
 
 function ArtistListItem(props) {
     const [showEdit, setShowEdit] = useState(false);
@@ -16,7 +16,11 @@ function ArtistListItem(props) {
 
     return (
         <React.Fragment>
-            <li className="card" onClick={() => setShowEdit(true)}>{displayName}</li>
+            <li className="card" onClick={() => setShowEdit(true)}>
+                <div className="header">Artist</div>
+                <div className="name">{displayName}</div>
+                <div className="details"></div>
+            </li>
             <FormModal 
                 title="Edit Artist"
                 onClose={() => setShowEdit(false)}
