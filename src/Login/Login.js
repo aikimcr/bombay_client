@@ -1,5 +1,4 @@
-import { useEffect, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import './Login.scss';
@@ -12,8 +11,6 @@ import LabeledInput from '../Widgets/LabeledInput';
 import Button from '../Widgets/Button';
 
 function Login(props) {
-    const navigate = useNavigate();
-
     let timerHandle = null;
 
     const [error, setError] = useState(null);
@@ -39,8 +36,6 @@ function Login(props) {
 
     function handleChange(event) {
         timerHandle = setTimeout(() => {
-            const loginButton = document.querySelector('.btn.login');
-
             clearTimer();
 
             const { username, password } = getCredentials();
@@ -54,8 +49,6 @@ function Login(props) {
     }
 
     function clearAllFields(event) {
-        const loginButton = document.querySelector('.btn.login');
-
         clearTimer();
 
         document.querySelector('[data-fieldname="username"] input').value = '';
@@ -69,7 +62,7 @@ function Login(props) {
 
         clearTimer();
 
-        const token = await login(username, password)
+        await login(username, password)
             .catch(err => {
                 if (err.status === 401) {
                     setError('Username or password is incorrect.');

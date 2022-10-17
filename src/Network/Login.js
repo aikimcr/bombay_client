@@ -2,7 +2,7 @@
 // correctly.
 
 import jwt_decode from 'jwt-decode';
-import { getFromURLString, prepareURLFromArgs, postToPath, postToURLString } from './Network';
+import { prepareURLFromArgs, postToURLString } from './Network';
 
 function setToken(token) {
   localStorage.setItem('jwttoken', token);

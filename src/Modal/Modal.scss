@@ -39,8 +39,8 @@ $close-button-size: $standard-font-size - 5px;
 
         .close {
             position: absolute;
-            top: $close-button-size / 2;
-            right: $close-button-size / 2;
+            top: calc($close-button-size / 2);
+            right: calc($close-button-size / 2);
             height: $close-button-size;
             width: $close-button-size;
             padding: 0;
