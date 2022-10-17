@@ -59,7 +59,7 @@ globalThis.toggleLogin = function () {
 }
 
 globalThis.changeInput = async function(root, selector, newValue, timerAdvance = -1) {
-    const inputField = root.querySelector(`input${selector}`);
+    const inputField = selector ? root.querySelector(selector) : root;
     fireEvent.change(inputField, {target: {value: newValue}});
 
     if (timerAdvance >= 0) {
@@ -69,25 +69,6 @@ globalThis.changeInput = async function(root, selector, newValue, timerAdvance =
     }
 
     return inputField;
-}
-
-globalThis.verifyClassList = function (element, includeClassList=[], excludeClassList=[]) {
-    includeClassList.forEach(classname => {
-        expect(element.classList).toContain(classname);
-    });
-
-    excludeClassList.forEach(classname => {
-        expect(element.classList).not.toContain(classname);
-    });
-}
-
-globalThis.nextTick = function() {
-    return new Promise((resolve, reject) => {
-        const timeoutHandle = setTimeout(() => {
-            resolve();
-            clearTimeout(timeoutHandle);
-        }, 0);
-    });
 }
 
 const allNames = {};
@@ -111,38 +92,6 @@ casual.define('nextId', function(sequenceName) {
     idSequences[sequenceName] = nextOne;
     return nextOne;
 });
-
-globalThis.makeAnArtist = function(id) {
-    id = id ?? casual.nextId('artist');
-    const name = casual.uniqueName('artist');
-    const url = buildURL({path: `/artist/${id}`});
-
-    return { id, name, url };
-}
-
-globalThis.makeArtistList = function(length = 10, query={}) {
-    const result = {
-        data: [],
-    };
-
-    while (result.data.length < length) {
-        result.data.push(makeAnArtist());
-    }
-
-    let offset = (query.offset || 0) - length;
-    let limit = query.limit || length;
-
-    if (offset >= 0) {
-        result.prevPage = prepareURLFromArgs('/artist', { offset, limit }).toString();
-    }
-
-    if (limit <= length) {
-        offset = (query.offset || 0) + length;
-        result.nextPage = prepareURLFromArgs('/artist', { offset, limit}).toString();
-    }
-
-    return result;
-}
 
 globalThis.makeAModel = function(tableName = 'table1') {
     const def = {};

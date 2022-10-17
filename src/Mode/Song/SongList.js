@@ -89,6 +89,7 @@ function SongList(props) {
         <div className="list-component">
             <div className="list-controls">
                 <button className="btn" onClick={() => setShowAdd(true)}>New</button>
+                <div className="title">Songs</div>
                 <button className="btn" onClick={refreshCollection}>Refresh</button>
                 <FormModal
                     title="Add Song"
@@ -98,7 +99,7 @@ function SongList(props) {
                     <Song />
                 </FormModal>
             </div>
-            <div className="song-list-container" ref={topRef}>
+            <div className="song-list-container list-container" ref={topRef}>
                 <ul className="song-list card-list">
                     {songCollection?.current == null ? '' : songCollection.current.map(song => {
                         const key = `song-list-${song.get('id')}`;

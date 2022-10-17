@@ -1,24 +1,12 @@
+import * as NetworkLogin from '../Network/Login';
+jest.mock('../Network/Login');
+
 import { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
-// Make it easier to track calls and arguments.
-// https://stackoverflow.com/questions/73683195/jest-fn-not-registering-mock-implementation
-const mockLogout = jest.fn();
-
-jest.mock('../Network/Login', () => {
-    const originalModule = jest.requireActual('../Network/Login');
-
-    return {
-        __esModule: true,
-        ...originalModule,
-        logout: async () => {
-            mockLogout.apply(this, arguments);
-            return '';
-        },
-    }
-});
+const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
 import BombayUtilityContext from '../Context/BombayUtilityContext';
@@ -28,23 +16,15 @@ import LoginStatus from './LoginStatus';
 let mockLoggedIn = false;
 
 function FakeContent(props) {
-    const [loginState, setLoginState] = useState(false);
-
-    function toggleLogin() {
-        setLoginState(oldState => !oldState);
-    }
-
-    const checkLoginState = async () => {
-        setLoginState(mockLoggedIn);
-    }
+    const [loginState, setLoginState] = useState(mockLoggedIn);
 
     const setMode = async newMode => {
         setModeState(newMode);
     }
 
     const utilities = {
-        checkLoginState,
         setMode,
+        setLoginState,
     }
 
     return (
@@ -52,69 +32,63 @@ function FakeContent(props) {
             <BombayLoginContext.Provider value={loginState}>
                 <BombayUtilityContext.Provider value={utilities}>
                     {props.children}
-                    <button className="toggleLogin" onClick={toggleLogin}>Toggle</button>
                 </BombayUtilityContext.Provider>
             </BombayLoginContext.Provider>
         </BrowserRouter>
     );
 }
 
-it('should render the login status', async () => {
-    const result = render(
+beforeEach(() => {
+    localStorage.removeItem('jwttoken');
+    mockLoggedIn = false;
+})
+
+afterEach(() => {
+    localStorage.removeItem('jwttoken');
+    mockLoggedIn = false;
+})
+
+it('should render the login status (logged out)', async () => {
+    const { asFragment } = render(
         <FakeContent>
             <LoginStatus />
         </FakeContent>
     )
 
-    const index = result.container;
-    const status = index.firstChild;
-    expect(status.childElementCount).toBe(1);
-    expect(status.firstChild.className).toBe('label');
-    expect(status.firstChild.textContent).toBe('Please Login');
+    expect(asFragment).toMatchSnapshot();
+    const statusDiv = screen.getByText('Please Login');
+    expect(statusDiv).toBeVisible();
 });
 
-it('should show the logout button after logging in', async () => {
-    const result = render(
+it('should show the logout button when logged in', async () => {
+    mockLoggedIn = true;
+    const { asFragment } = render(
         <FakeContent>
             <LoginStatus />
         </FakeContent>
     )
-
-    const index = result.container;
-    const status = index.firstChild;
-    const toggler = index.lastChild;
-
-    await act(async () => {
-        toggler.click();
-    })
-
-    expect(status.childElementCount).toBe(1);
-    verifyClassList(status.firstChild, ['logout', 'btn']);
-    expect(status.firstChild.textContent).toBe('Logout');
+    expect(asFragment).toMatchSnapshot();
+    const logoutButton = screen.getByText('Logout');
+    expect(logoutButton).toBeVisible();
 });
 
-it('should go back to the logout when the logout button is pressed', async () => {
+it('should logout when the logout button is pressed', async () => {
+    const { resolve } = NetworkLogin._setupMocks();
+
+    mockLoggedIn = true;
     const result = render(
         <FakeContent>
             <LoginStatus />
         </FakeContent>
     )
 
-    const index = result.container;
-    const status = index.firstChild;
-    const toggler = index.lastChild;
-
-    await act(async () => {
-        toggler.click();
-    })
-
-    const logoutButton = index.querySelector('.logout');
+    const logoutButton = screen.getByText('Logout');
 
     await act(async () => {
         logoutButton.click();
     });
 
-    expect(status.childElementCount).toBe(1);
-    expect(status.firstChild.className).toBe('label');
-    expect(status.firstChild.textContent).toBe('Please Login');
+    resolve({});
+
+    expect(NetworkLogin.logout).toBeCalledTimes(1);
 });

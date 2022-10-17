@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render the login mode 1`] = `[Function]`;
+
+exports[`should render the login mode 2`] = `
+<div
+  id="modal-root"
+>
+  <div
+    class="login-container"
+  >
+    <div
+      class="login-form"
+    >
+      <h1
+        class="login-header"
+      >
+        Please Log In
+      </h1>
+      <div
+        class="info"
+      >
+        <div
+          class="labeled-input"
+          data-fieldname="username"
+          data-modelname="login"
+        >
+          <label
+            for="login-username-isNew"
+          >
+            User Name
+          </label>
+          <input
+            id="login-username-isNew"
+            name="name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="labeled-input"
+          data-fieldname="password"
+          data-modelname="login"
+        >
+          <label
+            for="login-password-isNew"
+          >
+            Password
+          </label>
+          <input
+            id="login-password-isNew"
+            name="name"
+            type="password"
+            value=""
+          />
+          <input
+            class="toggle"
+            data-hidden="true"
+            type="button"
+            value="Show"
+          />
+        </div>
+      </div>
+      <div
+        class="controls"
+      >
+        <button
+          class="clear btn"
+        >
+          Clear All Field
+        </button>
+        <button
+          class="login btn"
+          disabled=""
+        >
+           
+          Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

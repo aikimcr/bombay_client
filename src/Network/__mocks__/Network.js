@@ -31,16 +31,9 @@ export function prepareURLFromArgs(path, query) {
     return requestUrl;
 }
 
-export function getFromPath(path, query) {
-    throw new Error('getFromPath has not been mocked properly');
-}
 
 export function getFromURLString(url, query) {
     throw new Error('getFromURLString has not been mocked properly');
-}
-
-export function postToPath(path, body, query) {
-    throw new Error('postToPath has not been mocked properly');
 }
 
 export async function postToURLString(urlString, body) {
@@ -67,9 +60,7 @@ export function _setupMockPromise() {
 
 export function _setupMocks() {
     _setupMockPromise();
-    this.getFromPath = jest.fn((path, query) => mockPromise);
     this.getFromURLString = jest.fn((urlString, query) => mockPromise);
-    this.postToPath = jest.fn((path, body, query) => mockPromise);
     this.postToURLString = jest.fn((urlString, body) => mockPromise);
     this.putToURLString = jest.fn((urlString, body) => mockPromise);
 

@@ -10,6 +10,19 @@ export const serverHost = setConfigOption('serverHost', 'localhost');
 export const basePath = setConfigOption('basePath', '');
 export const serverPort = setConfigOption('serverPort', null);
 
+function getStandardHeaders(includeContentType = true) {
+  const result = {};
+  if (includeContentType) result['content-type'] = 'application/json';
+
+  const token = localStorage.getItem('jwttoken')
+
+  if (token) {
+    result.Authorization = `Bearer ${token}`;
+  }
+
+  return result;
+}
+
 export function normalizeAndJoinPath(...pathParts) {
   const newPath = pathParts.reduce((memo, part) => {
     if (part === undefined) {
@@ -72,42 +85,31 @@ export function prepareURLFromArgs(path, query) {
   return requestUrl;
 }
 
-export function getFromPath(path, query = {}) {
-  const requestUrl = prepareURLFromArgs(path, query);
-  return getFromURLString(requestUrl.toString());
+async function decodeResponse(response) {
+  if (response.ok) {
+    const text = await response.text();
+    let result = text;
+
+    try {
+      result = JSON.parse(text);
+    } catch(err) {
+      result = text;
+    }
+
+    return result;
+  }
+
+  return Promise.reject({ status: response.status, message: response.statusText });
 }
 
 export async function getFromURLString(urlString) {
   const response = await fetch(urlString, {
     mode: 'cors',
     credentials: 'include',
+    headers: getStandardHeaders(false),
   });
 
-  if (response.ok) {
-    return response.json();
-  }
-
-  return Promise.reject({status: response.status, message: response.statusText});
-}
-
-export function postToPath(path, body = {}, query = {}) {
-  // TODO: Make this use fetch as well.
-  const requestUrl = prepareURLFromArgs(path, query);
-
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', requestUrl);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader('content-type', 'application/json');
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        resolve(xhr.response);
-      } else {
-        reject({status: xhr.status, message: xhr.responseText});
-      }
-    };
-    xhr.send(JSON.stringify(body));
-  });
+  return decodeResponse(response);
 }
 
 function buildJSON(body) {
@@ -121,36 +123,24 @@ export async function postToURLString(urlString, body) {
   const sendJSON = buildJSON(body);
   const response = await fetch(urlString, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers: getStandardHeaders(),
     body: sendJSON,
     mode: 'cors',
     credentials: 'include',
   });
 
-  if (response.ok) {
-    return response.json();
-  }
-
-  return Promise.reject({ status: response.status, message: response.statusText });
+  return decodeResponse(response);
 }
 
 export async function putToURLString(urlString, body) {
   const sendJSON = buildJSON(body);
   const response = await fetch(urlString, {
     method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers: getStandardHeaders(),
     body: sendJSON,
     mode: 'cors',
     credentials: 'include',
   });
 
-  if (response.ok) {
-    return response.json();
-  }
-
-  return Promise.reject({ status: response.status, message: response.statusText });
+  return decodeResponse(response);
 }

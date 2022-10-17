@@ -89,6 +89,7 @@ function ArtistList(props) {
         <div className="list-component">
             <div className="list-controls">
                 <button className="btn" onClick={() => setShowAdd(true)}>New</button>
+                <div className="title">Artists</div>
                 <button className="btn" onClick={refreshCollection}>Refresh</button>
                 <FormModal
                     title="Add Artist"
@@ -98,7 +99,7 @@ function ArtistList(props) {
                     <Artist />
                 </FormModal>
             </div>
-            <div className="artist-list-container" ref={topRef}>
+            <div className="artist-list-container list-container" ref={topRef}>
                 <ul className="artist-list card-list">
                     {artistCollection?.current == null ? '' : artistCollection.current.map(artist => {
                         const key = `artist-list-${artist.get('id')}`;

@@ -1,4 +1,5 @@
 import { getFromURLString, postToURLString, prepareURLFromArgs } from '../Network/Network';
+import { loginStatus } from '../Network/Login';
 
 import ModelBase from './ModelBase';
 
@@ -94,7 +95,7 @@ class CollectionBase {
             this.#models = [];
         }
 
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             const currentIds = this.#models.map(model => model.get('id'));
             const newModels = data
                 .filter(def => !currentIds.includes(def.id))
@@ -109,6 +110,15 @@ class CollectionBase {
     }
 
     async #fetch(url, options) {
+        const loggedIn = await loginStatus();
+
+        if (!loggedIn) {
+            this.#models = [];
+            this.#prevPage = null;
+            this.#nextPage = null;
+            return this.#models;
+        }
+
         const body = await getFromURLString(url)
             .catch((err) => {
                 if (err.status !== 404) {

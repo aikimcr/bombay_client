@@ -49,7 +49,7 @@ test('changes the login status when the context changes', () => {
     headerTitleNode = screen.getByText('The Title');
     loginStatusNode = headerTitleNode.nextSibling;
 
-    expect(loginStatusNode.firstChild.tagName).toBe('DIV');
+    expect(loginStatusNode.firstChild.tagName).toBe('BUTTON');
     expect(loginStatusNode.firstChild.className).toBe('logout btn');
     expect(loginStatusNode.firstChild.nextSibling).toBe(null);
 })

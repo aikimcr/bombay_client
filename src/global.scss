@@ -44,6 +44,7 @@ input[type="button"],
         border-color: black;
     }    
 
+    &:disabled,
     &.disabled {
         background-color: rgb(128, 128, 128);
         pointer-events: none;
@@ -76,6 +77,37 @@ input
     overflow-y: scroll;
 }
 
+.list-component {
+    height: 100%;
+    width: 100%;
+
+    display: grid;
+    grid-template-rows: $button-font-size + 10px auto;
+    grid-template-areas:
+        "header"
+        "content"
+}
+
+.list-controls {
+    grid-area: header;
+    height: $button-font-size + 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+
+    .title {
+        font-size: $standard-font-size * 2;
+        font-weight: bold;
+    }
+}
+
+.list-container {
+    grid-area: content;
+    @include scrollListContainer;
+}
+
 .card-list {
     background: linear-gradient(160deg, rgb(64, 64, 60), rgb(64, 60, 64), rgb(60, 64, 64));
     list-style: none;
@@ -87,6 +119,14 @@ input
     gap: 5px;
     justify-content: flex-start;
     align-content: flex-start;
+
+    &:empty:after {
+        position: relative;
+        top: 5em;
+        left: calc(50% - 6ch);
+        font-size: $standard-font-size * 2;
+        content: 'No items found';
+    }
 }
 
 $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
