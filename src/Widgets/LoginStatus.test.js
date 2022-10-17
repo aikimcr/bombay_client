@@ -86,9 +86,8 @@ it('should logout when the logout button is pressed', async () => {
 
     await act(async () => {
         logoutButton.click();
+        resolve({});
     });
-
-    resolve({});
 
     expect(NetworkLogin.logout).toBeCalledTimes(1);
 });
