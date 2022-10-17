@@ -3,15 +3,18 @@ import { useContext } from 'react';
 import './LoginStatus.scss';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
+import BombayUtilityContext from '../Context/BombayUtilityContext';
 
 import { logout } from "../Network/Login";
 import Button from './Button';
 
 function LoginStatus(props) {
     const loggedIn = useContext(BombayLoginContext);
+    const { setLoginState } = useContext(BombayUtilityContext);
 
     async function doLogout() {
         await logout();
+        setLoginState(false);
     }
 
     return (
