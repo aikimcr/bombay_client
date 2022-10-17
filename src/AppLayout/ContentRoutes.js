@@ -21,20 +21,16 @@ function Content(props) {
         if (location.pathname !== `/${mode}`) navigate(`${mode}`);
     }, [mode, navigate, location.pathname]);
 
-    console.count(loggedIn);
-    if (loggedIn) {
-        return (
+    return (
+        <>
             <Routes>
                 <Route path="/" element={<Top />} />
                 <Route path="/artistList" element={<ArtistList />} />
                 <Route path="/songList" element={<SongList />} />
             </Routes>
-        );
-    } else {
-        return (
-        <Login />
-        );
-    }
+            <Login />
+        </>
+    );
 }
 
 export default Content;

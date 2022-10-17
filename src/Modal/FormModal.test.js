@@ -138,7 +138,7 @@ it('should call onSumbit when submit is clicked', async () => {
 
     const submitButton = modalRoot.querySelector('[type="submit"]');
 
-    const testInput = await changeInput(modalRoot.querySelector('.testDiv'), '', 'Hello?', 250);
+    const testInput = await changeInput(modalRoot.querySelector('.testDiv'), 'input', 'Hello?', 250);
     act(() => {
         submitButton.click();
     });

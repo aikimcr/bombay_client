@@ -49,10 +49,14 @@ function FakeContent(props) {
 
 jest.useFakeTimers();
 
+const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
+
 beforeEach(() => {
     const modalRoot = document.createElement('div');
     modalRoot.id = 'modal-root';
     document.body.append(modalRoot);
+
+    localStorage.setItem('jwttoken', testToken);
 })
 
 afterEach(() => {
@@ -62,6 +66,8 @@ afterEach(() => {
     while(mockObserver.mockObserver.observers.length > 0) {
         mockObserver.mockObserver.observers.pop();
     }
+
+    localStorage.removeItem('jwttoken');
 });
 
 function getAreas(result) {
@@ -76,12 +82,13 @@ function getAreas(result) {
 
     const controls = listComponent.firstChild;
     expect(controls.className).toEqual('list-controls');
-    expect(controls.childElementCount).toEqual(2);
+    expect(controls.childElementCount).toEqual(3);
 
     const listContainer = listComponent.lastChild;
-    expect(listContainer.className).toEqual('artist-list-container');
+    expect(listContainer).toHaveClass('artist-list-container');
+    expect(listContainer).toHaveClass('list-container');
     expect(listContainer.childElementCount).toEqual(1);
-    expect(observer.options.root.lastChild.className).toEqual('artist-list-container');
+    expect(observer.options.root.lastChild).toHaveClass('artist-list-container');
 
     const listElement = listContainer.firstChild;
 
@@ -194,7 +201,7 @@ it('should add an artist', async () => {
     const submitButton = modalRoot.querySelector('[type="submit"]');
 
     const [saveDef] = makeAModel('artist');
-    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), '', 'Herkimer', 250);
+    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), 'input', 'Herkimer', 250);
 
     await act(async () => {
         submitButton.click();

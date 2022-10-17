@@ -21,7 +21,7 @@ function App() {
 
   const checkLoginState = useCallback(async () => {
     const result = await loginStatus();
-    setLoginState(result.loggedIn);
+    setLoginState(result);
   }, []);
 
   const setMode = useCallback((newMode) => {
@@ -29,10 +29,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    checkLoginState();
+
     // ToDo: Make the interval configurable, don't check if logged out.
     const intervalHandle = setInterval(async () => {
       checkLoginState();
-    }, 10 * 60 * 1000); // Ten minutes.
+    }, 15000/*10 * 60 * 1000*/); // Ten minutes.
 
     return () => {
       clearInterval(intervalHandle);
@@ -40,8 +42,8 @@ function App() {
   });
 
   const utilities = {
-    checkLoginState,
     setMode,
+    setLoginState,
   }
 
   return (

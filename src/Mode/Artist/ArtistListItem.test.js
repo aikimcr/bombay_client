@@ -86,7 +86,7 @@ it('should save changes to the model', async () => {
 
     const submitButton = modalRoot.querySelector('[type="submit"]');
 
-    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), '', 'Herkimer', 250);
+    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), 'input', 'Herkimer', 250);
 
     act(() => {
         submitButton.click();

@@ -1,14 +1,15 @@
 import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 
 import './Login.scss';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
-import BombayModeContext from '../Context/BombayModeContext';
 import BombayUtilityContext from '../Context/BombayUtilityContext';
 
-import { login } from "../Network/Login";
+import { loginStatus, login } from "../Network/Login";
 import LabeledInput from '../Widgets/LabeledInput';
+import Button from '../Widgets/Button';
 
 function Login(props) {
     const navigate = useNavigate();
@@ -16,16 +17,10 @@ function Login(props) {
     let timerHandle = null;
 
     const [error, setError] = useState(null);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
 
     const loggedIn = useContext(BombayLoginContext);
-    const mode = useContext(BombayModeContext);
-    const { checkLoginState } = useContext(BombayUtilityContext);
-
-    useEffect(() => {
-        if (loggedIn) {
-            navigate(`/${mode}`);
-        }
-    }, [loggedIn, mode, navigate]);
+    const { setLoginState } = useContext(BombayUtilityContext);
 
     function getCredentials() {
         // TODO: THere has to be a better way to do what these two lines are doing.
@@ -51,9 +46,9 @@ function Login(props) {
             const { username, password } = getCredentials();
 
             if (username.length > 0 && password.length > 0) {
-                loginButton.classList.remove('disabled');
+                setSubmitDisabled(false);
             } else {
-                loginButton.classList.add('disabled');
+                setSubmitDisabled(true);
             }
         }, 250);
     }
@@ -65,7 +60,7 @@ function Login(props) {
 
         document.querySelector('[data-fieldname="username"] input').value = '';
         document.querySelector('[data-fieldname="password"] input').value = '';
-        loginButton.classList.add('disabled');
+        setSubmitDisabled(true);
         setError(null);
     }
 
@@ -74,7 +69,7 @@ function Login(props) {
 
         clearTimer();
 
-        await login(username, password)
+        const token = await login(username, password)
             .catch(err => {
                 if (err.status === 401) {
                     setError('Username or password is incorrect.');
@@ -83,40 +78,42 @@ function Login(props) {
                 }
             });
 
-        checkLoginState();
+        const loginOkay = await loginStatus();
+        setLoginState(loginOkay);
     }
 
-    if (loggedIn) {
-        return '';
-    } else {
-        return (
-            <div className="login-container">
-                <div className="login-form">
-                    <h1 className="login-header">Please Log In</h1>
-                    <div className="info">
-                        <LabeledInput
-                            modelName='login'
-                            fieldName='username'
-                            labelText='User Name'
-                            onChange={handleChange}
-                        />
-                        <LabeledInput
-                            modelName='login'
-                            fieldName='password'
-                            labelText='Password'
-                            type='password'
-                            onChange={handleChange}
-                        />
-                    </div>
-                    {error && <div className="error">{error}</div>}
-                    <div className="controls">
-                        <div className="clear btn" onClick={clearAllFields}>Clear All Fields</div>
-                        <div className="login btn disabled" onClick={doLogin}>Login</div>
-                    </div>
+    if (loggedIn) return null;
+
+    const modalRoot = document.getElementById('modal-root');
+
+    return createPortal(
+        <div className="login-container">
+            <div className="login-form">
+                <h1 className="login-header">Please Log In</h1>
+                <div className="info">
+                    <LabeledInput
+                        modelName='login'
+                        fieldName='username'
+                        labelText='User Name'
+                        onChange={handleChange}
+                    />
+                    <LabeledInput
+                        modelName='login'
+                        fieldName='password'
+                        labelText='Password'
+                        type='password'
+                        onChange={handleChange}
+                    />
+                </div>
+                {error && <div className="error">{error}</div>}
+                <div className="controls">
+                    <Button className="clear" disabled={false} onClick={clearAllFields} label='Clear All Field' />
+                    <Button className="login" disabled={submitDisabled} onClick={doLogin} label='Login' />
                 </div>
             </div>
-        );
-    }
+        </div>,
+        modalRoot
+    );
 }
 
 export default Login;

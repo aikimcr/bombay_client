@@ -1,22 +1,12 @@
+import * as NetworkLogin from './Network/Login';
+jest.mock('./Network/Login');
+
 import { useContext } from 'react';
 import { act, render } from '@testing-library/react';
-import { loginStatus } from './Network/Login';
 
 import BombayLoginContext from './Context/BombayLoginContext';
 
 let mockLoggedIn = false;
-
-jest.mock('./Network/Login', () => {
-  const originalModule = jest.requireActual('./Network/Login');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginStatus: async () => {
-      return { loggedIn: mockLoggedIn };
-    }
-  }
-});
 
 // Mock the top classes here, before importing the App.
 import HeaderBar from './AppLayout/HeaderBar';
@@ -86,7 +76,20 @@ import App from './App';
 
 jest.useFakeTimers();
 
+const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
+
+beforeEach(() => {
+  localStorage.setItem('jwttoken', testToken);
+})
+
+afterEach(() => {
+  localStorage.removeItem('jwttoken');
+});
+
 test('Renders App Framework', async () => {
+  const { resolve } = NetworkLogin._setupMocks();
+  resolve(true);
+  
   const result = render(<App />);
 
   const index = result.container;

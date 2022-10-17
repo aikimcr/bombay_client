@@ -16,6 +16,16 @@ jest.mock('../Network/Network');
 import ModelBase from './ModelBase';
 import CollectionBase from './CollectionBase';
 
+const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
+
+beforeEach(() => {
+    localStorage.setItem('jwttoken', testToken);
+});
+
+afterEach(() => {
+    localStorage.removeItem('jwttoken');
+});
+
 it('should fetch the first page', async () => {
     const { resolve } = Network._setupMocks();
     
