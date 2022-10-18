@@ -1,5 +1,30 @@
 // Manage XHR request calls.  This is the low-level stuff.
-import serverConfig from './serverConfig';
+// import serverConfig from './serverConfig';
+const serverConfig = {};
+
+const serverConfigKeys = {
+  serverProtocol: 'REACT_APP_SERVER_PROTOCOL',
+  serverHost: 'REACT_APP_SERVER_HOST',
+  serverBasePath: 'REACT_APP_SERVER_BASE_PATH',
+  serverPort: 'REACT_APP_SERVER_PORT',
+}
+
+for (const key in serverConfigKeys) {
+  if (process.env.hasOwnProperty(serverConfigKeys[key])) {
+    const value = process.env[serverConfigKeys[key]];
+
+    switch(value) {
+      case 'null':
+      case 'none':
+      case 'empty':
+        serverConfig[key] = null;
+        break;
+
+      default:
+        serverConfig[key] = value;
+    }
+  }
+}
 
 function setConfigOption(key, defaultConfig) {
   return serverConfig.hasOwnProperty(key) ? serverConfig[key] : defaultConfig;
@@ -7,8 +32,10 @@ function setConfigOption(key, defaultConfig) {
 
 export const serverProtocol = setConfigOption('serverProtocol', 'http');
 export const serverHost = setConfigOption('serverHost', 'localhost');
-export const basePath = setConfigOption('basePath', '');
-export const serverPort = setConfigOption('serverPort', null);
+export const serverBasePath = setConfigOption('serverBasePath', '');
+export const serverPort = setConfigOption('serverPort', 2001);
+
+console.log(`Server Base URL: ${prepareURLFromArgs('')}`);
 
 function getStandardHeaders(includeContentType = true) {
   const result = {};
@@ -76,7 +103,7 @@ export function buildURL(args = {}) {
 
 export function prepareURLFromArgs(path, query) {
   const requestUrl = new URL(buildURL());
-  requestUrl.pathname = normalizeAndJoinPath(basePath, path);
+  requestUrl.pathname = normalizeAndJoinPath(serverBasePath, path);
 
   for (const param in query) {
     requestUrl.searchParams.set(param, query[param]);

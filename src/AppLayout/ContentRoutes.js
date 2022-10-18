@@ -8,16 +8,19 @@ import ArtistList from "../Mode/Artist/ArtistList";
 import SongList from "../Mode/Song/SongList";
 
 import BombayModeContext from '../Context/BombayModeContext';
+import ConfigurationContext from '../Context/ConfiguratonContext';
 
 function Content(props) {
+    const { routerBase } = useContext(ConfigurationContext);
     const mode = useContext(BombayModeContext);
 
     const navigate = useNavigate();
     const location = useLocation();
+    console.log(`Current location: ${location.pathname}`);
 
     useEffect(() => {
-        if (location.pathname !== `/${mode}`) navigate(`${mode}`);
-    }, [mode, navigate, location.pathname]);
+        navigate(mode);
+    }, [mode, navigate]);
 
     return (
         <>
