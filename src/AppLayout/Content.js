@@ -8,7 +8,8 @@ import ContentRoutes from './ContentRoutes';
 function Content(props) {
     const { routerBase } = useContext(ConfigurationContext);
 
-    console.log(`Router Base path: ${routerBase}`);
+    // A diangnostic to turn on for deploy problems.
+    // console.log(`Router Base path: ${routerBase}`);
     
     return (
         <div className="content">

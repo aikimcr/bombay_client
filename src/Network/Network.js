@@ -35,7 +35,8 @@ export const serverHost = setConfigOption('serverHost', 'localhost');
 export const serverBasePath = setConfigOption('serverBasePath', '');
 export const serverPort = setConfigOption('serverPort', 2001);
 
-console.log(`Server Base URL: ${prepareURLFromArgs('')}`);
+// A diangnostic to turn on for deploy problems.
+// console.log(`Server Base URL: ${prepareURLFromArgs('')}`);
 
 function getStandardHeaders(includeContentType = true) {
   const result = {};
@@ -53,6 +54,7 @@ function getStandardHeaders(includeContentType = true) {
 export function normalizeAndJoinPath(...pathParts) {
   const newPath = pathParts.reduce((memo, part) => {
     if (part === undefined) {
+      debugger;
       throw new Error(`Unable to normalize path with parts: "${pathParts.join(', ')}"`);
     }
 
