@@ -7,11 +7,9 @@ import Top from '../Mode/Top';
 import ArtistList from "../Mode/Artist/ArtistList";
 import SongList from "../Mode/Song/SongList";
 
-import BombayLoginContext from '../Context/BombayLoginContext';
 import BombayModeContext from '../Context/BombayModeContext';
 
 function Content(props) {
-    const loggedIn = useContext(BombayLoginContext);
     const mode = useContext(BombayModeContext);
 
     const navigate = useNavigate();

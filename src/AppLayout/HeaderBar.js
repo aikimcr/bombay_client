@@ -1,5 +1,3 @@
-import { useState, useContext } from 'react';
-
 import './HeaderBar.scss';
 
 import LoginStatus from '../Widgets/LoginStatus';
