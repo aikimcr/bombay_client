@@ -16,7 +16,9 @@ function Content(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
-    console.log(`Current location: ${location.pathname}`);
+
+    // A diangnostic to turn on for deploy problems.
+    // console.log(`Current location: ${location.pathname}`);
 
     useEffect(() => {
         navigate(mode);

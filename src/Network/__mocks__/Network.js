@@ -2,7 +2,7 @@ const RealNetwork = jest.requireActual('../Network');
 
 export const serverProtocol = 'https';
 export const serverHost = 'fake';
-export const basePath = 'xyzzy';
+export const serverBasePath = 'xyzzy';
 export const serverPort = null;
 
 export const normalizeAndJoinPath = RealNetwork.normalizeAndJoinPath;
@@ -22,7 +22,7 @@ export function buildURL (args = {}) {
 // ToDo Find a way to do this without having to copy the entire real implementation.
 export function prepareURLFromArgs(path, query) {
     const requestUrl = new URL(buildURL());
-    requestUrl.pathname = normalizeAndJoinPath(basePath, path);
+    requestUrl.pathname = normalizeAndJoinPath(serverBasePath, path);
 
     for (const param in query) {
         requestUrl.searchParams.set(param, query[param]);

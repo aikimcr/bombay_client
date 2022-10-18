@@ -28,7 +28,7 @@ function FakeContent(props) {
     }
 
     return (
-        <BrowserRouter basePath="/">
+        <BrowserRouter basename="/">
             <BombayLoginContext.Provider value={loginState}>
                 <BombayUtilityContext.Provider value={utilities}>
                     {props.children}

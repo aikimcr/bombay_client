@@ -75,8 +75,8 @@ describe('utilities', function () {
         newUrl = Network.buildURL({ path: '/foobar' });
         expect(newUrl).toBe(`${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}/foobar`);
         
-        newUrl = Network.buildURL({ path: [Network.basePath, 'login'] });
-        expect(newUrl).toBe(`${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}${Network.basePath}/login`);
+        newUrl = Network.buildURL({ path: [Network.serverBasePath, 'login'] });
+        expect(newUrl).toBe(`${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}${Network.serverBasePath}/login`);
     });
 });
 
@@ -93,7 +93,7 @@ describe('include the auth header', function () {
         mockJSON = { id: 109, name: 'xyzzy', description: 'Plover' };
         mockFetch();
 
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table', '1'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table', '1'] });
         const data = await Network.getFromURLString(requestUrl.toString());
         expect(data).toEqual(mockJSON);
         expect(global.fetch).toBeCalledTimes(1);
@@ -124,7 +124,7 @@ describe('include the auth header', function () {
     });
 
     it('Should post the body to the URL', async () => {
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table'] });
         mockJSON = {
             id: 1,
             name: 'xyzzy',
@@ -156,7 +156,7 @@ describe('include the auth header', function () {
     });
 
     it('Should put the body to the URL', async () => {
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table', '1'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table', '1'] });
         mockJSON = {
             id: 1,
             name: 'xyzzy',
@@ -196,7 +196,7 @@ describe('do not include the auth header', function () {
 
         mockFetch();
 
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table', '1'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table', '1'] });
         const data = await Network.getFromURLString(requestUrl.toString());
         expect(data).toEqual(mockJSON);
         expect(global.fetch).toBeCalledTimes(1);
@@ -226,7 +226,7 @@ describe('do not include the auth header', function () {
     });
 
     it('Should post the body to the URL', async () => {
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table'] });
         mockJSON = {
             id: 1,
             name: 'xyzzy',
@@ -257,7 +257,7 @@ describe('do not include the auth header', function () {
     });
 
     it('Should put the body to the URL', async () => {
-        const requestUrl = Network.buildURL({ path: [Network.basePath, 'table', '1'] });
+        const requestUrl = Network.buildURL({ path: [Network.serverBasePath, 'table', '1'] });
         mockJSON = {
             id: 1,
             name: 'xyzzy',
