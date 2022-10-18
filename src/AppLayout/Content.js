@@ -12,7 +12,7 @@ function Content(props) {
     
     return (
         <div className="content">
-            <BrowserRouter baseName="/">
+            <BrowserRouter basename={routerBase}>
                 <ContentRoutes />
             </BrowserRouter>
         </div>
