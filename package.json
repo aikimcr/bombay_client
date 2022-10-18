@@ -18,8 +18,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts start .env .env.local",
+    "build": "react-scripts build .env .env.local",
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect-brk=127.0.0.1:3001 test --runInBand --no-cache",
     "eject": "react-scripts eject"

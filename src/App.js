@@ -5,6 +5,7 @@ import './App.scss';
 import BombayLoginContext from './Context/BombayLoginContext';
 import BombayModeContext from './Context/BombayModeContext';
 import BombayUtilityContext from './Context/BombayUtilityContext';
+import ConfigurationContext from './Context/ConfiguratonContext';
 
 import HeaderBar from './AppLayout/HeaderBar';
 import Navigation from './AppLayout/Navigation';
@@ -46,20 +47,28 @@ function App() {
     setLoginState,
   }
 
+  const routerBase = process.env.REACT_APP_ROUTER_BASE || '/';
+  
+  const appConfig = {
+    routerBase,
+  };
+
   return (
     <div className="App">
-      <BombayLoginContext.Provider value={loginState}>
-        <BombayModeContext.Provider value={modeState}>
-          <BombayUtilityContext.Provider value={utilities}>
-            <HeaderBar />
-            <Navigation />
-            <Filters />
-            <Content />
-            <Accessories />
-            <Footer />
-          </BombayUtilityContext.Provider>
-        </BombayModeContext.Provider>
-      </BombayLoginContext.Provider>
+      <ConfigurationContext.Provider value={appConfig}>
+        <BombayLoginContext.Provider value={loginState}>
+          <BombayModeContext.Provider value={modeState}>
+            <BombayUtilityContext.Provider value={utilities}>
+              <HeaderBar />
+              <Navigation />
+              <Filters />
+              <Content />
+              <Accessories />
+              <Footer />
+            </BombayUtilityContext.Provider>
+          </BombayModeContext.Provider>
+        </BombayLoginContext.Provider>
+      </ConfigurationContext.Provider>
     </div >
   );
 }
