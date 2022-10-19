@@ -53,8 +53,8 @@ it('should instantiate with a set of models', async () => {
     const fetchedModels = await collection.ready();
     expect(collection.length()).toBe(2);
     expect(collection.models()).toEqual([
-        new ModelBase({id: 1, name: 'Herkimer P Jones'}),
-        new ModelBase({id: 2, name: 'Agathea S Reese'}),
+        new ModelBase(null, {id: 1, name: 'Herkimer P Jones'}),
+        new ModelBase(null, {id: 2, name: 'Agathea S Reese'}),
     ]);
 });
 

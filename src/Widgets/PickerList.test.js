@@ -121,7 +121,7 @@ it('should show the next page', async () => {
 
     const listElements = asFragment().querySelectorAll('li.picker-item');
     expect(listElements).toHaveLength(20);
-}, 300000);
+});
 
 it('should call the callback when an item is clicked', async () => {
     const pickModel = jest.fn();

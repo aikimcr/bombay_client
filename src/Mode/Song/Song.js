@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -10,10 +10,6 @@ import PickerButton from '../../Widgets/PickerButton';
 function Song(props) {
     const [artistModel, setArtistModel] = useState(props.artist ? props.artist : null);
     
-    const artistName = useMemo(() => {
-        return artistModel ? artistModel.get('name') : '<Pick artist>';
-    }, [artistModel])
-
     return (
         <>
             <LabeledInput modelName='song' fieldName='name' labelText='Song Name' model={props.song} />

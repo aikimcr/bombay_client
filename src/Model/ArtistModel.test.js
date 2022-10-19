@@ -1,5 +1,3 @@
-import * as Network from '../Network/Network';
-jest.mock('../Network/Network');
 
 import ModelBase from './ModelBase';
 import ArtistModel from './ArtistModel';
@@ -34,8 +32,11 @@ it('should create a model from a definition', async () => {
 
 it('should not recognize a base model as an artist model', async () => {
     // If the class extension is done correctly, Javascript should just handle this.
-    const baseModel = new ModelBase({});
-    const artistModel = new ArtistModel({});
+    const [baseDef] = makeAModel('table1');
+    const [artistDef] = makeAModel('');
+
+    const baseModel = new ModelBase(baseDef.url, baseDef);
+    const artistModel = new ArtistModel(artistDef.url, artistDef);
 
     expect(ModelBase.isModel(baseModel)).toBeTruthy();
     expect(ModelBase.isModel(artistModel)).toBeTruthy();

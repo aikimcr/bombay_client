@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, createRef } from 'react';
+import { useEffect, useState, useRef, createRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import useIntersectionObserver from '../Hooks/useIntersectionObserver';
@@ -23,13 +23,23 @@ function PickerList(props) {
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const refreshCollection = useCallback(() => {
+        setLoading(true);
+
+        listCollection.current = new props.collectionClass();
+        listCollection.current.ready()
+            .then(() => {
+                setLoading(false);
+            });
+    }, [props.collectionClass]);
+
     useEffect(() => {
         if (!props.isOpen) return;
 
         if (listCollection.current == null) {
             refreshCollection()
-        }
-    }, [props.isOpen]);
+        }    
+    }, [props.isOpen, refreshCollection]);    
 
     useEffect(() => {
         if (!shouldPage) { return; }
@@ -43,9 +53,9 @@ function PickerList(props) {
             listCollection.current.fetchNextPage()
                 .then(() => {
                     setLoading(false);
-                });
-        }
-    }, [shouldPage, loading]);
+                });    
+        }        
+    }, [shouldPage, loading]);    
 
     useEffect(() => {
         if (topRef.current == null) return;
@@ -56,19 +66,9 @@ function PickerList(props) {
 
             if (myElement) {
                 observer.current.observe(myElement);
-            }
-        }
-    }, [loading, observer, topRef]);
-
-    function refreshCollection() {
-        setLoading(true);
-
-        listCollection.current = new props.collectionClass();
-        listCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
-    }
+            }    
+        }    
+    }, [loading, observer, topRef]);    
 
     function clickHandler(evt, model ) {
         evt.preventDefault();
