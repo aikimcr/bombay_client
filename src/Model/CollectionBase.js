@@ -119,7 +119,10 @@ class CollectionBase {
             return this.#models;
         }
 
-        const body = await getFromURLString(url)
+        const getPromise = getFromURLString(url);
+        // debugger;
+        // const body = await getFromURLString(url)
+        const body = await getPromise
             .catch((err) => {
                 if (err.status !== 404) {
                     console.error(err.status, err.message);

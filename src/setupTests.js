@@ -9,10 +9,13 @@ import userEvent from '@testing-library/user-event';
 import casual from 'casual';
 
 import { useState } from 'react';
+
+import * as Network from './Network/Network';
+jest.mock('./Network/Network');
+
+
 import BombayLoginContext from './Context/BombayLoginContext';
 import BombayModeContext from './Context/BombayModeContext';
-
-import { buildURL, prepareURLFromArgs } from './Network/Network';
 
 import ModelBase from './Model/ModelBase';
 import ArtistModel from './Model/ArtistModel';
@@ -117,7 +120,7 @@ globalThis.makeAModel = function(tableName = 'table1') {
         default:
     }
 
-    def.url = buildURL({ path: `/${tableName}/${def.id}` });
+    def.url = Network.buildURL({ path: `/${tableName}/${def.id}` });
     return [def, modelClass.from(def)];
 }
 
@@ -138,12 +141,12 @@ globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1') 
     let limit = query.limit || length;
 
     if (offset >= 0) {
-        result.prevPage = prepareURLFromArgs(tableName, { offset, limit }).toString();
+        result.prevPage = Network.prepareURLFromArgs(tableName, { offset, limit }).toString();
     }
 
     if (limit <= length) {
         offset = (query.offset || 0) + length;
-        result.nextPage = prepareURLFromArgs(tableName, { offset, limit }).toString();
+        result.nextPage = Network.prepareURLFromArgs(tableName, { offset, limit }).toString();
     }
 
     return [result, models];

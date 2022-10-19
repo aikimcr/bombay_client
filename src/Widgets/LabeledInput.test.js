@@ -5,25 +5,11 @@ import LabeledInput from './LabeledInput';
 jest.useFakeTimers();
 
 it('should show a simple labeled input', async () => {
-    const result = render(<LabeledInput modelName='xyzzy' fieldName='plover' labelText='plugh' />)
+    const { asFragment } = render(
+        <LabeledInput modelName='xyzzy' fieldName='plover' labelText='plugh' />
+    )
 
-    const component = result.container.firstChild;
-
-    expect(component.className).toBe('labeled-input');
-    expect(component.dataset.modelname).toBe('xyzzy');
-    expect(component.dataset.fieldname).toBe('plover');
-    expect(component.childElementCount).toBe(2);
-    
-    const label = component.firstChild;
-    expect(label.tagName).toBe('LABEL');
-    expect(label.attributes.getNamedItem('for').value).toBe(`xyzzy-plover-isNew`);
-    expect(label.textContent).toBe('plugh');
-
-    const input = component.lastChild;
-    expect(input.tagName).toBe('INPUT');
-    expect(input.id).toBe(`xyzzy-plover-isNew`);
-    expect(input.type).toBe('text');
-    expect(input.defaultValue).toBe('');
+    expect(asFragment).toMatchSnapshot();
 });
 
 it('should set the default value to the field value', async () => {

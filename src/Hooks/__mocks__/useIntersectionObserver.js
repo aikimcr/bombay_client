@@ -37,6 +37,8 @@ export function useIntersectionObserver(topRef, callback, options = {}) {
     const observer = useRef(null);
     
     useEffect(() => {
+        if (topRef.current == null) return;
+        
         if (observer.current == null) {
             observer.current = new mockObserver(callback, { ...options, root: topRef.current.parentElement });
         }

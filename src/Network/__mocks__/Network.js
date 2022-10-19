@@ -60,12 +60,25 @@ export function _setupMockPromise() {
 
 export function _setupMocks() {
     _setupMockPromise();
-    this.getFromURLString = jest.fn((urlString, query) => mockPromise);
-    this.postToURLString = jest.fn((urlString, body) => mockPromise);
-    this.putToURLString = jest.fn((urlString, body) => mockPromise);
+
+    this.getFromURLString = jest.fn((urlString, query) => {
+        expect(mockPromise).toBeDefined();
+        return mockPromise;
+    });
+
+    this.postToURLString = jest.fn((urlString, body) => {
+        expect(mockPromise).toBeDefined();
+        return mockPromise;
+    });
+
+    this.putToURLString = jest.fn((urlString, body) => {
+        expect(mockPromise).toBeDefined();
+        return mockPromise;
+    });
 
     return {
         resolve: mockResolve,
         reject: mockReject,
+        promise: mockPromise,
     };
 }
