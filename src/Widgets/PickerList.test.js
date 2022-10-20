@@ -1,10 +1,7 @@
 import { act, render } from '@testing-library/react';
 
 import * as Network from '../Network/Network';
-jest.mock('../Network/Network');
-
-import useIntersectionObserver, * as mockObserver from '../Hooks/useIntersectionObserver';
-jest.mock('../Hooks/useIntersectionObserver');
+import  * as mockObserver from '../Hooks/useIntersectionObserver';
 
 import ModelBase from '../model/ModelBase';
 import CollectionBase from '../model/CollectionBase';

@@ -13,6 +13,8 @@ import { useState } from 'react';
 import * as Network from './Network/Network';
 jest.mock('./Network/Network');
 
+import useIntersectionObserver, * as mockObserver from './Hooks/useIntersectionObserver';
+jest.mock('./Hooks/useIntersectionObserver');
 
 import BombayLoginContext from './Context/BombayLoginContext';
 import BombayModeContext from './Context/BombayModeContext';

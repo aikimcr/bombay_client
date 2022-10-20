@@ -44,7 +44,7 @@ export function useIntersectionObserver(topRef, callback, options = {}) {
         }
 
         return () => { observer.current.disconnect(); }
-    }, [observer.current, topRef.current]);
+    }, [observer.current, topRef]);
 
     return observer;
 
