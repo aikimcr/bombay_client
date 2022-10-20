@@ -18,6 +18,7 @@ export function FormModal(props) {
         const entries = formData.entries();
         let entry = entries.next();
 
+        // This does not account for non-input type fields.
         while (!entry.done) {
             data[entry.value[0]] = entry.value[1];
             entry = entries.next();

@@ -113,4 +113,44 @@ it('should call the callback and close the list when an item is clicked', async 
 
     expect(onModelPicked).toBeCalled();
     expect(onModelPicked).toBeCalledWith(models[2]);
+    const listComponent = container.querySelector('.picker-component');
+    expect(listComponent).toBeNull;
 })
+
+it('should close the list without calling if the button is pushed again', async () => {
+    const onModelPicked = jest.fn();
+
+    const { resolve } = Network._setupMocks();
+
+    const { container, queryByText } = render(
+        <PickerButton
+            modelName='table1'
+            labelText='Pick A Model'
+            collectionClass={TestCollection}
+            onModelPicked={onModelPicked}
+        />
+    );
+
+    const showButton = queryByText(/Please Choose/);
+    const [fetchBody, models] = makeModels(10, {});
+
+    await act(async () => {
+        showButton.click();
+        resolve(fetchBody);
+    })
+
+    expect(onModelPicked).not.toBeCalled();
+
+    expect(mockObserver.mockObserver.observers.length).toBe(1);
+    let listComponent = container.querySelector('.picker-component');
+    expect(listComponent).toBeInTheDocument();
+
+    expect(onModelPicked).not.toBeCalled();
+
+    await act(async () => {
+        showButton.click();
+    })
+    
+    listComponent = container.querySelector('.picker-component');
+    expect(listComponent).not.toBeInTheDocument();
+});

@@ -58,11 +58,10 @@ function PickerList(props) {
     }, [shouldPage, loading]);    
 
     useEffect(() => {
-        if (topRef.current == null) return;
         if (loading) return;
 
         if (listCollection.current && listCollection.current.hasNextPage()) {
-            const myElement = topRef.current.querySelector('li:last-child');
+            const myElement = topRef.current?.querySelector('li:last-child');
 
             if (myElement) {
                 observer.current.observe(myElement);

@@ -27,7 +27,7 @@
         flex-grow: 2;
         width: 100%;
     }
-
+    
     .toggle {
         width: 4em;
         position: absolute;
@@ -38,4 +38,25 @@
 
 .picker-button {
     justify-content: flex-start;
+    
+        button {
+            position: relative;
+            background-color: white;
+            color: black;
+            border-radius: 0;
+            font-size: $standard-font-size;
+    
+            &:after {
+                position: absolute;
+                right: 0.5em;
+                content:  '\25BC';
+            }
+    
+            &:has(+ div) {
+                &:after {
+                    content: '\25B2';
+                    right: 1em;
+                }
+            }
+        }
 }

@@ -26,7 +26,7 @@ function PickerButton(props) {
 
     function pickAModel(evt) {
         evt.preventDefault();
-        setShowPickerList(true);
+        setShowPickerList(oldShow => !oldShow);
     }
 
     return (
