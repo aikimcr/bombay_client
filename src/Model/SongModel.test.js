@@ -1,6 +1,3 @@
-import * as Network from '../Network/Network';
-jest.mock('../Network/Network');
-
 import ModelBase from './ModelBase';
 import SongModel from './SongModel';
 
@@ -24,8 +21,11 @@ it('should instantiate a model', async () => {
 
 it('should not recognize a base model as a song model', async () => {
     // If the class extension is done correctly, Javascript should just handle this.
-    const baseModel = new ModelBase({});
-    const songModel = new SongModel({});
+    const [baseDef] = makeAModel('table1');
+    const [songDef] = makeAModel('song');
+
+    const baseModel = new ModelBase(baseDef.url, baseDef);
+    const songModel = new SongModel(songDef.url, songDef);
 
     expect(ModelBase.isModel(baseModel)).toBeTruthy();
     expect(ModelBase.isModel(songModel)).toBeTruthy();

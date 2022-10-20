@@ -132,13 +132,13 @@ async function decodeResponse(response) {
 }
 
 export async function getFromURLString(urlString) {
-  const response = await fetch(urlString, {
-    mode: 'cors',
-    credentials: 'include',
-    headers: getStandardHeaders(false),
-  });
+    const response = await fetch(urlString, {
+      mode: 'cors',
+      credentials: 'include',
+      headers: getStandardHeaders(false),
+    });
 
-  return decodeResponse(response);
+    return decodeResponse(response);
 }
 
 function buildJSON(body) {
