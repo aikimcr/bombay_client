@@ -4,7 +4,6 @@ export function useIntersectionObserver(topRef, callback, options = {}) {
     const observer = useRef(null);
 
     useEffect(() => {
-        debugger;
         if (topRef.current == null) return;
         
         if (observer.current == null) {

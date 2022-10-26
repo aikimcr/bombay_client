@@ -21,8 +21,8 @@ function Login(props) {
 
     function getCredentials() {
         // TODO: THere has to be a better way to do what these two lines are doing.
-        const usernameInput = document.querySelector('[data-fieldname="username"] input');
-        const passwordInput = document.querySelector('[data-fieldname="password"] input');
+        const usernameInput = document.querySelector('[data-targetfield="username"] input');
+        const passwordInput = document.querySelector('[data-targetfield="password"] input');
 
         return { username: usernameInput.value, password: passwordInput.value };
     }
@@ -51,8 +51,8 @@ function Login(props) {
     function clearAllFields(event) {
         clearTimer();
 
-        document.querySelector('[data-fieldname="username"] input').value = '';
-        document.querySelector('[data-fieldname="password"] input').value = '';
+        document.querySelector('[data-targetfield="username"] input').value = '';
+        document.querySelector('[data-targetfield="password"] input').value = '';
         setSubmitDisabled(true);
         setError(null);
     }

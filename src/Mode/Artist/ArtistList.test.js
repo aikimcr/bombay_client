@@ -201,7 +201,7 @@ it('should add an artist', async () => {
     const submitButton = modalRoot.querySelector('[type="submit"]');
 
     const [saveDef] = makeAModel('artist');
-    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), 'input', 'Herkimer', 250);
+    await changeInput(modalRoot.querySelector('[data-targetfield="name"'), 'input', 'Herkimer', 250);
 
     await act(async () => {
         submitButton.click();

@@ -37,7 +37,18 @@ function ModalWrapper(props) {
             <button onClick={() => setShow(true)}>open</button>
             <FormModal open={show} onClose={handleClose} title='Test Modal' onSubmit={handleSubmit}>
                 <div className="testDiv">
-                    <input type="text" defaultValue="val1" />
+                    <input name="TEXT" type="text" defaultValue="val1" />
+                    <input name="NUMBER" type="number" defaultValue="1" />
+                    <input name="DATE" type="date" defaultValue="2022-10-20" />
+                    <input name="RANGE" type="range" defaultValue="20" min="10" max="30" />
+                    <input name="CHECKBOX" type="checkbox" />
+                    <input name="RADIO" type="radio" value="huey" />
+                    <input name="RADIO" type="radio" value="duey" defaultChecked />
+                    <input name="RADIO" type="radio" value="louey" />
+                    <select name="SELECT">
+                        <option value="Bacteria">Bacteria</option>
+                        <option value="Virus">Virus</option>
+                    </select>
                 </div>
             </FormModal>
         </>
@@ -113,11 +124,11 @@ it('should call onSumbit when submit is clicked', async () => {
         closes++;
     }
 
-    // let lastFormData = null;
+    let lastFormData = null;
     let submits = 0;
 
     function handleSubmit(formData) {
-        // lastFormData = formData;
+        lastFormData = formData;
         submits++;
     }
 
@@ -147,6 +158,13 @@ it('should call onSumbit when submit is clicked', async () => {
     expect(closes).toEqual(1);
     expect(submits).toEqual(1);
 
-    // FormData is always empty in tests.  Works fine in the browser
-    // expect(lastFormData).toEqual({});
+    expect(lastFormData).toEqual({
+        CHECKBOX: false,
+        DATE: '2022-10-20T00:00:00.000Z',
+        NUMBER: 1,
+        RADIO: 'duey',
+        RANGE: 20,
+        SELECT: 'Bacteria',
+        TEXT: 'Hello?',
+    });
 });

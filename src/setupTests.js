@@ -98,10 +98,15 @@ casual.define('nextId', function(sequenceName) {
     return nextOne;
 });
 
-globalThis.makeAModel = function(tableName = 'table1') {
+globalThis.makeAModel = function(tableName = 'table1', fieldsCallback) {
     const def = {};
     def.id = casual.nextId(tableName);
     def.name = casual.uniqueName(tableName);
+
+    if (fieldsCallback) {
+        fieldsCallback(def);
+    }
+
     let modelClass = ModelBase;
 
     switch (tableName) {
@@ -126,7 +131,7 @@ globalThis.makeAModel = function(tableName = 'table1') {
     return [def, modelClass.from(def)];
 }
 
-globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1') {
+globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1', fieldsCallback) {
     const result = {
         data: [],
     };
@@ -134,7 +139,7 @@ globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1') 
     const models = [];
 
     while (result.data.length < length) {
-        const [def, model] = makeAModel(tableName);
+        const [def, model] = makeAModel(tableName, fieldsCallback);
         result.data.push(def);
         models.push(model);
     }

@@ -28,9 +28,9 @@ function LabeledInput(props) {
     }
 
     return (
-        <div ref={topRef} className='labeled-input' data-modelname={props.modelName} data-fieldname={props.fieldName}>
+        <div ref={topRef} className='labeled-input' data-modelname={props.modelName} data-targetfield={props.fieldName}>
             <label htmlFor={inputId}>{props.labelText}</label>
-            <input id={inputId} name='name' type={type} defaultValue={defaultValue} onChange={props.onChange}></input>
+            <input id={inputId} name={props.fieldName} type={type} defaultValue={defaultValue} onChange={props.onChange}></input>
             { isPassword ? <input type="button" className="toggle" data-hidden="true" onClick={toggleHide} value="Show"/> : '' }
         </div>
     )

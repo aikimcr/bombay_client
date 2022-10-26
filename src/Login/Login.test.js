@@ -77,10 +77,10 @@ it('should enable and disable the login button', async () => {
     const loginButton = modalRoot.querySelector('.login.btn');
     expect(loginButton).toBeDisabled()
     
-    const usernameInput = await changeInput(modalRoot, '[data-fieldname="username"] > input', 'herkimer', 250);
+    const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 250);
     expect(loginButton).toBeDisabled();
 
-    const passwordInput = await changeInput(modalRoot, '[data-fieldname="password"] > input', 'jones', 250);
+    const passwordInput = await changeInput(modalRoot, '[data-targetfield="password"] > input', 'jones', 250);
     expect(loginButton).not.toBeDisabled()
 });
 
@@ -94,8 +94,8 @@ it('should login successfully', async () => {
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
 
-    const usernameInput = await changeInput(modalRoot, '[data-fieldname="username"] > input', 'herkimer', 300);
-    const passwordInput = await changeInput(modalRoot, '[data-fieldname="password"] > input', 'jones', 300);
+    const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 300);
+    const passwordInput = await changeInput(modalRoot, '[data-targetfield="password"] > input', 'jones', 300);
     expect(loginButton).not.toBeDisabled()
 
     // Wait for the component to rerender.
@@ -122,8 +122,8 @@ it('should show error on failed login', async () => {
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
 
-    const usernameInput = await changeInput(modalRoot, '[data-fieldname="username"] > input', 'herkimer', 250);
-    const passwordInput = await changeInput(modalRoot, '[data-fieldname="password"] > input', 'jones', 250);
+    const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 250);
+    const passwordInput = await changeInput(modalRoot, '[data-targetfield="password"] > input', 'jones', 250);
     expect(loginButton).not.toBeDisabled()
 
     // Wait for the component to rerender.
@@ -150,8 +150,8 @@ it('should show error on call error', async () => {
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
 
-    const usernameInput = await changeInput(modalRoot, '[data-fieldname="username"] > input', 'herkimer', 250);
-    const passwordInput = await changeInput(modalRoot, '[data-fieldname="password"] > input', 'jones', 250);
+    const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 250);
+    const passwordInput = await changeInput(modalRoot, '[data-targetfield="password"] > input', 'jones', 250);
     expect(loginButton).not.toBeDisabled()
 
     // Wait for the component to rerender.
@@ -178,8 +178,8 @@ it('should clear the inputs and error on clear all fields', async () => {
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
 
-    const usernameInput = await changeInput(modalRoot, '[data-fieldname="username"] > input', 'herkimer', 250);
-    const passwordInput = await changeInput(modalRoot, '[data-fieldname="password"] > input', 'jones', 250);
+    const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 250);
+    const passwordInput = await changeInput(modalRoot, '[data-targetfield="password"] > input', 'jones', 250);
     expect(loginButton).not.toBeDisabled()
 
     // Wait for the component to rerender.

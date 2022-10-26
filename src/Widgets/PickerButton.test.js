@@ -37,9 +37,11 @@ it('should show the button', async () => {
 
     const { asFragment } = render(
         <PickerButton
-            modelName='table1'
-            labelText='Pick A Model'
             collectionClass={TestCollection}
+            modelName='table1'
+            fieldName='id'
+            targetField='table2_id'
+            labelText='Pick A Model'
             onModelPicked={onModelPicked}
         />
     );
@@ -56,9 +58,11 @@ it('should show the list on click', async () => {
 
     const { container, queryByText } = render(
         <PickerButton
-            modelName='table1'
-            labelText='Pick A Model'
             collectionClass={TestCollection}
+            modelName='table1'
+            fieldName='id'
+            targetField='table2_id'
+            labelText='Pick A Model'
             onModelPicked={onModelPicked}
         />
     );
@@ -87,15 +91,19 @@ it('should call the callback and close the list when an item is clicked', async 
 
     const { container, queryByText } = render(
         <PickerButton
-            modelName='table1'
-            labelText='Pick A Model'
             collectionClass={TestCollection}
+            modelName='table1'
+            fieldName='id'
+            targetField='table2_id'
+            labelText='Pick A Model'
             onModelPicked={onModelPicked}
         />
     );
 
     const showButton = queryByText(/Please Choose/);
-    const [fetchBody, models] = makeModels(10, {});
+    const [fetchBody, models] = makeModels(10, {}, undefined, (def) => {
+        def.table2_id = parseInt(Math.random() * 100);
+    });
 
     await act(async () => {
         showButton.click();
@@ -124,9 +132,11 @@ it('should close the list without calling if the button is pushed again', async 
 
     const { container, queryByText } = render(
         <PickerButton
-            modelName='table1'
-            labelText='Pick A Model'
             collectionClass={TestCollection}
+            modelName='table1'
+            targetField='table2_id'
+            fieldName='table2_id'
+            labelText='Pick A Model'
             onModelPicked={onModelPicked}
         />
     );
@@ -150,7 +160,7 @@ it('should close the list without calling if the button is pushed again', async 
     await act(async () => {
         showButton.click();
     })
-    
+
     listComponent = container.querySelector('.picker-component');
     expect(listComponent).not.toBeInTheDocument();
 });

@@ -39,24 +39,28 @@
 .picker-button {
     justify-content: flex-start;
     
-        button {
-            position: relative;
-            background-color: white;
-            color: black;
-            border-radius: 0;
-            font-size: $standard-font-size;
-    
+    button {
+        position: relative;
+        background-color: white;
+        color: black;
+        border-radius: 0;
+        font-size: $standard-font-size;
+
+        &:after {
+            position: absolute;
+            right: 0.5em;
+            content:  '\25BC';
+        }
+
+        &:has(+ div) {
             &:after {
-                position: absolute;
-                right: 0.5em;
-                content:  '\25BC';
-            }
-    
-            &:has(+ div) {
-                &:after {
-                    content: '\25B2';
-                    right: 1em;
-                }
+                content: '\25B2';
+                right: 1em;
             }
         }
+    }
+
+    input {
+        display: none;
+    }
 }
