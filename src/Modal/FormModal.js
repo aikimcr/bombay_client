@@ -12,16 +12,36 @@ export function FormModal(props) {
 
     function submitData(evt) {
         evt.preventDefault();
-        const formData = new FormData(evt.currentTarget);
+
+        const fieldElements = evt.currentTarget.querySelectorAll('[name]');
+        const fields = Array.from(fieldElements);
 
         const data = {};
-        const entries = formData.entries();
-        let entry = entries.next();
 
-        // This does not account for non-input type fields.
-        while (!entry.done) {
-            data[entry.value[0]] = entry.value[1];
-            entry = entries.next();
+        for (const field of fields) {
+            if (field.tagName === 'SELECT') {
+                data[field.name] = field.value;
+            } else {
+                switch (field.type) {
+                    case 'number':
+                    case 'range':
+                        data[field.name] = field.valueAsNumber;
+                        break;
+
+                    case 'date': data[field.name] = field.valueAsDate.toISOString(); break;
+                    case 'checkbox': data[field.name] = field.checked; break;
+
+                    case 'radio':
+                        if (!data.hasOwnProperty(field.name)) {
+                            data[field.name] = '';
+                        } else if (field.checked) {
+                            data[field.name] = field.value;
+                        }
+                        break;
+
+                    default: data[field.name] = field.value;
+                }
+            }
         }
 
         props.onSubmit(data);
@@ -33,7 +53,7 @@ export function FormModal(props) {
             <form action="" className='modal-form' onSubmit={submitData}>
                 <div className="form-content">{props.children}</div>
                 <div className="controls">
-                    <input type='submit'/>
+                    <input type='submit' />
                     <input type='button' onClick={closeForm} value='Cancel' />
                 </div>
             </form>

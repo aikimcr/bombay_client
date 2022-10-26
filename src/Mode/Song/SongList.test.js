@@ -201,7 +201,9 @@ it('should add a song', async () => {
     const submitButton = modalRoot.querySelector('[type="submit"]');
 
     const [saveDef] = makeAModel('song');
-    await changeInput(modalRoot.querySelector('[data-fieldName="name"'), 'input', 'Herkimer', 250);
+    const artistId = saveDef.artist.id;
+    await changeInput(modalRoot.querySelector('[data-targetfield="name"'), 'input', 'Herkimer', 250);
+    await changeInput(modalRoot.querySelector('[data-targetfield="artist_id"'), 'input', artistId, 250);
 
     await act(async () => {
         submitButton.click();
@@ -210,5 +212,5 @@ it('should add a song', async () => {
     resolve(saveDef);
 
     expect(Network.postToURLString).toBeCalledTimes(1);
-    expect(Network.postToURLString).toBeCalledWith(collectionUrl, { name: 'Herkimer' });
+    expect(Network.postToURLString).toBeCalledWith(collectionUrl, { name: 'Herkimer', artist_id: artistId });
 });

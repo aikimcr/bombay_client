@@ -22,8 +22,8 @@ exports[`should render the login mode 2`] = `
       >
         <div
           class="labeled-input"
-          data-fieldname="username"
           data-modelname="login"
+          data-targetfield="username"
         >
           <label
             for="login-username-isNew"
@@ -32,15 +32,15 @@ exports[`should render the login mode 2`] = `
           </label>
           <input
             id="login-username-isNew"
-            name="name"
+            name="username"
             type="text"
             value=""
           />
         </div>
         <div
           class="labeled-input"
-          data-fieldname="password"
           data-modelname="login"
+          data-targetfield="password"
         >
           <label
             for="login-password-isNew"
@@ -49,7 +49,7 @@ exports[`should render the login mode 2`] = `
           </label>
           <input
             id="login-password-isNew"
-            name="name"
+            name="password"
             type="password"
             value=""
           />

@@ -7,6 +7,7 @@ import './LabeledInput.scss';
 
 function PickerButton(props) {
     const topRef = useRef(null);
+    const inputRef = useRef(null);
 
     const modelId = props.model ? props.model.get('id') : 'isNew';
     const buttonId = `${props.modelName}-name-${modelId}`;
@@ -18,8 +19,13 @@ function PickerButton(props) {
                         currentModel.get('name') :
                         '<Please Choose>';
 
+    const initialValue = currentModel ?
+                        currentModel.get('id') :
+                        0;
+
     function modelPicked(newModel) {
         setCurrentModel(newModel);
+        inputRef.current.value = newModel.get(props.fieldName);
         props.onModelPicked(newModel);
         setShowPickerList(false);
     }
@@ -34,14 +40,23 @@ function PickerButton(props) {
             ref={topRef}
             className='picker-button'
             data-modelname={props.modelName}
+            data-targetfield={props.targetField}
         >
             <label htmlFor={buttonId}>{props.labelText}</label>
+            <input
+                type="number"
+                ref={inputRef}
+                name={props.targetField}
+                defaultValue={initialValue}
+            ></input>
+
             <Button
                 id={buttonId}
                 label={buttonLabel}
                 disabled={false}
                 onClick={pickAModel}
             />
+
             <PickerList
                 pickModel={modelPicked}
                 isOpen={showPickerList}
@@ -52,11 +67,13 @@ function PickerButton(props) {
 }
 
 PickerButton.propTypes = {
-    modelName: PropTypes.string.isRequired,
+    collectionClass: PropTypes.func.isRequired, // To get the list of models
+    model: PropTypes.object, // A currently set model (optional)
+    modelName: PropTypes.string.isRequired, // Should match collectionClass, mostly a convenience
+    fieldName: PropTypes.string.isRequired, // The field from the model used to set the target value
+    targetField: PropTypes.string.isRequired, // The key in the data from the form
     labelText: PropTypes.string.isRequired,
-    collectionClass: PropTypes.func.isRequired,
-    onModelPicked: PropTypes.func.isRequired,
-    model: PropTypes.object,
+    onModelPicked: PropTypes.func.isRequired, // Called with the selected model from the collection
 }
 
 export default PickerButton;

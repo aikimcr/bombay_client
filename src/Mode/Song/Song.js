@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -8,13 +8,15 @@ import LabeledInput from '../../Widgets/LabeledInput';
 import PickerButton from '../../Widgets/PickerButton';
 
 function Song(props) {
-    const [artistModel, setArtistModel] = useState(props.artist ? props.artist : null);
+    const [artistModel, setArtistModel] = useState(props.song ? props.song.artist() : null);
     
     return (
         <>
             <LabeledInput modelName='song' fieldName='name' labelText='Song Name' model={props.song} />
             <PickerButton 
                 modelName='artist'
+                targetField='artist_id'
+                fieldName='id'
                 labelText='Artist'
                 collectionClass={ArtistCollection}
                 model={artistModel}
