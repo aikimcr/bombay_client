@@ -1,21 +1,23 @@
 @import '../global.scss';
 
-$modal-header-height: $standard-font-size + 5px;
+$modal-header-height: $standard-font-size + 10px;
 $modal-footer-height: $button-font-size + 10px;
-$close-button-size: $standard-font-size - 5px;
+$close-button-size: $standard-font-size;
 
 .modal {
     position: relative;
-    top: calc(50vh - 200px);
-    left: calc(50vw - 300px);
-    height: 400px;
-    width: 600px;
+    top: calc(50vh - 300px);
+    left: calc(50vw - 500px);
+    height: 600px;
+    width: 1000px;
 
     padding: 0 0 10px 0;
     border-radius: 10px;
 
     font-size: $standard-font-size;
     background-color: white;
+
+    isolation: isolate;
 
     .header {
         width: 100%;
@@ -39,7 +41,7 @@ $close-button-size: $standard-font-size - 5px;
 
         .close {
             position: absolute;
-            top: calc($close-button-size / 2);
+            top: calc($modal-header-height / 2 - $close-button-size / 2);
             right: calc($close-button-size / 2);
             height: $close-button-size;
             width: $close-button-size;
@@ -49,6 +51,7 @@ $close-button-size: $standard-font-size - 5px;
             text-align: center;
             font-size: $close-button-size;
             line-height: $close-button-size;
+            cursor: pointer;
         }
     }
 
@@ -73,6 +76,11 @@ $close-button-size: $standard-font-size - 5px;
 
     .form-content {
         height: calc(100% - #{$modal-footer-height});
+
+        display: grid;
+        grid-template-columns: 100%;
+        grid-auto-rows: 1.5em;
+        gap: .5rem;
     }
 
     .controls {

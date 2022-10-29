@@ -1,6 +1,3 @@
-// Load the data from the server.  Handle all the boilerplate for xhr
-// correctly.
-
 import jwt_decode from 'jwt-decode';
 import { prepareURLFromArgs, postToURLString } from './Network';
 

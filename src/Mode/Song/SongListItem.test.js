@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react';
+import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
 import * as Network from '../../Network/Network';
 // jest.mock('../../Network/Network'); // This doesn't actually  work here.
@@ -17,6 +18,22 @@ afterEach(() => {
     const modalRoot = document.getElementById('modal-root');
     modalRoot.remove();
 });
+
+const mockUtility = {
+    getBootstrap: () => {
+        return {
+            keySignatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+        };
+    }
+}
+
+const renderWrapper = ({children}) => {
+    return (
+        <BombayUtilityContext.Provider value={mockUtility}>
+            {children}
+        </BombayUtilityContext.Provider>
+    );
+}
 
 function getAreas(result) {
     const index = result.container;
@@ -44,7 +61,7 @@ function getAreas(result) {
 
 it ('should render a list item', async () => {
     const [ modelDef, model ] = makeAModel('song');
-    const result = render(<SongListItem song={model} />);
+    const result = render(<SongListItem song={model} />, {wrapper: renderWrapper});
     const [detailsElement, nameElement] = getAreas(result);
 
     expect(nameElement).toHaveTextContent(modelDef.name);
@@ -58,7 +75,7 @@ it ('should render a list item', async () => {
 it('should open the editor modal', async () => {
     const [modelDef, model] = makeAModel('song');
 
-    const result = render(<SongListItem song={model} />);
+    const result = render(<SongListItem song={model} />, {wrapper: renderWrapper});
 
     const index = result.container;
 
@@ -81,7 +98,7 @@ it('should save changes to the model', async () => {
     const songModelDef = {...modelDef};
     delete songModelDef.artist;
 
-    const result = render(<SongListItem song={model} />);
+    const result = render(<SongListItem song={model} />, { wrapper: renderWrapper });
 
     const index = result.container;
 

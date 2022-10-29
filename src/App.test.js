@@ -1,6 +1,9 @@
 import * as NetworkLogin from './Network/Login';
 jest.mock('./Network/Login');
 
+import * as NetworkBootstrap from './Network/Bootstrap';
+jest.mock('./Network/Bootstrap');
+
 import { useContext } from 'react';
 import { act, render } from '@testing-library/react';
 
@@ -87,8 +90,11 @@ afterEach(() => {
 });
 
 test('Renders App Framework', async () => {
-  const { resolve } = NetworkLogin._setupMocks();
-  resolve(true);
+  const { resolve: loginResolve } = NetworkLogin._setupMocks();
+  loginResolve(true);
+
+  const { resolve: bootstrapResolve } = NetworkBootstrap._setupMocks();
+  bootstrapResolve({ key_signatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G']});
   
   const result = render(<App />);
 

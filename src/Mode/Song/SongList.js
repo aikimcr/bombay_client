@@ -35,11 +35,12 @@ function SongList(props) {
             refreshCollection();
         }
 
-        const intervalHandle = setInterval(refreshCollection, 300000);
+        // Disable automatic refresh.  It's more trouble than it's worth for now.
+        // const intervalHandle = setInterval(refreshCollection, 300000);
 
-        return () => {
-            clearInterval(intervalHandle);
-        }
+        // return () => {
+        //     clearInterval(intervalHandle);
+        // }
     }, []);
 
     useEffect(() => {

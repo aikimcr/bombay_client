@@ -117,7 +117,7 @@ globalThis.makeAModel = function(tableName = 'table1', fieldsCallback) {
         case 'song':
             modelClass = SongModel;
             def.key_signature = 'C';
-            def.tempo = '120';
+            def.tempo = 120;
             def.lyrics = 'O Solo Mio! The troubles I have seen';
             const [artist] = makeAModel('artist');
             def.artist_id = artist.id;

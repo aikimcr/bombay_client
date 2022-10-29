@@ -29,9 +29,16 @@ function FakeContent(props) {
         setModeState('song');
     }
 
+    const getBootstrap = () => {
+        return {
+            keySignatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+        };
+    }
+
     const utilities = {
         checkLoginState,
         setMode,
+        getBootstrap,
     }
 
     return (
@@ -69,6 +76,22 @@ afterEach(() => {
 
     localStorage.removeItem('jwttoken');
 });
+
+const mockUtility = {
+    getBootstrap: () => {
+        return {
+            keySignatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+        };
+    }
+}
+
+const renderWrapper = ({ children }) => {
+    return (
+        <BombayUtilityContext.Provider value={mockUtility}>
+            {children}
+        </BombayUtilityContext.Provider>
+    );
+}
 
 function getAreas(result) {
     expect(mockObserver.mockObserver.observers.length).toBe(1);
@@ -212,5 +235,11 @@ it('should add a song', async () => {
     resolve(saveDef);
 
     expect(Network.postToURLString).toBeCalledTimes(1);
-    expect(Network.postToURLString).toBeCalledWith(collectionUrl, { name: 'Herkimer', artist_id: artistId });
+    expect(Network.postToURLString).toBeCalledWith(collectionUrl, {
+        name: 'Herkimer',
+        artist_id: artistId,
+        key_signature: '',
+        tempo: null,
+        lyrics: '',
+    });
 });
