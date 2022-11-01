@@ -15,19 +15,41 @@ import Accessories from './AppLayout/Accessories';
 import Footer from './AppLayout/Footer';
 
 import { loginStatus } from './Network/Login';
+import { fetchBootstrap } from './Network/Bootstrap';
 
 function App() {
+  const [bootstrap, setBootstrap] = useState(null);
   const [loginState, setLoginState] = useState(false);
   const [modeState, setModeState] = useState('songList');
 
+  const callFetchBootstrap = useCallback(async () => {
+    try {
+      const result = await fetchBootstrap();
+      setBootstrap(result);
+      return result;
+    } catch(err) {
+      console.warn(err);
+    }
+  }, []);
+
   const checkLoginState = useCallback(async () => {
+    if (!bootstrap) return;
+
     const result = await loginStatus();
     setLoginState(result);
-  }, []);
+    return result;
+  }, [bootstrap]);
 
   const setMode = useCallback((newMode) => {
     setModeState(newMode);
+    return newMode;
   }, []);
+
+  const getBootstrap = () => bootstrap;
+
+  useEffect(() => {
+    callFetchBootstrap();
+  }, [callFetchBootstrap]);
 
   useEffect(() => {
     checkLoginState();
@@ -35,16 +57,17 @@ function App() {
     // ToDo: Make the interval configurable, don't check if logged out.
     const intervalHandle = setInterval(async () => {
       checkLoginState();
-    }, 15000/*10 * 60 * 1000*/); // Ten minutes.
+    }, 10 * 60 * 1000); // Ten minutes.
 
     return () => {
       clearInterval(intervalHandle);
     };
-  });
+  }, [bootstrap, checkLoginState]);
 
   const utilities = {
     setMode,
     setLoginState,
+    getBootstrap,
   }
 
   const routerBase = process.env.REACT_APP_ROUTER_BASE || '/';

@@ -1,7 +1,26 @@
 @import '../global.scss';
 
+.close-or-clear,
+.close,
+.clear {
+    color: black;
+    background-color: white;
+    border-color: black;
+    border-style: solid;
+    border-radius: 50%;
+    font-size: $standard-font-size;
+    line-height: $standard-font-size;
+    height: $standard-font-size * 1.5;
+    width: $standard-font-size * 1.5;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+}
+
 .picker-button,
-.labeled-input {
+.labeled-input,
+.labeled-select,
+.labeled-range {
     position: relative;
     top: 0;
     left: 0;
@@ -12,20 +31,21 @@
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: nowrap;
+    gap: 1em;
 
     width: 100%;
 
     label {
-        flex-grow: 1;
         min-width: 30%;
         height: $standard-font-size;
         line-height: $standard-font-size;
     }
 
-    button,
-    input {
+    > button,
+    > input {
         flex-grow: 2;
         width: 100%;
+        padding: 1px 1em;
     }
     
     .toggle {
@@ -37,14 +57,13 @@
 }
 
 .picker-button {
-    justify-content: flex-start;
-    
-    button {
+    > button {
         position: relative;
         background-color: white;
         color: black;
         border-radius: 0;
         font-size: $standard-font-size;
+        text-align: left;
 
         &:after {
             position: absolute;
@@ -62,5 +81,27 @@
 
     input {
         display: none;
+    }
+}
+
+.labeled-select {
+    > select {
+        font-size: $standard-font-size;
+        padding: 1px .75em;
+        cursor: pointer;
+    }
+}
+
+.labeled-range {
+    > .range-input {
+        flex-grow: 2; // This might not make a difference, but it was needed for input and button.
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 5ch $standard-font-size * 1.5;
+        gap: 0.5em;
+        
+        > input[type="range"] {
+            cursor: pointer;
+        }
     }
 }

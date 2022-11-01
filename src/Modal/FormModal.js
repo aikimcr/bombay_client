@@ -25,7 +25,7 @@ export function FormModal(props) {
                 switch (field.type) {
                     case 'number':
                     case 'range':
-                        data[field.name] = field.valueAsNumber;
+                        data[field.name] = isNaN(field.valueAsNumber) ? null : field.valueAsNumber;
                         break;
 
                     case 'date': data[field.name] = field.valueAsDate.toISOString(); break;
