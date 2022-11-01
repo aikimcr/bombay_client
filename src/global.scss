@@ -20,7 +20,7 @@ input {
     box-sizing: border-box;
     font-size: $standard-font-size;
     line-height: $standard-font-size;
-}    
+}
 
 input[type="submit"],
 input[type="button"],
@@ -33,24 +33,24 @@ input[type="button"],
     line-height: $button-font-size - 5px; // Subtract 5px to account for the padding
     cursor: pointer;
     border-radius: calc($button-font-size / 2);
-    
+
     &:hover {
         background-color: rgb(80, 75, 227);
-    }    
+    }
 
     &:active {
         background-color: rgb(128, 128, 128);
         border-style: inset;
         border-color: black;
-    }    
+    }
 
     &:disabled,
     &.disabled {
         background-color: rgb(128, 128, 128);
         pointer-events: none;
         cursor: auto;
-    }    
-}    
+    }
+}
 
 label,
 .label {
@@ -58,10 +58,9 @@ label,
     line-height: $standard-font-size;
     width: 100px;
     overflow: hidden;
-}    
+}
 
-input
-.input {
+input .input {
     position: relative;
     top: 0;
     bottom: 0;
@@ -76,8 +75,8 @@ input
     height: 100%;
     overflow-y: auto;
     overflow-x: $overflow-x;
-    
-    > * {
+
+    >* {
         margin-top: 0;
         margin-bottom: 0;
         padding-top: 0;
@@ -128,12 +127,9 @@ input
     list-style: none;
     padding: 5px;
 
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 5px;
-    justify-content: flex-start;
-    align-content: flex-start;
 
     &:empty:after {
         position: relative;
@@ -141,6 +137,35 @@ input
         left: calc(50% - 6ch);
         font-size: $standard-font-size * 2;
         content: 'No items found';
+    }
+}
+
+$layout-allowance: 200px;
+$minimum-card-width: 400px;
+
+@media(min-width: calc($minimum-card-width * 2 + $layout-allowance)) {
+    .card-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(min-width: calc($minimum-card-width * 3 + $layout-allowance)) {
+    .card-list {
+        grid-template-columns: repeat(3, 1fr);
+
+        &:has(> .card.wide) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+@media(min-width: calc($minimum-card-width * 4 + $layout-allowance)) {
+    .card-list {
+        grid-template-columns: repeat(4, 1fr);
+
+        &:has(> .card.wide) {
+            grid-template-columns: repeat(4, 1fr);
+        }
     }
 }
 
@@ -177,31 +202,42 @@ input
 }
 
 $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
+
 .card {
     background: $card-background;
     box-shadow: 5px 5px 10px 1px rgb(0, 0, 0);
     font-size: $standard-font-size;
     line-height: $standard-font-size;
-    // width: 15em;
+    width: 100%;
+    min-width: $minimum-card-width;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     border-radius: .5em;
     padding: 0;
-    // flex-grow: 0;
-    // flex-shrink: 1;
-    flex-basis: fit-content;
+
+    &.wide {
+        grid-column: span 2;
+        min-width: calc($minimum-card-width * 2);
+    }
 
     .header {
         border-bottom: thin black solid;
         background-color: $header-background-color;
         color: $header-color;
     }
+
     .name {
         padding: 0 1em;
         border: thin black solid;
         background-color: $sidebar-background-color;
         color: $sidebar-color;
+    }
+
+    &:has(> .details:empty) {
+        .header {
+            display: none;
+        }
     }
 
     .details {
@@ -212,24 +248,36 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
         grid-template-columns: minmax(5em, 10em) auto;
         width: fit-content;
 
-        .label, .text, .long-text {
+        &:empty {
+            display: none;
+        }
+
+        .label,
+        .text,
+        .long-text {
             margin: .5em .5em 0 0;
         }
 
         .long-text {
+            background-color: rgba(128, 128, 200, .3);
             @include scrollListContainer(auto);
             min-width: 25ch;
             max-width: 100ch;
             min-height: 5ch;
             max-height: 25ch;
+            padding: .5em;
+
+            &:has(> pre:empty) {
+                display: none;
+            }
         }
 
         .label {
-            background-color: rgba(0, 0, 0, 0.1);
             text-align: left;
         }
 
-        .text, .long-text {
+        .text,
+        .long-text {
             &:empty {
                 background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(0, 0, 0, .1));
             }

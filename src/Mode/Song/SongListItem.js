@@ -16,7 +16,7 @@ function SongListItem(props) {
 
     return (
         <React.Fragment>
-            <li className="card" onClick={() => setShowEdit(true)}>
+            <li className="card wide" onClick={() => setShowEdit(true)}>
                 <div className='header'>Song</div>
                 <div className='name'>{displayName}</div>
                 <div className='details'>
