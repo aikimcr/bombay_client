@@ -72,10 +72,17 @@ input
 }
 
 // Parent element must have height specificed.  100% should work.
-@mixin scrollListContainer {
+@mixin scrollListContainer($overflow-x: hidden) {
     height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-x: $overflow-x;
+    
+    > * {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 @mixin ellipsisText {
@@ -175,15 +182,15 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
     box-shadow: 5px 5px 10px 1px rgb(0, 0, 0);
     font-size: $standard-font-size;
     line-height: $standard-font-size;
-    width: 15em;
+    // width: 15em;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     border-radius: .5em;
     padding: 0;
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: 16em;
+    // flex-grow: 0;
+    // flex-shrink: 1;
+    flex-basis: fit-content;
 
     .header {
         border-bottom: thin black solid;
@@ -202,11 +209,19 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
         padding: 0 1em;
 
         display: grid;
-        grid-template-columns: minmax(5em, 20em) auto;
-        width: min-content;
+        grid-template-columns: minmax(5em, 10em) auto;
+        width: fit-content;
 
-        .label, .text, .longText {
+        .label, .text, .long-text {
             margin: .5em .5em 0 0;
+        }
+
+        .long-text {
+            @include scrollListContainer(auto);
+            min-width: 25ch;
+            max-width: 100ch;
+            min-height: 5ch;
+            max-height: 25ch;
         }
 
         .label {
@@ -214,7 +229,7 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
             text-align: left;
         }
 
-        .text, .longText {
+        .text, .long-text {
             &:empty {
                 background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(0, 0, 0, .1));
             }

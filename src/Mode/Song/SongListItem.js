@@ -34,7 +34,7 @@ function SongListItem(props) {
                     </>
                     <>
                         <div className='label'>Lyrics</div>
-                        <div className='longText'>{props.song.get('lyrics')}</div>
+                        <div className='long-text'><pre>{props.song.get('lyrics')}</pre></div>
                     </>
                 </div>
             </li>
