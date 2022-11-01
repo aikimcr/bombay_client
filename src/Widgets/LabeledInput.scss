@@ -20,7 +20,8 @@
 .picker-button,
 .labeled-input,
 .labeled-select,
-.labeled-range {
+.labeled-range,
+.labeled-textarea {
     position: relative;
     top: 0;
     left: 0;
@@ -103,5 +104,17 @@
         > input[type="range"] {
             cursor: pointer;
         }
+    }
+}
+
+.labeled-textarea {
+    textarea {
+        min-width: 25ch;
+        max-width: 100ch;
+        width: 100%;
+
+        min-height: 30ch;
+        max-height: 100ch;
+        height: 100%;
     }
 }

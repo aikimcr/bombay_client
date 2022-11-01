@@ -14,7 +14,7 @@ function LabeledTextArea(props) {
     const cols = props.cols || 100;
 
     return (
-        <div ref={topRef} className='labeled-input' data-modelname={props.modelName} data-targetfield={props.fieldName}>
+        <div ref={topRef} className='labeled-textarea' data-modelname={props.modelName} data-targetfield={props.fieldName}>
             <label htmlFor={inputId}>{props.labelText}</label>
             <textarea
                 id={inputId}
