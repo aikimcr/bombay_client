@@ -4,6 +4,10 @@ export async function loginStatus() {
     throw new Error('loginStatus has not been mocked properly');
 }
 
+export async function refreshToken() {
+    throw new Error('refreshToken has not been mocked properly');
+}
+
 export async function login(username, password) {
     throw new Error('login has not been mocked properly');
 }
@@ -28,12 +32,14 @@ export function _setupMockPromise() {
 
 export function _setupMocks() {
     _setupMockPromise();
-    this.loginStatus = jest.fn((urlString, query) => mockPromise);
-    this.login = jest.fn((urlString, body) => mockPromise);
-    this.logout = jest.fn((urlString, body) => mockPromise);
+    this.loginStatus = jest.fn(() => mockPromise);
+    this.refreshToken =jest.fn(() => mockPromise);
+    this.login = jest.fn((username, password) => mockPromise);
+    this.logout = jest.fn(() => mockPromise);
 
     return {
         resolve: mockResolve,
         reject: mockReject,
+        promise: mockPromise,
     };
 }

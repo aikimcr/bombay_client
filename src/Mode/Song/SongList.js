@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef, createRef } from 'react';
+import { useEffect, useState, useRef, useContext, createRef, useCallback } from 'react';
 import useIntersectionObserver from '../../Hooks/useIntersectionObserver';
 
 import './SongList.scss';
+
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
 import SongCollection from '../../Model/SongCollection';
 
@@ -11,6 +13,8 @@ import FormModal from '../../Modal/FormModal';
 
 function SongList(props) {
     const topRef = createRef();
+
+    const loggedIn = useContext(BombayLoginContext);
 
     const songCollection = useRef(null);
     const observer = useIntersectionObserver(topRef, (entries, observer) => {
@@ -30,18 +34,26 @@ function SongList(props) {
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const refreshCollection = useCallback(() => {
+        if (!loggedIn) {
+            songCollection.current = null;
+            return;
+        }
+
+        setLoading(true);
+
+        songCollection.current = new SongCollection();
+        songCollection.current.ready()
+            .then(() => {
+                setLoading(false);
+            });
+    }, [loggedIn]);
+
     useEffect(() => {
         if (songCollection.current == null) {
             refreshCollection();
         }
-
-        // Disable automatic refresh.  It's more trouble than it's worth for now.
-        // const intervalHandle = setInterval(refreshCollection, 300000);
-
-        // return () => {
-        //     clearInterval(intervalHandle);
-        // }
-    }, []);
+    }, [refreshCollection]);
 
     useEffect(() => {
         if (!shouldPage) { return; }
@@ -71,20 +83,18 @@ function SongList(props) {
         }
     }, [loading, observer, topRef]);
 
-    function refreshCollection() {
-        setLoading(true);
-
-        songCollection.current = new SongCollection();
-        songCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
-    }
+    useEffect(() => {
+        if (loggedIn && songCollection.current === null) {
+            refreshCollection()
+        }
+    }, [loggedIn, refreshCollection]);
 
     async function submitNewSong(songDef) {
         await songCollection.current.save(songDef);
         refreshCollection();
     }
+
+    if (!loggedIn) return null;
 
     return (
         <div className="list-component">

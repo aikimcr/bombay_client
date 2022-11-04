@@ -1,5 +1,5 @@
 import jwt_decode from 'jwt-decode';
-import { prepareURLFromArgs, postToURLString } from './Network';
+import { prepareURLFromArgs, getFromURLString, postToURLString, putToURLString } from './Network';
 
 function setToken(token) {
   localStorage.setItem('jwttoken', token);
@@ -15,18 +15,44 @@ function deleteToken() {
   localStorage.removeItem('jwttoken');
 }
 
-export async function loginStatus()  {
+export async function loginStatus(expireMinutes = 30)  {
   const token = getToken();
 
   if (token) {
-    return true;
-    // To Do: This code should only execute if the token has expired.  I think.
-    // const requestURL = prepareURLFromArgs('login');
-    // const result = await getFromURLString(requestURL.toString());
-    // return result.loggedIn;
+    // Precalculate some stuff to make debugging a little easier.
+    const now = parseInt(Date.now() / 1000);
+    const tokenAge = now - token.iat;
+    const expireSeconds = expireMinutes * 60;
+
+    if (tokenAge <= expireSeconds) {
+      return true;
+    } else {
+      const requestURL = prepareURLFromArgs('login');
+      const result = await getFromURLString(requestURL.toString());
+
+      if (result.loggedIn) {
+        setToken(result.token);
+      } else {
+        deleteToken();
+      }
+
+      return result.loggedIn;
+    }
   }
 
   return false;
+};
+
+export async function refreshToken() {
+  try {
+    const requestUrl = prepareURLFromArgs('login');
+    const result = await putToURLString(requestUrl.toString(), {});
+    setToken(result);
+    return getToken();
+  } catch (err) {
+    deleteToken();
+    return null;
+  }
 };
 
 export async function login(username, password) {

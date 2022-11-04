@@ -3,6 +3,9 @@ import { act, render } from '@testing-library/react';
 import * as Network from '../Network/Network';
 import  * as mockObserver from '../Hooks/useIntersectionObserver';
 
+import * as Login from '../Network/Login';
+jest.mock('../Network/Login');
+
 import ModelBase from '../model/ModelBase';
 import CollectionBase from '../model/CollectionBase';
 
@@ -33,8 +36,14 @@ afterEach(() => {
 })
 
 it('should show the list', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const pickModel = jest.fn();
-    
+
     const { resolve } = Network._setupMocks();
 
     const  { asFragment } = render(
@@ -63,6 +72,12 @@ it('should show the list', async () => {
 });
 
 it('should be an empty component', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const pickModel = jest.fn();
 
     const { container } = render(
@@ -77,6 +92,12 @@ it('should be an empty component', async () => {
 });
 
 it('should show the next page', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const pickModel = jest.fn();
 
     const { resolve } = Network._setupMocks();
@@ -121,6 +142,12 @@ it('should show the next page', async () => {
 });
 
 it('should call the callback when an item is clicked', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const pickModel = jest.fn();
 
     const { resolve } = Network._setupMocks();

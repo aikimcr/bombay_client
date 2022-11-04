@@ -9,6 +9,9 @@ jest.mock('../../Network/Network');
 import useIntersectionObserver, * as mockObserver from '../../Hooks/useIntersectionObserver';
 jest.mock('../../Hooks/useIntersectionObserver');
 
+import * as Login from '../../Network/Login';
+jest.mock('../../Network/Login');
+
 import BombayLoginContext from '../../Context/BombayLoginContext';
 import BombayModeContext from '../../Context/BombayModeContext';
 import BombayUtilityContext from '../../Context/BombayUtilityContext';
@@ -96,6 +99,12 @@ function getAreas(result) {
 }
 
 it('should render the list', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve } = Network._setupMocks();
     const result = render(<FakeContent>
         <ArtistList />
@@ -117,6 +126,12 @@ it('should render the list', async () => {
 });
 
 it('should render the next page', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve: resolve1 } = Network._setupMocks();
     const result = render(<FakeContent>
         <ArtistList />
@@ -145,6 +160,12 @@ it('should render the next page', async () => {
 });
 
 it('should stop when it runs out of data', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve } = Network._setupMocks();
     const result = render(<FakeContent>
         <ArtistList />
@@ -170,6 +191,12 @@ it('should stop when it runs out of data', async () => {
 });
 
 it('should add an artist', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const modalRoot = document.getElementById('modal-root');
 
     const { resolve } = Network._setupMocks();

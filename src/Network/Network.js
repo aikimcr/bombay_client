@@ -54,7 +54,6 @@ function getStandardHeaders(includeContentType = true) {
 export function normalizeAndJoinPath(...pathParts) {
   const newPath = pathParts.reduce((memo, part) => {
     if (part === undefined) {
-      debugger;
       throw new Error(`Unable to normalize path with parts: "${pathParts.join(', ')}"`);
     }
 
