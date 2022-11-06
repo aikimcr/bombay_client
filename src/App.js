@@ -14,13 +14,14 @@ import Content from './AppLayout/Content';
 import Accessories from './AppLayout/Accessories';
 import Footer from './AppLayout/Footer';
 
-import { loginStatus } from './Network/Login';
 import { fetchBootstrap } from './Network/Bootstrap';
+import useLoginTracking from './Hooks/useLoginTracking';
 
 function App() {
   const [bootstrap, setBootstrap] = useState(null);
-  const [loginState, setLoginState] = useState(false);
   const [modeState, setModeState] = useState('songList');
+
+  const [loginState, setLoginState] = useLoginTracking();
 
   const callFetchBootstrap = useCallback(async () => {
     try {
@@ -32,37 +33,16 @@ function App() {
     }
   }, []);
 
-  const checkLoginState = useCallback(async () => {
-    if (!bootstrap) return;
-
-    const result = await loginStatus();
-    setLoginState(result);
-    return result;
-  }, [bootstrap]);
-
-  const setMode = useCallback((newMode) => {
-    setModeState(newMode);
-    return newMode;
-  }, []);
-
-  const getBootstrap = () => bootstrap;
-
   useEffect(() => {
     callFetchBootstrap();
   }, [callFetchBootstrap]);
 
-  useEffect(() => {
-    checkLoginState();
+  const getBootstrap = () => bootstrap;
 
-    // ToDo: Make the interval configurable, don't check if logged out.
-    const intervalHandle = setInterval(async () => {
-      checkLoginState();
-    }, 10 * 60 * 1000); // Ten minutes.
-
-    return () => {
-      clearInterval(intervalHandle);
-    };
-  }, [bootstrap, checkLoginState]);
+  const setMode = useCallback((newMode) => {
+    setModeState(newMode);
+    return newMode;
+  }, []);  
 
   const utilities = {
     setMode,

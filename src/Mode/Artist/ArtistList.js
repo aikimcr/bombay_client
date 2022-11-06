@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef, createRef } from 'react';
+import { useEffect, useState, useRef, useContext, createRef, useCallback } from 'react';
 import useIntersectionObserver from '../../Hooks/useIntersectionObserver';
 
 import './ArtistList.scss';
+
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
 import ArtistCollection from '../../Model/ArtistCollection';
 
@@ -11,6 +13,8 @@ import FormModal from '../../Modal/FormModal';
 
 function ArtistList(props) {
     const topRef = createRef();
+
+    const loggedIn = useContext(BombayLoginContext);
 
     const artistCollection = useRef(null);
     const observer = useIntersectionObserver(topRef, (entries, observer) => {
@@ -30,17 +34,26 @@ function ArtistList(props) {
     const [shouldPage, setShouldPage] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const refreshCollection = useCallback(() => {
+        if (!loggedIn) {
+            artistCollection.current = null;
+            return;
+        }
+
+        setLoading(true);
+
+        artistCollection.current = new ArtistCollection();
+        artistCollection.current.ready()
+            .then(() => {
+                setLoading(false);
+            });
+    }, [loggedIn]);
+
     useEffect(() => {
         if (artistCollection.current == null) {
             refreshCollection()
         }
-
-        const intervalHandle = setInterval(refreshCollection, 300000);
-
-        return () => {
-            clearInterval(intervalHandle);
-        }
-    }, []);
+    }, [refreshCollection]);
 
     useEffect(() => {
         if (!shouldPage) { return; }
@@ -70,20 +83,18 @@ function ArtistList(props) {
         }
     }, [loading, observer, topRef]);
 
-    function refreshCollection() {
-        setLoading(true);
-
-        artistCollection.current = new ArtistCollection();
-        artistCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
-    }
+    useEffect(() => {
+        if (loggedIn && artistCollection.current === null) {
+            refreshCollection()
+        }
+    }, [loggedIn, refreshCollection]);
 
     async function submitNewArtist(artistDef) {
         await artistCollection.current.save(artistDef);
         refreshCollection();
     }
+
+    if (!loggedIn) return null;
 
     return (
         <div className="list-component">

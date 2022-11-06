@@ -3,6 +3,9 @@ import { act, render } from '@testing-library/react';
 import * as Network from '../Network/Network';
 import * as mockObserver from '../Hooks/useIntersectionObserver';
 
+import * as Login from '../Network/Login';
+jest.mock('../Network/Login');
+
 import ModelBase from '../model/ModelBase';
 import CollectionBase from '../model/CollectionBase';
 
@@ -33,6 +36,12 @@ afterEach(() => {
 })
 
 it('should show the button', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const onModelPicked = jest.fn();
 
     const { asFragment } = render(
@@ -52,6 +61,12 @@ it('should show the button', async () => {
 })
 
 it('should show the list on click', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const onModelPicked = jest.fn();
 
     const { resolve } = Network._setupMocks();
@@ -85,6 +100,12 @@ it('should show the list on click', async () => {
 })
 
 it('should call the callback and close the list when an item is clicked', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const onModelPicked = jest.fn();
 
     const { resolve } = Network._setupMocks();
@@ -126,6 +147,12 @@ it('should call the callback and close the list when an item is clicked', async 
 })
 
 it('should close the list without calling if the button is pushed again', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const onModelPicked = jest.fn();
 
     const { resolve } = Network._setupMocks();

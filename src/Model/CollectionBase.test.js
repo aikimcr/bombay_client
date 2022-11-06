@@ -13,6 +13,9 @@
 import * as Network from "../Network/Network";
 jest.mock('../Network/Network');
 
+import * as Login from '../Network/Login';
+jest.mock('../Network/Login');
+
 import ModelBase from './ModelBase';
 import CollectionBase from './CollectionBase';
 
@@ -27,6 +30,12 @@ afterEach(() => {
 });
 
 it('should fetch the first page', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve } = Network._setupMocks();
     
     const collection = new CollectionBase('/table');
@@ -38,6 +47,12 @@ it('should fetch the first page', async () => {
 });
 
 it('should instantiate with a set of models', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     // In this case, paging may not be possible.
     const collection = new CollectionBase('/table1', {
         models: [{
@@ -59,6 +74,12 @@ it('should instantiate with a set of models', async () => {
 });
 
 it('should fetch another page', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve: resolve1 } = Network._setupMocks();
 
     const collection = new CollectionBase('/table1');
@@ -78,6 +99,12 @@ it('should fetch another page', async () => {
 });
 
 it('should fetch the next page and not add duplicates', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     // The situation this is testing is actually slightly pathological and
     // not easy to handle.  This strategy really only works if the data
     // doesn't change often.
@@ -101,6 +128,12 @@ it('should fetch the next page and not add duplicates', async () => {
 });
 
 it('should handle a 404 at the end of the last page gracefully', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve: resolve1 } = Network._setupMocks();
     const collection = new CollectionBase('/table1');
 
@@ -126,6 +159,12 @@ it('should handle a 404 at the end of the last page gracefully', async () => {
 });
 
 it('should fetch the previous page', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     const { resolve: resolve1 } = Network._setupMocks();
     const collection = new CollectionBase('/table1');
 
@@ -144,6 +183,12 @@ it('should fetch the previous page', async () => {
 });
 
 if('should fetch the previous page and not add duplicates', async () => {
+    const loginPromise = Login._setupMocks();
+    loginPromise.resolve({
+        loggedIn: true,
+        token: testToken,
+    });
+
     // The situation this is testing is actually slightly pathological and
     // not easy to handle.  This strategy really only works if the data
     // doesn't change often.
