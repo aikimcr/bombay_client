@@ -1,16 +1,15 @@
 import * as NetworkLogin from '../Network/Login';
 jest.mock('../Network/Login');
 
-import { useState } from 'react'; 
+import { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { act, fireEvent, render} from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 
 const testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 
 import BombayLoginContext from '../Context/BombayLoginContext';
-import BombayModeContext from '../Context/BombayModeContext';
 import BombayUtilityContext from '../Context/BombayUtilityContext';
 
 import Login from './Login';
@@ -29,15 +28,13 @@ function FakeContent(props) {
         setMode,
         setLoginState
     }
-    
+
     return (
         <BrowserRouter basename="/">
             <BombayLoginContext.Provider value={loginState}>
-                <BombayModeContext.Provider value={modeState}>
-                    <BombayUtilityContext.Provider value={utilities}>
-                        {props.children}
-                    </BombayUtilityContext.Provider>
-                </BombayModeContext.Provider>
+                <BombayUtilityContext.Provider value={utilities}>
+                    {props.children}
+                </BombayUtilityContext.Provider>
             </BombayLoginContext.Provider>
         </BrowserRouter>
     );
@@ -76,7 +73,7 @@ it('should enable and disable the login button', async () => {
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
     expect(loginButton).toBeDisabled()
-    
+
     const usernameInput = await changeInput(modalRoot, '[data-targetfield="username"] > input', 'herkimer', 250);
     expect(loginButton).toBeDisabled();
 

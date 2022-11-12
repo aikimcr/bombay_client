@@ -17,13 +17,12 @@ import useIntersectionObserver, * as mockObserver from './Hooks/useIntersectionO
 jest.mock('./Hooks/useIntersectionObserver');
 
 import BombayLoginContext from './Context/BombayLoginContext';
-import BombayModeContext from './Context/BombayModeContext';
 
 import ModelBase from './Model/ModelBase';
 import ArtistModel from './Model/ArtistModel';
 import SongModel from './Model/SongModel';
 
-globalThis.makeResolvablePromise = function() {
+globalThis.makeResolvablePromise = function () {
     let resolver;
     let rejecter;
     let promise = new Promise((resolve, reject) => {
@@ -49,11 +48,9 @@ globalThis.ContextChanger = function (props) {
 
     return (
         <BombayLoginContext.Provider value={loginState}>
-            <BombayModeContext.Provider value={modeState}>
-                {props.children}
-                <button className="change-test-login" onClick={toggleLogin}>Change Login</button>
-                <input className="change-test-mode" type='text' onChange={updateModeState} />
-            </BombayModeContext.Provider>
+            {props.children}
+            <button className="change-test-login" onClick={toggleLogin}>Change Login</button>
+            <input className="change-test-mode" type='text' onChange={updateModeState} />
         </BombayLoginContext.Provider>
     );
 }
@@ -63,9 +60,9 @@ globalThis.toggleLogin = function () {
     userEvent.click(changeButton);
 }
 
-globalThis.changeInput = async function(root, selector, newValue, timerAdvance = -1) {
+globalThis.changeInput = async function (root, selector, newValue, timerAdvance = -1) {
     const inputField = selector ? root.querySelector(selector) : root;
-    fireEvent.change(inputField, {target: {value: newValue}});
+    fireEvent.change(inputField, { target: { value: newValue } });
 
     if (timerAdvance >= 0) {
         await act(async function () {
@@ -77,13 +74,13 @@ globalThis.changeInput = async function(root, selector, newValue, timerAdvance =
 }
 
 const allNames = {};
-casual.define('uniqueName', function(nameType, clear) {
+casual.define('uniqueName', function (nameType, clear) {
     if (!allNames[nameType]) allNames[nameType] = new Set();
 
     const oldSize = allNames[nameType].size;
     let newName;
 
-    while(allNames[nameType].size === oldSize) {
+    while (allNames[nameType].size === oldSize) {
         newName = casual.full_name;
         allNames[nameType].add(newName);
     }
@@ -92,13 +89,13 @@ casual.define('uniqueName', function(nameType, clear) {
 });
 
 const idSequences = {};
-casual.define('nextId', function(sequenceName) {
+casual.define('nextId', function (sequenceName) {
     const nextOne = (idSequences[sequenceName] ?? 0) + 1;
     idSequences[sequenceName] = nextOne;
     return nextOne;
 });
 
-globalThis.makeAModel = function(tableName = 'table1', fieldsCallback) {
+globalThis.makeAModel = function (tableName = 'table1', fieldsCallback) {
     const def = {};
     def.id = casual.nextId(tableName);
     def.name = casual.uniqueName(tableName);
@@ -131,7 +128,7 @@ globalThis.makeAModel = function(tableName = 'table1', fieldsCallback) {
     return [def, modelClass.from(def)];
 }
 
-globalThis.makeModels = function(length = 10, query = {}, tableName = 'table1', fieldsCallback) {
+globalThis.makeModels = function (length = 10, query = {}, tableName = 'table1', fieldsCallback) {
     const result = {
         data: [],
     };

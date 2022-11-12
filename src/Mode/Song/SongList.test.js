@@ -13,7 +13,6 @@ import * as Login from '../../Network/Login';
 jest.mock('../../Network/Login');
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
-import BombayModeContext from '../../Context/BombayModeContext';
 import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
 import SongList from './SongList';
@@ -47,11 +46,9 @@ function FakeContent(props) {
     return (
         <BrowserRouter basename="/">
             <BombayLoginContext.Provider value={loginState}>
-                <BombayModeContext.Provider value={modeState}>
-                    <BombayUtilityContext.Provider value={utilities}>
-                        {props.children}
-                    </BombayUtilityContext.Provider>
-                </BombayModeContext.Provider>
+                <BombayUtilityContext.Provider value={utilities}>
+                    {props.children}
+                </BombayUtilityContext.Provider>
             </BombayLoginContext.Provider>
         </BrowserRouter>
     );
@@ -73,7 +70,7 @@ afterEach(() => {
     const modalRoot = document.getElementById('modal-root');
     modalRoot.remove();
 
-    while(mockObserver.mockObserver.observers.length > 0) {
+    while (mockObserver.mockObserver.observers.length > 0) {
         mockObserver.mockObserver.observers.pop();
     }
 
@@ -172,7 +169,7 @@ it('should render the next page', async () => {
     expect(listElement.childElementCount).toBe(models1.length);
 
     const { resolve: resolve2 } = Network._setupMockPromise();
-    const [fetchBody2, models2] = makeModels(10, {offset: 10, limit: 10}, 'song');
+    const [fetchBody2, models2] = makeModels(10, { offset: 10, limit: 10 }, 'song');
 
     await act(async () => {
         observer._fireIntersect(listElement.lastChild);
@@ -236,7 +233,7 @@ it('should add a song', async () => {
 
     expect(mockObserver.mockObserver.observers.length).toBe(1);
 
-    const [ , controls] = getAreas(result);
+    const [, controls] = getAreas(result);
 
     expect(modalRoot.childElementCount).toEqual(0);
 
@@ -245,7 +242,7 @@ it('should add a song', async () => {
     act(() => {
         addButton.click();
     });
-    
+
     expect(modalRoot.childElementCount).toEqual(1);
 
     const submitButton = modalRoot.querySelector('[type="submit"]');
@@ -258,7 +255,7 @@ it('should add a song', async () => {
     await act(async () => {
         submitButton.click();
     });
- 
+
     resolve(saveDef);
 
     expect(Network.postToURLString).toBeCalledTimes(1);
