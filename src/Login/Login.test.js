@@ -16,30 +16,6 @@ import Login from './Login';
 
 jest.useFakeTimers();
 
-function FakeContent(props) {
-    const [loginState, setLoginState] = useState(false);
-    const [modeState, setModeState] = useState('artist');
-
-    const setMode = async newMode => {
-        setModeState(newMode);
-    }
-
-    const utilities = {
-        setMode,
-        setLoginState
-    }
-
-    return (
-        <BrowserRouter basename="/">
-            <BombayLoginContext.Provider value={loginState}>
-                <BombayUtilityContext.Provider value={utilities}>
-                    {props.children}
-                </BombayUtilityContext.Provider>
-            </BombayLoginContext.Provider>
-        </BrowserRouter>
-    );
-}
-
 beforeEach(() => {
     localStorage.removeItem('jwttoken');
 
@@ -54,9 +30,9 @@ afterEach(() => {
 });
 
 it('should render the login mode', async () => {
-    const { asFragment } = render(<FakeContent>
+    const { asFragment } = render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     expect(asFragment).toMatchSnapshot();
 
@@ -64,11 +40,19 @@ it('should render the login mode', async () => {
     expect(modalRoot).toMatchSnapshot();
 });
 
+it('should not render the login mode', async () => {
+    render(<ContextChanger loggedIn={false} showLoginForm={false}>
+        <Login />
+    </ContextChanger>);
+
+    const modalRoot = document.getElementById('modal-root');
+    expect(modalRoot).toBeEmptyDOMElement();
+});
 
 it('should enable and disable the login button', async () => {
-    render(<FakeContent>
+    render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
@@ -84,9 +68,9 @@ it('should enable and disable the login button', async () => {
 it('should login successfully', async () => {
     const { resolve } = NetworkLogin._setupMocks();
 
-    const result = render(<FakeContent>
+    const result = render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
@@ -112,9 +96,9 @@ it('should login successfully', async () => {
 it('should show error on failed login', async () => {
     const { resolve } = NetworkLogin._setupMocks();
 
-    const result = render(<FakeContent>
+    const result = render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
@@ -140,9 +124,9 @@ it('should show error on failed login', async () => {
 it('should show error on call error', async () => {
     const { resolve } = NetworkLogin._setupMocks();
 
-    const result = render(<FakeContent>
+    const result = render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');
@@ -168,9 +152,9 @@ it('should show error on call error', async () => {
 it('should clear the inputs and error on clear all fields', async () => {
     const { resolve } = NetworkLogin._setupMocks();
 
-    const result = render(<FakeContent>
+    const result = render(<ContextChanger loggedIn={false} showLoginForm={true}>
         <Login />
-    </FakeContent>);
+    </ContextChanger>);
 
     const modalRoot = document.getElementById('modal-root');
     const loginButton = modalRoot.querySelector('.login.btn');

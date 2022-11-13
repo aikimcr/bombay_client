@@ -6,7 +6,6 @@ import './LabeledInput.scss';
 // This is generally not considered a Good Idea, but this
 // particular component is small and has no utility outside this module.
 function LabeledSelectOption(props) {
-    const isSelected = props.value === props.currentValue;
     return <option value={props.value}>{props.label}</option>
 }
 

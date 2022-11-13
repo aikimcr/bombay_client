@@ -18,7 +18,7 @@ jest.mock('./AppLayout/HeaderBar', () => {
 
   return {
     __esModule: true,
-    ...originalModule, 
+    ...originalModule,
     default: () => {
       return (<div className="header-bar"></div>);
     },
@@ -52,7 +52,7 @@ jest.mock('./AppLayout/Filters', () => {
 });
 
 function MockContextConsumer(props) {
-  const loggedIn = useContext(BombayLoginContext);
+  const { loggedIn } = useContext(BombayLoginContext);
   const lgsText = loggedIn ? 'Logged In' : 'Logged Out';
 
   return (
@@ -95,7 +95,7 @@ test('Renders App Framework', async () => {
 
   const { resolve: bootstrapResolve } = NetworkBootstrap._setupMocks();
   bootstrapResolve({ key_signatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G']});
-  
+
   const result = render(<App />);
 
   const index = result.container;
