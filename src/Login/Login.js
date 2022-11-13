@@ -4,7 +4,6 @@ import { createPortal } from 'react-dom';
 import './Login.scss';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
-import BombayUtilityContext from '../Context/BombayUtilityContext';
 
 import { loginStatus, login } from "../Network/Login";
 import LabeledInput from '../Widgets/LabeledInput';
@@ -16,8 +15,7 @@ function Login(props) {
     const [error, setError] = useState(null);
     const [submitDisabled, setSubmitDisabled] = useState(true);
 
-    const loggedIn = useContext(BombayLoginContext);
-    const { setLoginState } = useContext(BombayUtilityContext);
+    const { loggedIn, setLoggedIn, showLoginForm } = useContext(BombayLoginContext);
 
     function getCredentials() {
         // TODO: THere has to be a better way to do what these two lines are doing.
@@ -72,10 +70,11 @@ function Login(props) {
             });
 
         const loginOkay = await loginStatus();
-        setLoginState(loginOkay);
+        setLoggedIn(loginOkay);
     }
 
     if (loggedIn) return null;
+    if (!showLoginForm) return null;
 
     const modalRoot = document.getElementById('modal-root');
 

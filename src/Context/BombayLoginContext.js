@@ -1,5 +1,10 @@
 import { createContext } from 'react';
 
-const BombayLoginContext = createContext(false);
+const BombayLoginContext = createContext({
+    loggedIn: false,
+    showLoginForm: false,
+    setLoggedIn: null,
+    setShowLogin: null,
+});
 
 export default BombayLoginContext;

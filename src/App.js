@@ -18,6 +18,7 @@ import useLoginTracking from './Hooks/useLoginTracking';
 
 function App() {
   const [bootstrap, setBootstrap] = useState(null);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const [loginState, setLoginState] = useLoginTracking();
 
@@ -37,8 +38,24 @@ function App() {
 
   const getBootstrap = () => bootstrap;
 
+  const loginContext = {
+    loggedIn: loginState,
+    showLoginForm: showLoginForm,
+    setLoggedIn: newLoggedIn => {
+      if (newLoggedIn) {
+        setShowLoginForm(false);
+      }
+
+      setLoginState(newLoggedIn);
+    },
+
+    setShowLogin: newShow => {
+      if (loginState) return;
+      setShowLoginForm(newShow);
+    },
+  }
+
   const utilities = {
-    setLoginState,
     getBootstrap,
   }
 
@@ -51,7 +68,7 @@ function App() {
   return (
     <div className="App">
       <ConfigurationContext.Provider value={appConfig}>
-        <BombayLoginContext.Provider value={loginState}>
+        <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>
             <HeaderBar />
             <Navigation />

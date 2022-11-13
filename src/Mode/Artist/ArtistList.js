@@ -14,7 +14,7 @@ import FormModal from '../../Modal/FormModal';
 function ArtistList(props) {
     const topRef = createRef();
 
-    const loggedIn = useContext(BombayLoginContext);
+    const { loggedIn } = useContext(BombayLoginContext);
 
     const artistCollection = useRef(null);
     const observer = useIntersectionObserver(topRef, (entries, observer) => {

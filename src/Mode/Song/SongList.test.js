@@ -20,7 +20,7 @@ import SongList from './SongList';
 jest.useFakeTimers();
 
 function FakeContent(props) {
-    const [loginState, setLoginState] = useState(true);
+    const [loginState, setLoginState] = useState({ loggedIn: true, showLoginForm: false });
     const [modeState, setModeState] = useState('song');
 
     const checkLoginState = async () => {

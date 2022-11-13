@@ -35,22 +35,35 @@ globalThis.makeResolvablePromise = function () {
 
 // Use this to turn the crank on context changes.
 globalThis.ContextChanger = function (props) {
-    const [loginState, setLoginState] = useState(props.loginState);
-    const [modeState, setModeState] = useState(props.modeState);
+    const [loginState, setLoginState] = useState(props.loggedIn);
+    const [showLoginForm, setShowLoginForm] = useState(props.showLoginForm);
 
-    function toggleLogin() {
-        setLoginState(!loginState);
+    const loginContext = {
+        loggedIn: loginState,
+        showLoginForm: showLoginForm,
+        setLoggedIn: newLoggedIn => {
+            if (newLoggedIn) {
+                setShowLoginForm(false);
+            }
+
+            setLoginState(newLoggedIn);
+        },
+
+        setShowLogin: newShow => {
+            if (loginState) return;
+            setShowLoginForm(newShow);
+        },
     }
 
-    function updateModeState(evt) {
-        setModeState(evt.currentTarget.value);
+    function toggleLogin() {
+        loginContext.setLoggedIn(!loginState);
     }
 
     return (
-        <BombayLoginContext.Provider value={loginState}>
+        <BombayLoginContext.Provider value={loginContext}>
             {props.children}
+            {showLoginForm ? <div>Showing Log In Form</div> : null}
             <button className="change-test-login" onClick={toggleLogin}>Change Login</button>
-            <input className="change-test-mode" type='text' onChange={updateModeState} />
         </BombayLoginContext.Provider>
     );
 }
