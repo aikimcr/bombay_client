@@ -1,0 +1,24 @@
+@import '../global.scss';
+
+.app-home {
+    border-top: 1px solid rgba(0, 0, 0, 0); // Prevent margin collapsing.
+    height: 100%;
+    width: 100%;
+
+    @include utiliity-component-background;
+
+    >ul {
+        padding: 0 3em;
+
+        >li {
+            height: 3rem;
+            line-height: 3rem;
+
+            &::marker {
+                color: white;
+                content: "\1F3B5"; // Musical Note Emoji
+                font-size: 2rem;
+            }
+        }
+    }
+}

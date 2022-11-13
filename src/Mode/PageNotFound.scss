@@ -1,0 +1,27 @@
+@import '../global.scss';
+
+.error-404 {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+
+    @include utiliity-component-background;
+
+    > div {
+        font-size: 2rem;
+        height : 2rem;
+        line-height: 2rem;
+    }
+
+    .emoji {
+        font-size: 40vmin;
+        height: 50vh;
+        width: 40vmin;
+        line-height: 40vmin;;
+    }
+}

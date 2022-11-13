@@ -5,15 +5,19 @@
   position: relative;
   overflow: hidden;
 
-  @if ($bottom == null) {
+  @if ($bottom ==null) {
     top: $top;
-  } @else {
+  }
+
+  @else {
     bottom: $bottom;
   }
 
-  @if ($right == null) {
+  @if ($right ==null) {
     left: $left;
-  } @else {
+  }
+
+  @else {
     right: $right;
   }
 
@@ -38,29 +42,30 @@
     "filters content accessories"
     "footer footer footer";
 
-  .header-bar {
-    @include areaLayout(header, $header-background-color, $header-color, $height: 60px);
-  }
+}
 
-  .navigation {
-    @include areaLayout(navigation, $navigation-background-color, $navigation-color, $height: 30px);
-    font-size: 20px;
-    line-height: 20px;
-  }
+.header-bar {
+  @include areaLayout(header, $header-background-color, $header-color, $height: 60px);
+}
 
-  .filters {
-    @include areaLayout(filters, $sidebar-background-color, $sidebar-color, 150px);
-  }
+.app-navigation {
+  @include areaLayout(navigation, $navigation-background-color, $navigation-color, $height: 30px);
+  font-size: 20px;
+  line-height: 20px;
+}
 
-  .content {
-    @include areaLayout(content, white, black);
-  }
+.filters {
+  @include areaLayout(filters, $sidebar-background-color, $sidebar-color, 150px);
+}
 
-  .accessories {
-    @include areaLayout(accessories, $sidebar-background-color, $sidebar-color, 50px, $right: 0);
-  }
+.content {
+  @include areaLayout(content, white, black);
+}
 
-  .footer {
-    @include areaLayout(footer, $header-background-color, $header-color, $height: 30px);
-  }
+.accessories {
+  @include areaLayout(accessories, $sidebar-background-color, $sidebar-color, 50px, $right: 0);
+}
+
+.footer {
+  @include areaLayout(footer, $header-background-color, $header-color, $height: 30px);
 }

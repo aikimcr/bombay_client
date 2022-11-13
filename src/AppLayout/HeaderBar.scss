@@ -8,8 +8,8 @@
         background-color: $header-bar-parts-background-color;
         width: 100%;
         flex-grow: 2;
-        font-size: 50px;
-        line-height: 50px;
+        font-size: clamp(20px, 50px, 50px);
+        line-height: clamp(20px, 50px, 50px);
         text-align: center;
     }
 }

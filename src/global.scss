@@ -14,6 +14,16 @@ $sidebar-color: $navigation-color;
 $standard-font-size: 20px;
 $button-font-size: $standard-font-size + 10px;
 
+@mixin utiliity-component-background {
+    background-image: radial-gradient(rgba(127, 0, 0, 0.7), rgba(0, 127, 0, 0.7), rgba(0, 0, 127, 0.7));
+
+    a {
+        color: white;
+        font-size: 2rem;
+        ;
+    }
+}
+
 body,
 div,
 input {
