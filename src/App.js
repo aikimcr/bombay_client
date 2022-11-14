@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 import './App.scss';
 
@@ -70,12 +71,14 @@ function App() {
       <ConfigurationContext.Provider value={appConfig}>
         <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>
-            <HeaderBar />
-            <Navigation />
-            <Filters />
-            <Content />
-            <Accessories />
-            <Footer />
+            <BrowserRouter basename={routerBase}>
+              <HeaderBar />
+              <Navigation />
+              <Filters />
+              <Content />
+              <Accessories />
+              <Footer />
+            </BrowserRouter>
           </BombayUtilityContext.Provider>
         </BombayLoginContext.Provider>
       </ConfigurationContext.Provider>
