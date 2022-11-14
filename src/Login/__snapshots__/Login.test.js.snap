@@ -67,7 +67,7 @@ exports[`should render the login mode 2`] = `
         <button
           class="clear btn"
         >
-          Clear All Field
+          Clear All Fields
         </button>
         <button
           class="login btn"
