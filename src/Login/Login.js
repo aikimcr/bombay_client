@@ -99,7 +99,7 @@ function Login(props) {
                 </div>
                 {error && <div className="error">{error}</div>}
                 <div className="controls">
-                    <Button className="clear" disabled={false} onClick={clearAllFields} label='Clear All Field' />
+                    <Button className="clear" disabled={false} onClick={clearAllFields} label='Clear All Fields' />
                     <Button className="login" disabled={submitDisabled} onClick={doLogin} label='Login' />
                 </div>
             </div>

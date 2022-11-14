@@ -11,10 +11,14 @@
     font-size: $standard-font-size;
     line-height: $standard-font-size;
     height: $standard-font-size * 1.5;
-    width: $standard-font-size * 1.5;
     text-align: center;
     padding: 0;
     cursor: pointer;
+}
+
+.close-or-clear,
+.close {
+    width: $standard-font-size * 1.5;
 }
 
 .picker-button,
@@ -48,7 +52,7 @@
         width: 100%;
         padding: 1px 1em;
     }
-    
+
     .toggle {
         width: 4em;
         position: absolute;
@@ -100,7 +104,7 @@
         display: grid;
         grid-template-columns: auto 5ch $standard-font-size * 1.5;
         gap: 0.5em;
-        
+
         > input[type="range"] {
             cursor: pointer;
         }
