@@ -1,5 +1,5 @@
-
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 
 import BombayLoginContext from "../Context/BombayLoginContext";
 import Button from "../Widgets/Button";
@@ -19,8 +19,8 @@ function Top(props) {
 
             {loggedIn ?
                 <ul>
-                    <li><a href="artistList">Artist List</a></li>
-                    <li><a href="songList">Song List</a></li>
+                    <li><Link to="artistList">Artist List</Link></li>
+                    <li><Link to="songList">Song List</Link></li>
                 </ul> :
                 <div>
                     <h2>Please Login to continue</h2>
