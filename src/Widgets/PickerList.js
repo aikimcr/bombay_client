@@ -1,80 +1,25 @@
-import { useEffect, useState, useRef, createRef, useCallback } from 'react';
+import { createRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import useIntersectionObserver from '../Hooks/useIntersectionObserver';
+import BombayLoginContext from '../Context/BombayLoginContext';
+import useModelCollection from '../Hooks/useModelCollection';
 
-function PickerList(props) {
+function PickerList({ pickModel, isOpen, collectionClass }) {
     const topRef = createRef();
 
-    const listCollection = useRef(null);
-    const observer = useIntersectionObserver(topRef, (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setShouldPage(true);
-                observer.unobserve(entry.target);
-            }
+    const loginState = useContext(BombayLoginContext);
 
-            // I haven't found a case where this is actually needed, but I haven't ruled it out.
-            // if (entry.isVisible) {
-            // }
-        });
+    const [listCollection] = useModelCollection({
+        CollectionClass: collectionClass,
+        topRef, loginState,
     });
-
-    const [shouldPage, setShouldPage] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    const refreshCollection = useCallback(() => {
-        setLoading(true);
-
-        listCollection.current = new props.collectionClass();
-        listCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
-    }, [props.collectionClass]);
-
-    useEffect(() => {
-        if (!props.isOpen) return;
-
-        if (listCollection.current == null) {
-            refreshCollection()
-        }    
-    }, [props.isOpen, refreshCollection]);    
-
-    useEffect(() => {
-        if (!shouldPage) return;
-        if (loading) return;
-
-        setShouldPage(false);
-
-        if (listCollection.current.hasNextPage()) {
-            setLoading(true);
-
-            listCollection.current.fetchNextPage()
-                .then(() => {
-                    setLoading(false);
-                });    
-        }        
-    }, [shouldPage, loading]);    
-
-    useEffect(() => {
-        if (loading) return;
-
-        if (listCollection.current && listCollection.current.hasNextPage()) {
-            const myElement = topRef.current?.querySelector('li:last-child');
-
-            if (myElement) {
-                observer.current.observe(myElement);
-            }    
-        }    
-    }, [loading, observer, topRef]);    
 
     function clickHandler(evt, model ) {
         evt.preventDefault();
-        props.pickModel(model);
+        pickModel(model);
     }
 
-    if (!props.isOpen) return null;
+    if (!isOpen) return null;
 
     return (
         <div className="picker-component">

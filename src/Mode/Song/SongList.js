@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef, useContext, createRef, useCallback } from 'react';
-import useIntersectionObserver from '../../Hooks/useIntersectionObserver';
+import { useState, useContext, createRef } from 'react';
 
 import './SongList.scss';
 
@@ -10,91 +9,26 @@ import SongCollection from '../../Model/SongCollection';
 import SongListItem from './SongListItem';
 import Song from './Song';
 import FormModal from '../../Modal/FormModal';
+import useModelCollection from '../../Hooks/useModelCollection';
 
 function SongList(props) {
     const topRef = createRef();
 
-    const { loggedIn } = useContext(BombayLoginContext);
+    const loginState = useContext(BombayLoginContext);
 
-    const songCollection = useRef(null);
-    const observer = useIntersectionObserver(topRef, (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setShouldPage(true);
-                observer.unobserve(entry.target);
-            }
-
-            // I haven't found a case where this is actually needed, but I haven't ruled it out.
-            // if (entry.isVisible) {
-            // }
-        });
+    const [songCollection, refreshCollection] = useModelCollection({
+        CollectionClass: SongCollection,
+        topRef, loginState,
     });
 
     const [showAdd, setShowAdd] = useState(false);
-    const [shouldPage, setShouldPage] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    const refreshCollection = useCallback(() => {
-        if (!loggedIn) {
-            songCollection.current = null;
-            return;
-        }
-
-        setLoading(true);
-
-        songCollection.current = new SongCollection();
-        songCollection.current.ready()
-            .then(() => {
-                setLoading(false);
-            });
-    }, [loggedIn]);
-
-    useEffect(() => {
-        if (songCollection.current == null) {
-            refreshCollection();
-        }
-    }, [refreshCollection]);
-
-    useEffect(() => {
-        if (!shouldPage) { return; }
-        if (loading) { return; }
-
-        setShouldPage(false);
-
-        if (songCollection.current.hasNextPage()) {
-            setLoading(true);
-
-            songCollection.current.fetchNextPage()
-                .then(() => {
-                    setLoading(false);
-                });
-        }
-    }, [shouldPage, loading]);
-
-    useEffect(() => {
-        if (loading) { return; }
-
-        if (songCollection.current && songCollection.current.hasNextPage()) {
-            const myElement = topRef.current.querySelector('li:last-child');
-
-            if (myElement) {
-                observer.current.observe(myElement);
-            }
-        }
-    }, [loading, observer, topRef]);
-
-    useEffect(() => {
-        if (loggedIn && songCollection.current === null) {
-            refreshCollection()
-        }
-    }, [loggedIn, refreshCollection]);
 
     async function submitNewSong(songDef) {
         await songCollection.current.save(songDef);
         refreshCollection();
     }
 
-    if (!loggedIn) return null;
+    if (!loginState.loggedIn) return null;
 
     return (
         <div className="list-component">
