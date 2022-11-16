@@ -34,15 +34,15 @@ class ModelBase {
             this.#data = {};
         }
     }
-    
+
     idUrl() {
         return this.#idUrl;
     }
-    
+
     ready() {
         return this.#readyPromise;
     }
-    
+
     createRefmodels(data) {
         this.#data = {...data};
         if (this.#data.url) {
@@ -71,10 +71,10 @@ class ModelBase {
 
         throw new Error(`No field "${fieldName}" is set`);
     }
-    
+
     async save() {
         const newDef = await putToURLString(this.#idUrl, this.#data);
-        this.#data = { ...this.#data, ...newDef };
+        this.createRefmodels(newDef);
         return this.#data;
     }
 

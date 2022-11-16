@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import './SongList.scss';
 
 import Song from './Song';
 import FormModal from '../../Modal/FormModal';
 
-function SongListItem(props) {
+function SongListItem({ song }) {
     const [showEdit, setShowEdit] = useState(false);
-    const [displayName, setDisplayName] = useState(props.song.get('name'));
+    const [displayName, setDisplayName] = useState(song.get('name'));
+    const [artistName, setArtistName] = useState(song.artist().get('name'));
 
     async function updateSong(modelDef) {
-        await props.song.set(modelDef).save();
-        setDisplayName(props.song.get('name'));
+        await song.set(modelDef).save();
+        setDisplayName(song.get('name'));
+        setArtistName(song.artist().get('name'));
     }
 
     return (
@@ -22,32 +26,36 @@ function SongListItem(props) {
                 <div className='details'>
                     <>
                         <div className='label'>Artist</div>
-                        <div className='text'>{props.song.artist().get('name')}</div>
+                        <div className='text'>{artistName}</div>
                     </>
                     <>
                         <div className='label'>Key</div>
-                        <div className='text'>{props.song.get('key_signature')}</div>
+                        <div className='text'>{song.get('key_signature')}</div>
                     </>
                     <>
                         <div className='label'>Tempo</div>
-                        <div className='text'>{props.song.get('tempo')}</div>
+                        <div className='text'>{song.get('tempo')}</div>
                     </>
                     <>
                         <div className='label'>Lyrics</div>
-                        <div className='long-text'><pre>{props.song.get('lyrics')}</pre></div>
+                        <div className='long-text'><pre>{song.get('lyrics')}</pre></div>
                     </>
                 </div>
             </li>
-            <FormModal 
+            <FormModal
                 title="Edit Song"
                 onClose={() => setShowEdit(false)}
                 onSubmit={updateSong}
                 open={showEdit}
             >
-                <Song song={props.song} />
+                <Song song={song} />
             </FormModal>
         </React.Fragment>
     )
+}
+
+SongListItem.propTypes = {
+    song: PropTypes.object,
 }
 
 export default SongListItem;

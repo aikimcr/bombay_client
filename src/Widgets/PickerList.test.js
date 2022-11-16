@@ -24,12 +24,7 @@ class TestCollection extends CollectionBase {
 import PickerList from './PickerList';
 
 function TestWrapper({ loggedIn, showLoginForm, children }) {
-    debugger;
     const [loginState, setLoginState] = useState({ loggedIn, showLoginForm });
-
-    testSetLoggedIn = (isLoggedIn) => {
-        setLoginState(oldState => { return { ...oldState, loggedIn: isLoggedIn }; });
-    }
 
     return (
         <BombayLoginContext.Provider value={loginState}>
