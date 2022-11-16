@@ -6,10 +6,7 @@ import * as NetworkLogin from '../Network/Login';
 jest.mock('../Network/Login');
 
 import * as Network from '../Network/Network';
-jest.mock('../Network/Network');
-
 import useIntersectionObserver, * as mockObserver from './useIntersectionObserver';
-jest.mock('./useIntersectionObserver');
 
 import jwt_decode from 'jwt-decode';
 jest.mock('jwt-decode');

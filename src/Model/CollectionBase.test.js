@@ -10,11 +10,10 @@
 // - Provide mechanisms to add or remove models.
 // - Provide a mechanism to post or delete for models.
 // - Be  agnostic to the model type.
-import * as Network from "../Network/Network";
-jest.mock('../Network/Network');
-
 import * as Login from '../Network/Login';
 jest.mock('../Network/Login');
+
+import * as Network from "../Network/Network";
 
 import ModelBase from './ModelBase';
 import CollectionBase from './CollectionBase';
@@ -37,7 +36,7 @@ it('should fetch the first page', async () => {
     });
 
     const { resolve } = Network._setupMocks();
-    
+
     const collection = new CollectionBase('/table');
     const [fetchBody, models] = makeModels(10);
     resolve(fetchBody);
@@ -92,7 +91,7 @@ it('should fetch another page', async () => {
     const fetchPromise2 = collection.fetchNextPage();
     const [fetchBody2, models2] = makeModels(10, {offset: 10, limit: 10});
     resolve2(fetchBody2);
-    
+
     const fetchModels2 = await fetchPromise2;
     expect(fetchModels2).toEqual([...models1, ...models2]);
     expect(collection.models()).toEqual(fetchModels2);

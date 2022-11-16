@@ -4,7 +4,6 @@
 // - Set the data fields on instantiate
 // - Allow changing of field values.
 import * as Network from "../Network/Network";
-// jest.mock('../Network/Network'); // This doesn't actually work here.
 
 import casual from 'casual';
 
@@ -43,13 +42,13 @@ it('should create a model from a definition', async () => {
 // // ToDO: Mocking is not working on getFromURLString here.
 it('should fetch a model', async () => {
     const [mockPromise, mockResolve] = makeResolvablePromise();
-    // The mock is not recognized unless it is done this way. 
+    // The mock is not recognized unless it is done this way.
     Network.getFromURLString = jest.fn((url) => {
         return mockPromise;
     });
 
     const [fetchBody, fetchModel] = makeAModel();
-   
+
     const model = new ModelBase(fetchBody.url);
     const fetchPromise = model.ready();
     mockResolve(fetchBody);
@@ -83,7 +82,7 @@ it('should save changes to the model', async () => {
     const newBody = await savePromise;
     expect(newBody).not.toEqual(oldBody);
     expect(newBody.name).toEqual(newName);
-    
+
     expect(Network.putToURLString).toBeCalledTimes(1);
     expect(Network.putToURLString).toBeCalledWith(oldBody.url, {...oldBody, name: newName});
 });

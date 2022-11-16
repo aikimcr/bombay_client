@@ -1,14 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 
-import * as Network from '../Network/Network';
-jest.mock('../Network/Login');
-
-import * as mockObserver from '../Hooks/useIntersectionObserver';
-jest.mock('../Hooks/useIntersectionObserver');
-
 import * as NetworkLogin from '../Network/Login';
 jest.mock('../Network/Login');
+
+import * as Network from '../Network/Network';
+import * as mockObserver from '../Hooks/useIntersectionObserver';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
 

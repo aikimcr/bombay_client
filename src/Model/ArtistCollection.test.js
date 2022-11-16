@@ -11,8 +11,6 @@
 // - Provide a mechanism to post or delete for models.
 // - Be  agnostic to the model type.
 import * as Network from "../Network/Network";
-jest.mock('../Network/Network');
-
 
 import CollectionBase from './CollectionBase';
 import ArtistCollection from './ArtistCollection';
