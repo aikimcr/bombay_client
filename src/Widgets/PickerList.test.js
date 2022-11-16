@@ -6,10 +6,7 @@ import * as NetworkLogin from '../Network/Login';
 jest.mock('../Network/Login');
 
 import * as Network from '../Network/Network';
-jest.mock('../Network/Network');
-
 import * as mockObserver from '../Hooks/useIntersectionObserver';
-jest.mock('../Hooks/useIntersectionObserver');
 
 import BombayLoginContext from '../Context/BombayLoginContext';
 
@@ -99,4 +96,28 @@ it('should show the list', async () => {
 
     expect(pickModel).toBeCalled();
     expect(pickModel).toBeCalledWith(models[1]);
+});
+
+it('should show an empty list', async () => {
+    setupLogin();
+    const pickModel = jest.fn();
+
+    const { reject } = Network._setupMocks();
+
+    const { container } = render(
+        <TestWrapper loggedIn={true} showLoginForm={false}>
+            <PickerList
+                pickModel={pickModel}
+                isOpen={true}
+                collectionClass={TestCollection}
+            />
+        </TestWrapper>
+    );
+
+    await act(async () => {
+        reject({ status: 404, message: 'Not Found' });
+    });
+
+    const listElements = container.querySelectorAll('li.picker-item');
+    expect(listElements).toHaveLength(0);
 });
