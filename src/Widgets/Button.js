@@ -13,7 +13,7 @@ function Button(props) {
     const className = Array.from(classList).join(' ');
 
     if (props.disabled) {
-        return (< button className={className} onClick={props.onClick} disabled > {props.label}</button >);
+        return (<button className={className} onClick={props.onClick} disabled > {props.label}</button >);
     } else {
         return (<button className={className} onClick={props.onClick}>{props.label}</button>);
     }

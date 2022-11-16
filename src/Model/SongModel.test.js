@@ -1,3 +1,5 @@
+import * as Network from "../Network/Network";
+
 import ModelBase from './ModelBase';
 import SongModel from './SongModel';
 
@@ -32,4 +34,28 @@ it('should not recognize a base model as a song model', async () => {
 
     expect(SongModel.isModel(baseModel)).toBeFalsy();
     expect(SongModel.isModel(songModel)).toBeTruthy();
+});
+
+it('should update the artist model', async () => {
+    const [mockPromise, mockResolve] = makeResolvablePromise();
+    // The mock is not recognized unless it is done this way.
+    Network.putToURLString = jest.fn((url, body) => {
+        return mockPromise;
+    });
+
+    const [modelDef, songModel] = makeAModel('song');
+    const [newArtistDef, newArtistModel] = makeAModel('artist');
+    const songModelDef = { ...modelDef };
+    delete songModelDef.artist;
+
+    songModelDef.artist_id = newArtistDef.id;
+    songModel.set(songModelDef);
+
+    const savePromise = songModel.save();
+    mockResolve({ ...songModelDef, artist: newArtistDef });
+    const newBody = await savePromise;
+
+    expect(newBody).toEqual(songModelDef);
+    expect(songModel.get('artist_id')).toEqual(newArtistModel.get('id'));
+    expect(songModel.artist()).toEqual(newArtistModel);
 });

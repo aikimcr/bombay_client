@@ -12,11 +12,11 @@ import LabeledSelect from '../../Widgets/LabeledSelect';
 import LabeledRange from '../../Widgets/LabeledRange';
 import LabeledTextArea from '../../Widgets/LabeledTextArea';
 
-function Song(props) {
+function Song({ song }) {
     const { getBootstrap } = useContext(BombayUtilityContext);
 
-    const [artistModel, setArtistModel] = useState(props.song ? props.song.artist() : null);
-    
+    const [artistModel, setArtistModel] = useState(song ? song.artist() : null);
+
     const { keySignatures } = getBootstrap();
     const keyOptions = keySignatures.map(key => {
         return { value: key };
@@ -24,8 +24,8 @@ function Song(props) {
 
     return (
         <>
-            <LabeledInput modelName='song' fieldName='name' labelText='Song Name' model={props.song} />
-            <PickerButton 
+            <LabeledInput modelName='song' fieldName='name' labelText='Song Name' model={song} />
+            <PickerButton
                 modelName='artist'
                 targetField='artist_id'
                 fieldName='id'
@@ -40,7 +40,7 @@ function Song(props) {
                 labelText='Key'
                 options={keyOptions}
                 unsetLabel='<unset>'
-                model={props.song}
+                model={song}
             />
             <LabeledRange
                 modelName='song'
@@ -48,13 +48,13 @@ function Song(props) {
                 labelText='Tempo'
                 min={20}
                 max={220}
-                model={props.song}
+                model={song}
             />
             <LabeledTextArea
                 modelName='song'
                 fieldName='lyrics'
                 labelText='Lyrics'
-                model={props.song}
+                model={song}
             />
         </>
     )
@@ -62,7 +62,6 @@ function Song(props) {
 
 Song.propTypes = {
     song: PropTypes.object,
-    artist: PropTypes.object,
 }
 
 export default Song
