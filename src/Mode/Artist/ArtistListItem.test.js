@@ -2,6 +2,8 @@ import { act, render } from '@testing-library/react';
 
 import * as Network from '../../Network/Network';
 
+import { makeAModel } from '../../testHelpers/modelTools';
+
 import ArtistListItem from './ArtistListItem';
 
 jest.useFakeTimers();

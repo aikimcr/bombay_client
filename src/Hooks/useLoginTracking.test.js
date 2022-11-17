@@ -53,7 +53,7 @@ async function renderAndCheck(checkResolve = true) {
     await act(async () => {
         mockCheckLoginPromise.resolve(checkResolve);
     });
-    
+
     expect(NetworkLogin.loginStatus).toBeCalledTimes(1);
     expect(NetworkLogin.refreshToken).not.toBeCalled();
 
@@ -66,7 +66,7 @@ it('should render as logged out', async function () {
     const testDiv = screen.getByText(/Logged/);
     expect(testDiv).toBeInTheDocument();
     expect(testDiv).toHaveTextContent('Logged Out');
-});    
+});
 
 it('should render as logged in', async function () {
     await renderAndCheck();
@@ -118,7 +118,7 @@ async function nextCheck(loginStatusCalls, refreshTokenCalls, resolveToken, reso
 
 it('should logout if there is no activity', async function () {
     await renderAndCheck();
-    
+
     await nextCheck(0, 1, testToken, true, 'Logged In');
     await nextCheck(0, 1, testToken, true, 'Logged In');
     await nextCheck(0, 1, testToken, true, 'Logged In');
@@ -132,11 +132,11 @@ it('should logout if there is no activity', async function () {
 
 it('should refresh the token if there is activity', async function () {
     const result = await renderAndCheck();
-    
+
     const testDiv = screen.queryByText(/Logged/);
     expect(testDiv).toBeInTheDocument();
     expect(testDiv).toHaveTextContent('Logged In');
-    
+
     await nextCheck(0, 1, testToken, true, 'Logged In');
     await nextCheck(0, 1, testToken, true, 'Logged In');
     await nextCheck(0, 1, testToken, true, 'Logged In');
@@ -162,7 +162,7 @@ it('should set login state to true', async function () {
     let testDiv = screen.queryByText(/Logged/);
     expect(testDiv).toBeInTheDocument();
     expect(testDiv).toHaveTextContent('Logged Out');
-    
+
     const button = screen.getByText('LOGIN');
 
     await act(async () => {

@@ -11,6 +11,8 @@ import useIntersectionObserver, * as mockObserver from './useIntersectionObserve
 import jwt_decode from 'jwt-decode';
 jest.mock('jwt-decode');
 
+import { makeModels } from '../testHelpers/modelTools';
+
 import ModelBase from '../Model/ModelBase';
 import CollectionBase from '../Model/CollectionBase';
 
