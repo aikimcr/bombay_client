@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { loginStatus, refreshToken } from '../Network/Login';
+// Allow external forcing of the state
+let setLoggedIn;
+export function forceLoginState(newState) {
+    if (setLoggedIn) return setLoggedIn(newState);
+}
 
 function toMilliseconds(minutes) {
     return minutes * 60 * 1000;
@@ -14,6 +19,8 @@ export function useLoginTracking() {
     const loginCheckMinutes = 10;
 
     let activityHandle = useRef(false);
+
+    setLoggedIn = setLoginState; // Allow external forcing of the state.
 
     const checkLoginState = useCallback(async function() {
         const result = await loginStatus(activityCheckMinutes);
@@ -62,10 +69,10 @@ export function useLoginTracking() {
             await refreshState();
             return;
         }
-    
+
         return await checkLoginState();
     }, [activitySeen, refreshState, checkLoginState]);
-    
+
     useEffect(() => {
         // console.debug(`${new Date().toLocaleString()}: Change (Activity: ${activitySeen}, loginState: ${loginState})`);
         let intervalHandle = false;
@@ -75,7 +82,7 @@ export function useLoginTracking() {
             checkActivity();
             setListeners();
         }
-    
+
         return () => {
             removeListeners();
             clearTimeout(activityHandle.current);

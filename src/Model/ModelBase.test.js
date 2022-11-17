@@ -3,13 +3,24 @@
 // - Fetch based on a unique id
 // - Set the data fields on instantiate
 // - Allow changing of field values.
+import * as NetworkLogin from '../Network/Login';
+jest.mock('../Network/Login');
+
 import * as Network from "../Network/Network";
 
 import casual from 'casual';
 
+import { makeAModel } from '../testHelpers/modelTools';
+
 import ModelBase from './ModelBase';
 
+function setupLogin(loggedIn = true, token = 'xyzzy') {
+    const loginPromise = NetworkLogin._setupMocks();
+    loginPromise.resolve({ loggedIn, token });
+}
+
 it('should instantiate a model', async () => {
+    setupLogin();
     // const { resolve } = Network._setupMocks();
     const model = new ModelBase(null, {
         id: 119,
@@ -27,6 +38,7 @@ it('should instantiate a model', async () => {
 })
 
 it('should create a model from a definition', async () => {
+    setupLogin();
     // const { resolve } = Network._setupMocks();
     const model = ModelBase.from({
         id: 63,
@@ -39,19 +51,14 @@ it('should create a model from a definition', async () => {
     expect(model.get('name')).toBe('Plover');
 });
 
-// // ToDO: Mocking is not working on getFromURLString here.
 it('should fetch a model', async () => {
-    const [mockPromise, mockResolve] = makeResolvablePromise();
-    // The mock is not recognized unless it is done this way.
-    Network.getFromURLString = jest.fn((url) => {
-        return mockPromise;
-    });
-
+    setupLogin();
+    const { resolve } = Network._setupMocks();
     const [fetchBody, fetchModel] = makeAModel();
 
     const model = new ModelBase(fetchBody.url);
     const fetchPromise = model.ready();
-    mockResolve(fetchBody);
+    resolve(fetchBody);
     const fetchDef = await fetchPromise;
     expect(model.toJSON()).toEqual(fetchBody);
     expect(model.toJSON()).toEqual(fetchModel.toJSON());
@@ -62,11 +69,8 @@ it('should fetch a model', async () => {
 });
 
 it('should save changes to the model', async () => {
-    const [mockPromise, mockResolve] = makeResolvablePromise();
-    // The mock is not recognized unless it is done this way.
-    Network.putToURLString = jest.fn((url, body) => {
-        return mockPromise;
-    });
+    setupLogin();
+    const { resolve } = Network._setupMocks();
 
     const [oldBody, oldModel] = makeAModel();
     const model = ModelBase.from(oldBody);
@@ -78,7 +82,7 @@ it('should save changes to the model', async () => {
     expect(model.get('name')).toEqual(newName);
 
     const savePromise = model.save();
-    mockResolve({...oldBody, name: newName});
+    resolve({...oldBody, name: newName});
     const newBody = await savePromise;
     expect(newBody).not.toEqual(oldBody);
     expect(newBody.name).toEqual(newName);

@@ -33,15 +33,15 @@ export function prepareURLFromArgs(path, query) {
 
 
 export function getFromURLString(url, query) {
-    throw new Error('getFromURLString has not been mocked properly');
+    throw new Error(`getFromURLString has not been mocked properly ${url} ${JSON.stringify(query)}`);
 }
 
 export async function postToURLString(urlString, body) {
-    throw new Error('postToURLString has not been mocked properly');
+    throw new Error(`postToURLString has not been mocked properly ${url} ${JSON.stringify(body)}`);
 }
 
 export async function putToURLString(urlString, body) {
-    throw new Error('putToURLString has not been mocked properly');
+    throw new Error(`putToURLString has not been mocked properly ${url} ${JSON.stringify(body)}`);
 }
 
 // Test Utilities not found in the original

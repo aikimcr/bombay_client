@@ -2,6 +2,7 @@ import { getFromURLString, postToURLString, prepareURLFromArgs } from '../Networ
 import { loginStatus } from '../Network/Login';
 
 import ModelBase from './ModelBase';
+import { forceLoginState } from '../Hooks/useLoginTracking';
 
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class CollectionBase {
@@ -116,12 +117,25 @@ class CollectionBase {
             this.#models = [];
             this.#prevPage = null;
             this.#nextPage = null;
+            forceLoginState(false);
             return this.#models;
         }
 
         const body = await getFromURLString(url)
             .catch((err) => {
-                if (err.status !== 404) {
+                // Logged out
+                if (err.status === 401) {
+                    this.#models = [];
+                    this.#prevPage = null;
+                    this.#nextPage = null;
+                    forceLoginState(false);
+                    return this.#models;
+                }
+
+                // You just don't have permission to look at this.
+                if (err.status === 403) {
+                    this.#models = [];
+                } else if (err.status !== 404) {
                     console.error(err.status, err.message);
                 }
 

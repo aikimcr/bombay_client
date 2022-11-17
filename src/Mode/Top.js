@@ -23,8 +23,11 @@ function Top(props) {
                     <li><Link to="songList">Song List</Link></li>
                 </ul> :
                 <div>
-                    <h2>Please Login to continue</h2>
-                    <Button className="login btn" onClick={showLogin} disabled={false} label="Login" />
+                    <h2>You have been logged out</h2>
+                    <div>
+                        <h3>Please login to continue</h3>
+                        <Button className="login btn" onClick={showLogin} disabled={false} label="Login" />
+                    </div>
                 </div>
             }
         </div>

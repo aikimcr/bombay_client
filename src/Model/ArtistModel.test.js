@@ -1,3 +1,4 @@
+import { makeAModel } from '../testHelpers/modelTools';
 
 import ModelBase from './ModelBase';
 import ArtistModel from './ArtistModel';

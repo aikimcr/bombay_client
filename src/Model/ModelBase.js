@@ -1,4 +1,7 @@
 import { getFromURLString, putToURLString } from '../Network/Network';
+import { loginStatus } from '../Network/Login';
+import { forceLoginState } from '../Hooks/useLoginTracking';
+
 
 // Use a Javascript class rather than just a module.  This allows simpler derivation.
 class ModelBase {
@@ -25,11 +28,7 @@ class ModelBase {
             this.#readyPromise = Promise.resolve(this.#data);
         } else if (url) {
             this.#idUrl = url;
-            this.#readyPromise = getFromURLString(this.#idUrl)
-            .then((fetchedData) => {
-                this.createRefmodels(fetchedData);
-                return Promise.resolve(fetchedData);
-            });
+            this.#readyPromise = this.#fetch(this.#idUrl);
         } else {
             this.#data = {};
         }
@@ -41,6 +40,31 @@ class ModelBase {
 
     ready() {
         return this.#readyPromise;
+    }
+
+    async #fetch(url) {
+        const loggedIn = await loginStatus();
+
+        if (!loggedIn) {
+            forceLoginState(false);
+            return Promise.reject({status: 401, message: 'Not Logged In'});
+        }
+
+        const fetchedData = await getFromURLString(this.#idUrl)
+            .catch((err) => {
+                if (err.status === 401) { // Logged out
+                    forceLoginState(false);
+                // } else if (err.status === 403) { // You just don't have permission to look at this.
+                } else if (err.status !== 404) {
+                    console.error(err.status, err.message);
+                }
+
+                return Promise.reject(err);
+            });
+
+        this.createRefmodels(fetchedData);
+
+        return fetchedData;
     }
 
     createRefmodels(data) {
