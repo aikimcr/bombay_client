@@ -56,7 +56,9 @@ function login() {
                         placeholder="Enter password"
                         className="form-control"
                     />
-
+                    <p className="error">
+                        {errors.password && touched.password && errors.password}
+                    </p>
                     <button type="submit">Login</button>
                 </form>
             </div>
