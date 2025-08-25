@@ -1,31 +1,44 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import './LoginStatus.scss';
+import "./LoginStatus.scss";
 
-import BombayLoginContext from '../Context/BombayLoginContext';
+import BombayLoginContext from "../Context/BombayLoginContext";
 
 import { logout } from "../Network/Login";
-import Button from './Button';
+import Button from "./Button";
 
 function LoginStatus(props) {
-    const { loggedIn, setLoggedIn, setShowLogin }= useContext(BombayLoginContext);
+  const { loggedIn, setLoggedIn, setShowLogin } =
+    useContext(BombayLoginContext);
 
-    async function doLogout() {
-        await logout();
-        setLoggedIn(false);
-    }
+  async function doLogout() {
+    await logout();
+    setLoggedIn(false);
+  }
 
-    function showLogin() {
-        setShowLogin(true);
-    }
+  function showLogin() {
+    setShowLogin(true);
+  }
 
-    return (
-        <div className="login-status">
-            {loggedIn ?
-                <Button className="logout btn" onClick={doLogout} disabled={false} label='Logout' /> :
-                <Button className="login btn" onClick={showLogin} disabled={false} label="Login" />}
-        </div>
-    );
+  return (
+    <div className="login-status">
+      {loggedIn ? (
+        <Button
+          className="logout btn"
+          onClick={doLogout}
+          disabled={false}
+          label="Logout"
+        />
+      ) : (
+        <Button
+          className="login btn"
+          onClick={showLogin}
+          disabled={false}
+          label="Login"
+        />
+      )}
+    </div>
+  );
 }
 
 export default LoginStatus;

@@ -1,11 +1,11 @@
-import CollectionBase from './CollectionBase';
+import CollectionBase from "./CollectionBase";
 
-import ArtistModel from './ArtistModel';
+import ArtistModel from "./ArtistModel";
 
-class ArtistCollection extends CollectionBase{
-    constructor(options={}) {
-        super('/artist', {...options, modelClass: ArtistModel});
-    }
-};
+class ArtistCollection extends CollectionBase {
+  constructor(options = {}) {
+    super("/artist", { ...options, modelClass: ArtistModel });
+  }
+}
 
 export default ArtistCollection;

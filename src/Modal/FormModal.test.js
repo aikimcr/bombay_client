@@ -1,170 +1,188 @@
-import { act, render } from '@testing-library/react';
-import { useState } from 'react';
+import { act, render } from "@testing-library/react";
+import { useState } from "react";
 
-import FormModal from './FormModal';
+import FormModal from "./FormModal";
 
 jest.useFakeTimers();
 
 beforeEach(() => {
-    const modalRoot = document.createElement('div');
-    modalRoot.id = 'modal-root';
-    document.body.append(modalRoot);
-})
+  const modalRoot = document.createElement("div");
+  modalRoot.id = "modal-root";
+  document.body.append(modalRoot);
+});
 
 afterEach(() => {
-    const modalRoot = document.getElementById('modal-root');
-    modalRoot.remove();
+  const modalRoot = document.getElementById("modal-root");
+  modalRoot.remove();
 });
 
 function ModalWrapper(props) {
-    const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
 
-    function handleClose(evt) {
-        expect(evt).toBeDefined();
-        props.onClose(evt);
+  function handleClose(evt) {
+    expect(evt).toBeDefined();
+    props.onClose(evt);
 
-        act(() => {
-            setShow(false);
-        });
-    }
+    act(() => {
+      setShow(false);
+    });
+  }
 
-    function handleSubmit(formData) {
-        props.onSubmit(formData);
-    }
+  function handleSubmit(formData) {
+    props.onSubmit(formData);
+  }
 
-    return (
-        <>
-            <button onClick={() => setShow(true)}>open</button>
-            <FormModal open={show} onClose={handleClose} title='Test Modal' onSubmit={handleSubmit}>
-                <div className="testDiv">
-                    <input name="TEXT" type="text" defaultValue="val1" />
-                    <input name="NUMBER" type="number" defaultValue="1" />
-                    <input name="DATE" type="date" defaultValue="2022-10-20" />
-                    <input name="RANGE" type="range" defaultValue="20" min="10" max="30" />
-                    <input name="CHECKBOX" type="checkbox" />
-                    <input name="RADIO" type="radio" value="huey" />
-                    <input name="RADIO" type="radio" value="duey" defaultChecked />
-                    <input name="RADIO" type="radio" value="louey" />
-                    <select name="SELECT">
-                        <option value="Bacteria">Bacteria</option>
-                        <option value="Virus">Virus</option>
-                    </select>
-                </div>
-            </FormModal>
-        </>
-    );
+  return (
+    <>
+      <button onClick={() => setShow(true)}>open</button>
+      <FormModal
+        open={show}
+        onClose={handleClose}
+        title="Test Modal"
+        onSubmit={handleSubmit}
+      >
+        <div className="testDiv">
+          <input name="TEXT" type="text" defaultValue="val1" />
+          <input name="NUMBER" type="number" defaultValue="1" />
+          <input name="DATE" type="date" defaultValue="2022-10-20" />
+          <input
+            name="RANGE"
+            type="range"
+            defaultValue="20"
+            min="10"
+            max="30"
+          />
+          <input name="CHECKBOX" type="checkbox" />
+          <input name="RADIO" type="radio" value="huey" />
+          <input name="RADIO" type="radio" value="duey" defaultChecked />
+          <input name="RADIO" type="radio" value="louey" />
+          <select name="SELECT">
+            <option value="Bacteria">Bacteria</option>
+            <option value="Virus">Virus</option>
+          </select>
+        </div>
+      </FormModal>
+    </>
+  );
 }
 
-it('should show the modal', async () => {
-    let closes = 0;
+it("should show the modal", async () => {
+  let closes = 0;
 
-    function handleClose(evt) {
-        closes++;
-    }
+  function handleClose(evt) {
+    closes++;
+  }
 
-    const modalRoot = document.getElementById('modal-root');
-    const result = render(<ModalWrapper onClose={handleClose} />);
+  const modalRoot = document.getElementById("modal-root");
+  const result = render(<ModalWrapper onClose={handleClose} />);
 
-    const wrapper = result.container;
-    expect(wrapper.childElementCount).toEqual(1);
-    expect(modalRoot.childElementCount).toEqual(0);
-    expect(closes).toEqual(0);
+  const wrapper = result.container;
+  expect(wrapper.childElementCount).toEqual(1);
+  expect(modalRoot.childElementCount).toEqual(0);
+  expect(closes).toEqual(0);
 
-    const button = wrapper.firstChild;
+  const button = wrapper.firstChild;
 
-    act(() => {
-        button.click();
-    });
+  act(() => {
+    button.click();
+  });
 
-    expect(wrapper.childElementCount).toEqual(1);
-    expect(modalRoot.childElementCount).toEqual(1);
-    expect(closes).toEqual(0);
+  expect(wrapper.childElementCount).toEqual(1);
+  expect(modalRoot.childElementCount).toEqual(1);
+  expect(closes).toEqual(0);
 
-    const modal = modalRoot.firstChild;
-    modal.querySelector('.close').click();
-    expect(wrapper.childElementCount).toEqual(1);
-    expect(modalRoot.childElementCount).toEqual(0);
-    expect(closes).toEqual(1);
+  const modal = modalRoot.firstChild;
+  modal.querySelector(".close").click();
+  expect(wrapper.childElementCount).toEqual(1);
+  expect(modalRoot.childElementCount).toEqual(0);
+  expect(closes).toEqual(1);
 });
 
-it('should close on cancel', async () => {
-    let closes = 0;
+it("should close on cancel", async () => {
+  let closes = 0;
 
-    function handleClose(evt) {
-        closes++;
-    }
+  function handleClose(evt) {
+    closes++;
+  }
 
-    const modalRoot = document.getElementById('modal-root');
-    const result = render(<ModalWrapper onClose={handleClose} />);
+  const modalRoot = document.getElementById("modal-root");
+  const result = render(<ModalWrapper onClose={handleClose} />);
 
-    const wrapper = result.container;
-    const openButton = wrapper.firstChild;
+  const wrapper = result.container;
+  const openButton = wrapper.firstChild;
 
-    act(() => {
-        openButton.click();
-    });
+  act(() => {
+    openButton.click();
+  });
 
-    expect(modalRoot.childElementCount).toEqual(1);
-    expect(closes).toEqual(0);
+  expect(modalRoot.childElementCount).toEqual(1);
+  expect(closes).toEqual(0);
 
-    const cancelButton = modalRoot.querySelector('[value="Cancel"]');
+  const cancelButton = modalRoot.querySelector('[value="Cancel"]');
 
-    act(() => {
-        cancelButton.click();
-    });
+  act(() => {
+    cancelButton.click();
+  });
 
-    expect(modalRoot.childElementCount).toEqual(0);
-    expect(closes).toEqual(1);
+  expect(modalRoot.childElementCount).toEqual(0);
+  expect(closes).toEqual(1);
 });
 
-it('should call onSumbit when submit is clicked', async () => {
-    let closes = 0;
+it("should call onSumbit when submit is clicked", async () => {
+  let closes = 0;
 
-    function handleClose(evt) {
-        closes++;
-    }
+  function handleClose(evt) {
+    closes++;
+  }
 
-    let lastFormData = null;
-    let submits = 0;
+  let lastFormData = null;
+  let submits = 0;
 
-    function handleSubmit(formData) {
-        lastFormData = formData;
-        submits++;
-    }
+  function handleSubmit(formData) {
+    lastFormData = formData;
+    submits++;
+  }
 
-    const modalRoot = document.getElementById('modal-root');
-    const result = render(<ModalWrapper onClose={handleClose} onSubmit={handleSubmit}/>);
+  const modalRoot = document.getElementById("modal-root");
+  const result = render(
+    <ModalWrapper onClose={handleClose} onSubmit={handleSubmit} />,
+  );
 
-    const wrapper = result.container;
-    const openButton = wrapper.firstChild;
+  const wrapper = result.container;
+  const openButton = wrapper.firstChild;
 
-    act(() => {
-        openButton.click();
-    });
+  act(() => {
+    openButton.click();
+  });
 
-    expect(modalRoot.childElementCount).toEqual(1);
-    expect(closes).toEqual(0);
-    expect(submits).toEqual(0);
-    // expect(lastFormData).toBeNull();
+  expect(modalRoot.childElementCount).toEqual(1);
+  expect(closes).toEqual(0);
+  expect(submits).toEqual(0);
+  // expect(lastFormData).toBeNull();
 
-    const submitButton = modalRoot.querySelector('[type="submit"]');
+  const submitButton = modalRoot.querySelector('[type="submit"]');
 
-    const testInput = await changeInput(modalRoot.querySelector('.testDiv'), 'input', 'Hello?', 250);
-    act(() => {
-        submitButton.click();
-    });
+  const testInput = await changeInput(
+    modalRoot.querySelector(".testDiv"),
+    "input",
+    "Hello?",
+    250,
+  );
+  act(() => {
+    submitButton.click();
+  });
 
-    expect(modalRoot.childElementCount).toEqual(0);
-    expect(closes).toEqual(1);
-    expect(submits).toEqual(1);
+  expect(modalRoot.childElementCount).toEqual(0);
+  expect(closes).toEqual(1);
+  expect(submits).toEqual(1);
 
-    expect(lastFormData).toEqual({
-        CHECKBOX: false,
-        DATE: '2022-10-20T00:00:00.000Z',
-        NUMBER: 1,
-        RADIO: 'duey',
-        RANGE: 20,
-        SELECT: 'Bacteria',
-        TEXT: 'Hello?',
-    });
+  expect(lastFormData).toEqual({
+    CHECKBOX: false,
+    DATE: "2022-10-20T00:00:00.000Z",
+    NUMBER: 1,
+    RADIO: "duey",
+    RANGE: 20,
+    SELECT: "Bacteria",
+    TEXT: "Hello?",
+  });
 });

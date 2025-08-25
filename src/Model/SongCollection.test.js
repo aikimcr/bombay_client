@@ -12,20 +12,20 @@
 // - Be  agnostic to the model type.
 import * as Network from "../Network/Network";
 
-import CollectionBase from './CollectionBase';
-import SongCollection from './SongCollection';
+import CollectionBase from "./CollectionBase";
+import SongCollection from "./SongCollection";
 
-it('should not recognize a base model as an song model', async () => {
-    // If the class extension is done correctly, Javascript should just handle this.
-    Network._setupMocks();
-    const baseCollection = new CollectionBase({});
+it("should not recognize a base model as an song model", async () => {
+  // If the class extension is done correctly, Javascript should just handle this.
+  Network._setupMocks();
+  const baseCollection = new CollectionBase({});
 
-    Network._setupMockPromise();
-    const songCollection = new SongCollection({});
+  Network._setupMockPromise();
+  const songCollection = new SongCollection({});
 
-    expect(CollectionBase.isCollection(baseCollection)).toBeTruthy();
-    expect(CollectionBase.isCollection(songCollection)).toBeTruthy();
+  expect(CollectionBase.isCollection(baseCollection)).toBeTruthy();
+  expect(CollectionBase.isCollection(songCollection)).toBeTruthy();
 
-    expect(SongCollection.isCollection(baseCollection)).toBeFalsy();
-    expect(SongCollection.isCollection(songCollection)).toBeTruthy();
+  expect(SongCollection.isCollection(baseCollection)).toBeFalsy();
+  expect(SongCollection.isCollection(songCollection)).toBeTruthy();
 });
