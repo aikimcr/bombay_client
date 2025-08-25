@@ -1,79 +1,79 @@
-import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
-import PickerList from './PickerList';
-import Button from './Button';
+import PropTypes from "prop-types";
+import { useRef, useState } from "react";
+import PickerList from "./PickerList";
+import Button from "./Button";
 
-import './LabeledInput.scss';
+import "./LabeledInput.scss";
 
 function PickerButton(props) {
-    const topRef = useRef(null);
-    const inputRef = useRef(null);
+  const topRef = useRef(null);
+  const inputRef = useRef(null);
 
-    const modelId = props.model ? props.model.get('id') : 'isNew';
-    const buttonId = `${props.modelName}-name-${modelId}`;
+  const modelId = props.model ? props.model.get("id") : "isNew";
+  const buttonId = `${props.modelName}-name-${modelId}`;
 
-    const [showPickerList, setShowPickerList] = useState(false);
-    const [currentModel, setCurrentModel] = useState(props.model ? props.model : null);
-    
-    const buttonLabel = currentModel ?
-                        currentModel.get('name') :
-                        '<Please Choose>';
+  const [showPickerList, setShowPickerList] = useState(false);
+  const [currentModel, setCurrentModel] = useState(
+    props.model ? props.model : null,
+  );
 
-    const initialValue = currentModel ?
-                        currentModel.get('id') :
-                        0;
+  const buttonLabel = currentModel
+    ? currentModel.get("name")
+    : "<Please Choose>";
 
-    function modelPicked(newModel) {
-        setCurrentModel(newModel);
-        inputRef.current.value = newModel.get(props.fieldName);
-        props.onModelPicked(newModel);
-        setShowPickerList(false);
-    }
+  const initialValue = currentModel ? currentModel.get("id") : 0;
 
-    function pickAModel(evt) {
-        evt.preventDefault();
-        setShowPickerList(oldShow => !oldShow);
-    }
+  function modelPicked(newModel) {
+    setCurrentModel(newModel);
+    inputRef.current.value = newModel.get(props.fieldName);
+    props.onModelPicked(newModel);
+    setShowPickerList(false);
+  }
 
-    return (
-        <div 
-            ref={topRef}
-            className='picker-button'
-            data-modelname={props.modelName}
-            data-targetfield={props.targetField}
-        >
-            <label htmlFor={buttonId}>{props.labelText}</label>
-            <input
-                type="number"
-                ref={inputRef}
-                name={props.targetField}
-                defaultValue={initialValue}
-            ></input>
+  function pickAModel(evt) {
+    evt.preventDefault();
+    setShowPickerList((oldShow) => !oldShow);
+  }
 
-            <Button
-                id={buttonId}
-                label={buttonLabel}
-                disabled={false}
-                onClick={pickAModel}
-            />
+  return (
+    <div
+      ref={topRef}
+      className="picker-button"
+      data-modelname={props.modelName}
+      data-targetfield={props.targetField}
+    >
+      <label htmlFor={buttonId}>{props.labelText}</label>
+      <input
+        type="number"
+        ref={inputRef}
+        name={props.targetField}
+        defaultValue={initialValue}
+      ></input>
 
-            <PickerList
-                pickModel={modelPicked}
-                isOpen={showPickerList}
-                collectionClass={props.collectionClass}
-            />
-        </div>
-    );
+      <Button
+        id={buttonId}
+        label={buttonLabel}
+        disabled={false}
+        onClick={pickAModel}
+      />
+
+      <PickerList
+        pickModel={modelPicked}
+        isOpen={showPickerList}
+        collectionClass={props.collectionClass}
+      />
+    </div>
+  );
 }
 
 PickerButton.propTypes = {
-    collectionClass: PropTypes.func.isRequired, // To get the list of models
-    model: PropTypes.object, // A currently set model (optional)
-    modelName: PropTypes.string.isRequired, // Should match collectionClass, mostly a convenience
-    fieldName: PropTypes.string.isRequired, // The field from the model used to set the target value
-    targetField: PropTypes.string.isRequired, // The key in the data from the form
-    labelText: PropTypes.string.isRequired,
-    onModelPicked: PropTypes.func.isRequired, // Called with the selected model from the collection
-}
+  collectionClass: PropTypes.func.isRequired, // To get the list of models
+  model: PropTypes.object, // A currently set model (optional)
+  modelName: PropTypes.string.isRequired, // Should match collectionClass, mostly a convenience
+  fieldName: PropTypes.string.isRequired, // The field from the model used to set the target value
+  targetField: PropTypes.string.isRequired, // The key in the data from the form
+  labelText: PropTypes.string.isRequired,
+  onModelPicked: PropTypes.func.isRequired, // Called with the selected model from the collection
+};
 
 export default PickerButton;
