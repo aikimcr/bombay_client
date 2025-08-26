@@ -14,7 +14,7 @@ import { makeModels, makeAModel } from "../../testHelpers/modelTools";
 import BombayLoginContext from "../../Context/BombayLoginContext";
 import BombayUtilityContext from "../../Context/BombayUtilityContext";
 
-import ArtistList from "./ArtistList";
+import ArtistList from "./ArtistList.jsx";
 
 jest.useFakeTimers();
 

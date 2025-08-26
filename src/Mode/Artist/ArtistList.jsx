@@ -6,9 +6,9 @@ import BombayLoginContext from "../../Context/BombayLoginContext";
 
 import ArtistCollection from "../../Model/ArtistCollection";
 
-import ArtistListItem from "./ArtistListItem";
-import Artist from "./Artist";
-import FormModal from "../../Modal/FormModal";
+import ArtistListItem from "./ArtistListItem.jsx";
+import Artist from "./Artist.jsx";
+import FormModal from "../../Modal/FormModal.jsx";
 import useModelCollection from "../../Hooks/useModelCollection";
 
 function ArtistList(props) {

@@ -22,7 +22,7 @@ class TestCollection extends CollectionBase {
   }
 }
 
-import PickerButton from "./PickerButton";
+import PickerButton from "./PickerButton.jsx";
 
 let testSetLoggedIn;
 

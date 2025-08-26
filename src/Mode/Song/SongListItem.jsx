@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 
 import "./SongList.scss";
 
-import Song from "./Song";
-import FormModal from "../../Modal/FormModal";
+import Song from "./Song.jsx";
+import FormModal from "../../Modal/FormModal.jsx";
 
 function SongListItem({ song }) {
   const [showEdit, setShowEdit] = useState(false);

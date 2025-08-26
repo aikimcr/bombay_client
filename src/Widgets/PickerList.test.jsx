@@ -23,7 +23,7 @@ class TestCollection extends CollectionBase {
   }
 }
 
-import PickerList from "./PickerList";
+import PickerList from "./PickerList.jsx";
 
 function TestWrapper({ loggedIn, showLoginForm, children }) {
   const [loginState, setLoginState] = useState({ loggedIn, showLoginForm });

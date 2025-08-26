@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import PickerList from "./PickerList";
-import Button from "./Button";
+import PickerList from "./PickerList.jsx";
+import Button from "./Button.jsx";
 
 import "./LabeledInput.scss";
 

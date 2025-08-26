@@ -3,7 +3,7 @@ jest.mock("../Network/Login");
 
 import { act, render, screen } from "@testing-library/react";
 
-import LoginStatus from "./LoginStatus";
+import LoginStatus from "./LoginStatus.jsx";
 
 beforeEach(() => {
   localStorage.removeItem("jwttoken");

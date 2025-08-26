@@ -12,9 +12,9 @@ import BombayLoginContext from "./Context/BombayLoginContext";
 let mockLoggedIn = false;
 
 // Mock the top classes here, before importing the App.
-import HeaderBar from "./AppLayout/HeaderBar";
-jest.mock("./AppLayout/HeaderBar", () => {
-  const originalModule = jest.requireActual("./AppLayout/HeaderBar");
+import HeaderBar from "./AppLayout/HeaderBar.jsx";
+jest.mock("./AppLayout/HeaderBar.jsx", () => {
+  const originalModule = jest.requireActual("./AppLayout/HeaderBar.jsx");
 
   return {
     __esModule: true,
@@ -25,9 +25,9 @@ jest.mock("./AppLayout/HeaderBar", () => {
   };
 });
 
-import Navigation from "./AppLayout/Navigation";
-jest.mock("./AppLayout/Navigation", () => {
-  const originalModule = jest.requireActual("./AppLayout/Navigation");
+import Navigation from "./AppLayout/Navigation.jsx";
+jest.mock("./AppLayout/Navigation.jsx", () => {
+  const originalModule = jest.requireActual("./AppLayout/Navigation.jsx");
 
   return {
     __esModule: true,
@@ -38,9 +38,9 @@ jest.mock("./AppLayout/Navigation", () => {
   };
 });
 
-import Filters from "./AppLayout/Filters";
-jest.mock("./AppLayout/Filters", () => {
-  const originalModule = jest.requireActual("./AppLayout/Filters");
+import Filters from "./AppLayout/Filters.jsx";
+jest.mock("./AppLayout/Filters.jsx", () => {
+  const originalModule = jest.requireActual("./AppLayout/Filters.jsx");
 
   return {
     __esModule: true,
@@ -62,9 +62,9 @@ function MockContextConsumer(props) {
   );
 }
 
-import Content from "./AppLayout/Content";
-jest.mock("./AppLayout/Content", () => {
-  const originalModule = jest.requireActual("./AppLayout/Content");
+import Content from "./AppLayout/Content.jsx";
+jest.mock("./AppLayout/Content.jsx", () => {
+  const originalModule = jest.requireActual("./AppLayout/Content.jsx");
 
   return {
     __esModule: true,
@@ -79,7 +79,7 @@ jest.mock("./AppLayout/Content", () => {
   };
 });
 
-import App from "./App";
+import App from "./App.jsx";
 
 jest.useFakeTimers();
 
