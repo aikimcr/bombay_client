@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useRef } from "react";
-import CloseOrClear from "./CloseOrClear";
+import CloseOrClear from "./CloseOrClear.jsx";
 
 import "./LabeledInput.scss";
 

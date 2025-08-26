@@ -1,35 +1,12 @@
 import { render } from "@testing-library/react";
 
-import LabeledSelect from "./LabeledSelect";
+import LabeledTextArea from "./LabeledTextArea.jsx";
 
 jest.useFakeTimers();
 
-const options = [
-  {
-    value: "bird",
-  },
-  {
-    value: "plane",
-  },
-  {
-    value: "jet",
-  },
-  {
-    value: "rocket",
-  },
-  {
-    value: "bat",
-  },
-];
-
-it("should show a simple labeled select", async () => {
+it("should show a simple labeled input", async () => {
   const { asFragment } = render(
-    <LabeledSelect
-      modelName="xyzzy"
-      fieldName="plover"
-      labelText="plugh"
-      options={options}
-    />,
+    <LabeledTextArea modelName="xyzzy" fieldName="plover" labelText="plugh" />,
   );
 
   expect(asFragment).toMatchSnapshot();
@@ -43,36 +20,35 @@ it("should set the default value to the field value", async () => {
   };
 
   const result = render(
-    <LabeledSelect
+    <LabeledTextArea
       modelName="xyzzy"
       fieldName="plover"
       labelText="plugh"
-      options={options}
       model={model}
     />,
   );
 
   const component = result.container.firstChild;
-  const select = component.lastChild;
-  expect(select.value).toEqual("bird");
+  const input = component.lastChild;
+  expect(input.defaultValue).toBe("bird");
 });
 
 it("should call onChange", async () => {
   const changeHandler = jest.fn();
 
   const result = render(
-    <LabeledSelect
+    <LabeledTextArea
       modelName="xyzzy"
       fieldName="plover"
       labelText="plugh"
-      options={options}
       onChange={changeHandler}
     />,
   );
 
   const component = result.container.firstChild;
 
-  await changeInput(component, "select", "bird", 250);
+  const input = component.lastChild;
+  await changeInput(component, "textarea", "bird", 250);
 
   expect(changeHandler.mock.calls.length).toBe(1);
   expect(changeHandler.mock.calls[0].length).toBe(1);

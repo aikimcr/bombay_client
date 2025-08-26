@@ -5,7 +5,7 @@ import "./LoginStatus.scss";
 import BombayLoginContext from "../Context/BombayLoginContext";
 
 import { logout } from "../Network/Login";
-import Button from "./Button";
+import Button from "./Button.jsx";
 
 function LoginStatus(props) {
   const { loggedIn, setLoggedIn, setShowLogin } =

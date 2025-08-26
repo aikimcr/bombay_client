@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import LabeledInput from "../../Widgets/LabeledInput";
+import LabeledInput from "../../Widgets/LabeledInput.jsx";
 
 function Artist(props) {
   return (

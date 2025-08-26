@@ -6,11 +6,11 @@ import BombayUtilityContext from "../../Context/BombayUtilityContext";
 
 import ArtistCollection from "../../Model/ArtistCollection";
 
-import LabeledInput from "../../Widgets/LabeledInput";
-import PickerButton from "../../Widgets/PickerButton";
-import LabeledSelect from "../../Widgets/LabeledSelect";
-import LabeledRange from "../../Widgets/LabeledRange";
-import LabeledTextArea from "../../Widgets/LabeledTextArea";
+import LabeledInput from "../../Widgets/LabeledInput.jsx";
+import PickerButton from "../../Widgets/PickerButton.jsx";
+import LabeledSelect from "../../Widgets/LabeledSelect.jsx";
+import LabeledRange from "../../Widgets/LabeledRange.jsx";
+import LabeledTextArea from "../../Widgets/LabeledTextArea.jsx";
 
 function Song({ song }) {
   const { getBootstrap } = useContext(BombayUtilityContext);

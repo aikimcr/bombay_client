@@ -1,6 +1,6 @@
 import { act, render } from "@testing-library/react";
 
-import LabeledInput from "./LabeledInput";
+import LabeledInput from "./LabeledInput.jsx";
 
 jest.useFakeTimers();
 
