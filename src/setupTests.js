@@ -5,6 +5,9 @@
 import "@testing-library/jest-dom";
 import { act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { TextDecoder, TextEncoder } from "text-encoding";
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 import { useState } from "react";
 
@@ -13,8 +16,6 @@ jest.mock("./Network/Network");
 
 import useIntersectionObserver, * as mockObserver from "./Hooks/useIntersectionObserver";
 jest.mock("./Hooks/useIntersectionObserver");
-
-import BombayLoginContext from "./Context/BombayLoginContext";
 
 globalThis.makeResolvablePromise = function () {
   let resolver;
@@ -25,43 +26,6 @@ globalThis.makeResolvablePromise = function () {
   });
 
   return [promise, resolver, rejecter];
-};
-
-// Use this to turn the crank on context changes.
-globalThis.ContextChanger = function (props) {
-  const [loginState, setLoginState] = useState(props.loggedIn);
-  const [showLoginForm, setShowLoginForm] = useState(props.showLoginForm);
-
-  const loginContext = {
-    loggedIn: loginState,
-    showLoginForm: showLoginForm,
-    setLoggedIn: (newLoggedIn) => {
-      if (newLoggedIn) {
-        setShowLoginForm(false);
-      }
-
-      setLoginState(newLoggedIn);
-    },
-
-    setShowLogin: (newShow) => {
-      if (loginState) return;
-      setShowLoginForm(newShow);
-    },
-  };
-
-  function toggleLogin() {
-    loginContext.setLoggedIn(!loginState);
-  }
-
-  return (
-    <BombayLoginContext.Provider value={loginContext}>
-      {props.children}
-      {showLoginForm ? <div>Showing Log In Form</div> : null}
-      <button className="change-test-login" onClick={toggleLogin}>
-        Change Login
-      </button>
-    </BombayLoginContext.Provider>
-  );
 };
 
 globalThis.toggleLogin = function () {

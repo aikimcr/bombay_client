@@ -6,11 +6,11 @@ import BombayUtilityContext from "../../Context/BombayUtilityContext";
 
 import ArtistCollection from "../../Model/ArtistCollection";
 
-import LabeledInput from "../../Widgets/LabeledInput.jsx";
-import PickerButton from "../../Widgets/PickerButton.jsx";
-import LabeledSelect from "../../Widgets/LabeledSelect.jsx";
-import LabeledRange from "../../Widgets/LabeledRange.jsx";
-import LabeledTextArea from "../../Widgets/LabeledTextArea.jsx";
+import OldLabeledInput from "../../Components/Widgets/OldLabeledInput.jsx";
+import PickerButton from "../../Components/Widgets/PickerButton.jsx";
+import LabeledSelect from "../../Components/Widgets/LabeledSelect.jsx";
+import LabeledRange from "../../Components/Widgets/LabeledRange.jsx";
+import LabeledTextArea from "../../Components/Widgets/LabeledTextArea.jsx";
 
 function Song({ song }) {
   const { getBootstrap } = useContext(BombayUtilityContext);
@@ -24,7 +24,7 @@ function Song({ song }) {
 
   return (
     <>
-      <LabeledInput
+      <OldLabeledInput
         modelName="song"
         fieldName="name"
         labelText="Song Name"

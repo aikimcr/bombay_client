@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test AppRoutes Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="mock-top"
+    data-testid="mock-top"
+  >
+    <p
+      data-testid="mock-component-name"
+    >
+      Name Top
+    </p>
+    <div
+      data-testid="mock-component-props"
+    >
+      <div>
+        <span>
+          name
+        </span>
+        : 
+        <span>
+          Top
+        </span>
+      </div>
+      <div>
+        <span>
+          className
+        </span>
+        : 
+        <span>
+          mock-top
+        </span>
+      </div>
+      <div>
+        <span>
+          testId
+        </span>
+        : 
+        <span>
+          mock-top
+        </span>
+      </div>
+    </div>
+    <div
+      data-testid="mock-component-children"
+    />
+  </div>
+</DocumentFragment>
+`;

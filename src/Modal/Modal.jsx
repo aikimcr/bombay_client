@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 
 import "./Modal.scss";
-import CloseOrClear from "../Widgets/CloseOrClear";
+import CloseOrClear from "../Components/Widgets/CloseOrClear";
 
 function Modal(props) {
   if (!props.open) return null;
