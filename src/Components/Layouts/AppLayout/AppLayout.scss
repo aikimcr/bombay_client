@@ -1,0 +1,33 @@
+@import '../../../global.scss';
+
+.app-layout {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: auto 1fr;
+  gap: .25rem;
+
+  background-color: var(--container-background-color);
+  color: var(--container-color);
+
+  &__header {
+    --container-background-color: var(--color-peach-255);
+
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 0;
+
+    @include standard-container;
+  }
+
+  &__content {
+    display: block;
+
+    @include standard-container;
+  }
+}

@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { BrowserRouter } from "react-router-dom";
-
-import "./App.scss";
+import { BrowserRouter } from "react-router";
 
 import BombayLoginContext from "./Context/BombayLoginContext";
 import BombayUtilityContext from "./Context/BombayUtilityContext";
 import ConfigurationContext from "./Context/ConfiguratonContext";
 
-import HeaderBar from "./AppLayout/HeaderBar.jsx";
-import Navigation from "./AppLayout/Navigation.jsx";
-import Filters from "./AppLayout/Filters.jsx";
-import Content from "./AppLayout/Content.jsx";
-import Accessories from "./AppLayout/Accessories.jsx";
-import Footer from "./AppLayout/Footer.jsx";
-
 import { fetchBootstrap } from "./Network/Bootstrap";
 import useLoginTracking from "./Hooks/useLoginTracking";
+
+import "./App.scss";
+import { AppLayout, AppRoutes, HeaderLayout } from "./Components";
 
 export const App = () => {
   const [bootstrap, setBootstrap] = useState(null);
@@ -72,12 +66,9 @@ export const App = () => {
         <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>
             <BrowserRouter basename={routerBase}>
-              <HeaderBar />
-              <Navigation />
-              <Filters />
-              <Content />
-              <Accessories />
-              <Footer />
+              <AppLayout header={<HeaderLayout title="Bombay Band Manager" />}>
+                <AppRoutes />
+              </AppLayout>
             </BrowserRouter>
           </BombayUtilityContext.Provider>
         </BombayLoginContext.Provider>

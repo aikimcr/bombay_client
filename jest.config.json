@@ -1,7 +1,0 @@
-{
-    "clearMocks": false,
-    "resetMocks": true,
-    "resetModules": true,
-    "restoreMocks": false,
-    "collectCoverage": false
-}

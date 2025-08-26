@@ -2,7 +2,7 @@ import React from "react";
 
 import "./PageNotFound.scss";
 
-function PageNotFound() {
+export const PageNotFound = () => {
   // Use disapointed face emoji &#x1f61e;
 
   return (
@@ -17,6 +17,4 @@ function PageNotFound() {
       </div>
     </div>
   );
-}
-
-export default PageNotFound;
+};

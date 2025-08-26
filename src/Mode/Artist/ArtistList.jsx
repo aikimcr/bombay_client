@@ -10,8 +10,9 @@ import ArtistListItem from "./ArtistListItem.jsx";
 import Artist from "./Artist.jsx";
 import FormModal from "../../Modal/FormModal.jsx";
 import useModelCollection from "../../Hooks/useModelCollection";
+import { ProtectedRoute } from "../../Components";
 
-function ArtistList(props) {
+export const ArtistList = (props) => {
   const topRef = createRef();
 
   const loginState = useContext(BombayLoginContext);
@@ -29,39 +30,37 @@ function ArtistList(props) {
     refreshCollection();
   }
 
-  if (!loginState.loggedIn) return null;
-
   return (
-    <div className="list-component">
-      <div className="list-controls">
-        <button className="btn" onClick={() => setShowAdd(true)}>
-          New
-        </button>
-        <div className="title">Artists</div>
-        <button className="btn" onClick={refreshCollection}>
-          Refresh
-        </button>
-        <FormModal
-          title="Add Artist"
-          onClose={() => setShowAdd(false)}
-          onSubmit={submitNewArtist}
-          open={showAdd}
-        >
-          <Artist />
-        </FormModal>
+    <ProtectedRoute>
+      <div className="list-component">
+        <div className="list-controls">
+          <button className="btn" onClick={() => setShowAdd(true)}>
+            New
+          </button>
+          <div className="title">Artists</div>
+          <button className="btn" onClick={refreshCollection}>
+            Refresh
+          </button>
+          <FormModal
+            title="Add Artist"
+            onClose={() => setShowAdd(false)}
+            onSubmit={submitNewArtist}
+            open={showAdd}
+          >
+            <Artist />
+          </FormModal>
+        </div>
+        <div className="artist-list-container list-container" ref={topRef}>
+          <ul className="artist-list card-list">
+            {artistCollection?.current == null
+              ? ""
+              : artistCollection.current.map((artist) => {
+                  const key = `artist-list-${artist.get("id")}`;
+                  return <ArtistListItem className key={key} artist={artist} />;
+                })}
+          </ul>
+        </div>
       </div>
-      <div className="artist-list-container list-container" ref={topRef}>
-        <ul className="artist-list card-list">
-          {artistCollection?.current == null
-            ? ""
-            : artistCollection.current.map((artist) => {
-                const key = `artist-list-${artist.get("id")}`;
-                return <ArtistListItem className key={key} artist={artist} />;
-              })}
-        </ul>
-      </div>
-    </div>
+    </ProtectedRoute>
   );
-}
-
-export default ArtistList;
+};

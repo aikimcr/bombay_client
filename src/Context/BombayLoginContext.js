@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const BombayLoginContext = createContext({
   loggedIn: false,
-  showLoginForm: false,
+  showLoginForm: false, // deprecated
   setLoggedIn: null,
   setShowLogin: null,
 });

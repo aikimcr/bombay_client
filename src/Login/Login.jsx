@@ -6,8 +6,8 @@ import "./Login.scss";
 import BombayLoginContext from "../Context/BombayLoginContext";
 
 import { loginStatus, login } from "../Network/Login";
-import LabeledInput from "../Widgets/LabeledInput";
-import Button from "../Widgets/Button";
+import OldLabeledInput from "../Components/Widgets/OldLabeledInput";
+import Button from "../Components/Widgets/Button";
 
 function Login(props) {
   let timerHandle = null;
@@ -87,13 +87,13 @@ function Login(props) {
       <div className="login-form">
         <h1 className="login-header">Please Log In</h1>
         <div className="info">
-          <LabeledInput
+          <OldLabeledInput
             modelName="login"
             fieldName="username"
             labelText="User Name"
             onChange={handleChange}
           />
-          <LabeledInput
+          <OldLabeledInput
             modelName="login"
             fieldName="password"
             labelText="Password"

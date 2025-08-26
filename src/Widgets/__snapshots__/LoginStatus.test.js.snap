@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`should show the login button when logged out 1`] = `[Function]`;
-
-exports[`should show the logout button when logged in 1`] = `[Function]`;

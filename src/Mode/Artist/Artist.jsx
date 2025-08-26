@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 
-import LabeledInput from "../../Widgets/LabeledInput.jsx";
+import OldLabeledInput from "../../Components/Widgets/OldLabeledInput.jsx";
 
 function Artist(props) {
   return (
-    <LabeledInput
+    <OldLabeledInput
       modelName="artist"
       fieldName="name"
       labelText="Artist Name"
