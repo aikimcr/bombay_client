@@ -6,9 +6,9 @@ import BombayLoginContext from "../../Context/BombayLoginContext";
 
 import SongCollection from "../../Model/SongCollection";
 
-import SongListItem from "./SongListItem";
-import Song from "./Song";
-import FormModal from "../../Modal/FormModal";
+import SongListItem from "./SongListItem.jsx";
+import Song from "./Song.jsx";
+import FormModal from "../../Modal/FormModal.jsx";
 import useModelCollection from "../../Hooks/useModelCollection";
 
 function SongList(props) {

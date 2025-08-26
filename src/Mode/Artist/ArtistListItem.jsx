@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import "./ArtistList.scss";
 
-import Artist from "./Artist";
-import FormModal from "../../Modal/FormModal";
+import Artist from "./Artist.jsx";
+import FormModal from "../../Modal/FormModal.jsx";
 
 function ArtistListItem(props) {
   const [showEdit, setShowEdit] = useState(false);

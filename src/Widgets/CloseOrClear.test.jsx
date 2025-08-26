@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 
-import CloseOrClear from "./CloseOrClear";
+import CloseOrClear from "./CloseOrClear.jsx";
 
 jest.useFakeTimers();
 

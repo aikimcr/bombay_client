@@ -7,12 +7,12 @@ import BombayLoginContext from "./Context/BombayLoginContext";
 import BombayUtilityContext from "./Context/BombayUtilityContext";
 import ConfigurationContext from "./Context/ConfiguratonContext";
 
-import HeaderBar from "./AppLayout/HeaderBar";
-import Navigation from "./AppLayout/Navigation";
-import Filters from "./AppLayout/Filters";
-import Content from "./AppLayout/Content";
-import Accessories from "./AppLayout/Accessories";
-import Footer from "./AppLayout/Footer";
+import HeaderBar from "./AppLayout/HeaderBar.jsx";
+import Navigation from "./AppLayout/Navigation.jsx";
+import Filters from "./AppLayout/Filters.jsx";
+import Content from "./AppLayout/Content.jsx";
+import Accessories from "./AppLayout/Accessories.jsx";
+import Footer from "./AppLayout/Footer.jsx";
 
 import { fetchBootstrap } from "./Network/Bootstrap";
 import useLoginTracking from "./Hooks/useLoginTracking";

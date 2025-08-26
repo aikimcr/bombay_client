@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 
-import LabeledRange from "./LabeledRange";
+import LabeledRange from "./LabeledRange.jsx";
 
 jest.useFakeTimers();
 

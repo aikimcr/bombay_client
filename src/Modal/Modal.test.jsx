@@ -1,7 +1,7 @@
 import { act, render } from "@testing-library/react";
 import { useState } from "react";
 
-import Modal from "./Modal";
+import Modal from "./Modal.jsx";
 
 beforeEach(() => {
   const modalRoot = document.createElement("div");

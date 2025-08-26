@@ -2,7 +2,7 @@
 
 import PropTypes from "prop-types";
 
-import Modal from "./Modal";
+import Modal from "./Modal.jsx";
 
 export function FormModal(props) {
   function closeForm(evt) {

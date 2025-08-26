@@ -1,4 +1,4 @@
-import ContentRoutes from "./ContentRoutes";
+import ContentRoutes from "./ContentRoutes.jsx";
 
 function Content(props) {
   return (

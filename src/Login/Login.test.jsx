@@ -12,7 +12,7 @@ const testToken =
 import BombayLoginContext from "../Context/BombayLoginContext";
 import BombayUtilityContext from "../Context/BombayUtilityContext";
 
-import Login from "./Login";
+import Login from "./Login.jsx";
 
 jest.useFakeTimers();
 
