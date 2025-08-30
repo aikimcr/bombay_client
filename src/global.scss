@@ -76,35 +76,35 @@ input {
     line-height: var(--standard-font-size);
 }
 
-input[type="submit"],
-input[type="button"],
-.btn {
-    text-align: center;
-    padding: 0 10px;
-    background-color: rgb(32, 32, 32);
-    color: white;
-    height: var(--standard-button-size);
-    line-height: var(--standard-button-size) - 5px; // Subtract 5px to account for the padding
-    cursor: pointer;
-    border-radius: calc(var(--standard-button-size) / 2);
+// input[type="submit"],
+// input[type="button"],
+// .btn {
+//     text-align: center;
+//     padding: 0 10px;
+//     background-color: rgb(32, 32, 32);
+//     color: white;
+//     height: var(--standard-button-size);
+//     line-height: var(--standard-button-size) - 5px; // Subtract 5px to account for the padding
+//     cursor: pointer;
+//     border-radius: calc(var(--standard-button-size) / 2);
 
-    &:hover {
-        background-color: rgb(80, 75, 227);
-    }
+//     &:hover {
+//         background-color: rgb(80, 75, 227);
+//     }
 
-    &:active {
-        background-color: rgb(128, 128, 128);
-        border-style: inset;
-        border-color: black;
-    }
+//     &:active {
+//         background-color: rgb(128, 128, 128);
+//         border-style: inset;
+//         border-color: black;
+//     }
 
-    &:disabled,
-    &.disabled {
-        background-color: rgb(128, 128, 128);
-        pointer-events: none;
-        cursor: auto;
-    }
-}
+//     &:disabled,
+//     &.disabled {
+//         background-color: rgb(128, 128, 128);
+//         pointer-events: none;
+//         cursor: auto;
+//     }
+// }
 
 label,
 .label {

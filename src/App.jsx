@@ -9,7 +9,7 @@ import { fetchBootstrap } from "./Network/Bootstrap";
 import useLoginTracking from "./Hooks/useLoginTracking";
 
 import "./App.scss";
-import { AppLayout, AppRoutes, HeaderLayout } from "./Components";
+import { AppLayout, AppRoutes, HeaderLayout, LoginStatusDisplay } from "./Components";
 
 export const App = () => {
   const [bootstrap, setBootstrap] = useState(null);
@@ -66,7 +66,14 @@ export const App = () => {
         <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>
             <BrowserRouter basename={routerBase}>
-              <AppLayout header={<HeaderLayout title="Bombay Band Manager" />}>
+              <AppLayout
+                header={
+                  <HeaderLayout
+                    title="Bombay Band Manager"
+                    footer={<LoginStatusDisplay />}
+                  />
+                }
+              >
                 <AppRoutes />
               </AppLayout>
             </BrowserRouter>
