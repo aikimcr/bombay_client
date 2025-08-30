@@ -1,13 +1,15 @@
 import { useContext } from "react";
 
-import "./LoginStatus.scss";
+import "./LoginStatusDisplay.scss";
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
+import BombayLoginContext from "../../../../Context/BombayLoginContext";
 
-import { logout } from "../../Network/Login";
-import Button from "./Button.jsx";
+import { logout } from "../../../../Network/Login";
+import { Button } from "../..";
+import { useRouteManager } from "../../../../Hooks/useRouteManager";
 
-function LoginStatus(props) {
+export const LoginStatusDisplay = () => {
+  const routeManager = useRouteManager();
   const { loggedIn, setLoggedIn, setShowLogin } =
     useContext(BombayLoginContext);
 
@@ -17,7 +19,7 @@ function LoginStatus(props) {
   }
 
   function showLogin() {
-    setShowLogin(true);
+    routeManager.navigateToRoute("/login");
   }
 
   return (
@@ -27,18 +29,16 @@ function LoginStatus(props) {
           className="logout btn"
           onClick={doLogout}
           disabled={false}
-          label="Logout"
+          text="Logout"
         />
       ) : (
         <Button
           className="login btn"
           onClick={showLogin}
           disabled={false}
-          label="Login"
+          text="Login"
         />
       )}
     </div>
   );
-}
-
-export default LoginStatus;
+};

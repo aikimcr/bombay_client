@@ -3,7 +3,7 @@ jest.mock("../Network/Login");
 import { act, render, screen } from "@testing-library/react";
 import * as NetworkLogin from "../../Network/Login";
 
-import LoginStatus from "./LoginStatus.jsx";
+import { LoginStatusDisplay } from ".";
 import { ContextChanger } from "../../testHelpers/ContextChanger";
 
 beforeEach(() => {
@@ -17,7 +17,7 @@ afterEach(() => {
 it("should show the login button when logged out", async () => {
   const { asFragment } = render(
     <ContextChanger loggedIn={false}>
-      <LoginStatus />
+      <LoginStatusDisplay />
     </ContextChanger>,
   );
 
@@ -34,7 +34,7 @@ it("should show the login button when logged out", async () => {
 it("should show the login form when the login button is pressed", async () => {
   render(
     <ContextChanger loggedIn={false}>
-      <LoginStatus />
+      <LoginStatusDisplay />
     </ContextChanger>,
   );
 
@@ -55,7 +55,7 @@ it("should show the login form when the login button is pressed", async () => {
 it("should show the logout button when logged in", async () => {
   const { asFragment } = render(
     <ContextChanger loggedIn={true}>
-      <LoginStatus />
+      <LoginStatusDisplay />
     </ContextChanger>,
   );
   expect(asFragment).toMatchSnapshot();
@@ -73,7 +73,7 @@ it("should logout when the logout button is pressed", async () => {
 
   const result = render(
     <ContextChanger loggedIn={true}>
-      <LoginStatus />
+      <LoginStatusDisplay />
     </ContextChanger>,
   );
 

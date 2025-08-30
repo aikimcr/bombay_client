@@ -1,9 +1,6 @@
-import React, { useContext, useRef, useState } from "react";
-
-import "./Login.scss";
-
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import BombayLoginContext from "../../../Context/BombayLoginContext";
-
 import { loginStatus, login } from "../../../Network/Login";
 import {
   Button,
@@ -12,67 +9,24 @@ import {
   TextInput,
 } from "../../../Components";
 
+import "./Login.scss";
+import { useRouteManager } from "../../../Hooks/useRouteManager";
+
 export const Login = () => {
-  const formRef = useRef();
-
-  let timerHandle = null;
-
-  const [error, setError] = useState(null);
-  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const routeManager = useRouteManager();
 
   const { loggedIn, setLoggedIn, showLoginForm } =
     useContext(BombayLoginContext);
 
-  function getCredentials() {
-    // TODO: THere has to be a better way to do what these two lines are doing.
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
-    const usernameInput = formRef.current
-      ? formRef.current.querySelector('[name="username"]')
-      : "";
-    const passwordInput = formRef.current
-      ? formRef.current.querySelector('[name="password"]')
-      : "";
+  const { register, reset, handleSubmit, formState, setError, clearErrors } =
+    useForm({
+      shouldUseNativeValidaton: true,
+    });
 
-    return { username: usernameInput.value, password: passwordInput.value };
-  }
-
-  function clearTimer() {
-    if (timerHandle) {
-      clearTimeout(timerHandle);
-      timerHandle = null;
-    }
-  }
-
-  function handleChange(event) {
-    timerHandle = setTimeout(() => {
-      clearTimer();
-
-      const { username, password } = getCredentials();
-
-      if (username.length > 0 && password.length > 0) {
-        setSubmitDisabled(false);
-      } else {
-        setSubmitDisabled(true);
-      }
-    }, 250);
-  }
-
-  function clearAllFields(event) {
-    clearTimer();
-
-    if (formRef.current) {
-      formRef.current.querySelector('[name="username"]').value = "";
-      formRef.current.querySelector('[name="password"]').value = "";
-    }
-
-    setSubmitDisabled(true);
-    setError(null);
-  }
-
-  async function doLogin(event) {
-    const { username, password } = getCredentials();
-
-    clearTimer();
+  const doLogin = async (data) => {
+    const { username, password } = data;
 
     await login(username, password).catch((err) => {
       if (err.status === 401) {
@@ -84,13 +38,39 @@ export const Login = () => {
 
     const loginOkay = await loginStatus();
     setLoggedIn(loginOkay);
-  }
+  };
 
-  if (loggedIn) return null;
+  const onSubmit = (data) => {
+    doLogin(data);
+  };
+
+  const handleReset = () => {
+    reset();
+    setSubmitDisabled(true);
+  };
+
+  useEffect(() => {
+    if (formState.isValid && Object.entries(formState.errors).length === 0) {
+      setSubmitDisabled(false);
+      return;
+    }
+
+    setSubmitDisabled(true);
+  }, [formState]);
+
+  useEffect(() => {
+    if (loggedIn) {
+      routeManager.navigateToRoute("/artistList");
+    }
+  }, [loggedIn]);
 
   return (
     <div className="login-container">
-      <div ref={formRef} className="login-form">
+      <form
+        className="login-form"
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={handleReset}
+      >
         <h1 className="login-header">Please Log In</h1>
         <div className="info">
           <LabeledInput
@@ -98,6 +78,9 @@ export const Login = () => {
             inputId="login-user-name"
             InputField={TextInput}
             inputProps={{
+              ...register("username", {
+                required: "Please enter a valid username",
+              }),
               id: "login-user-name",
               name: "username",
             }}
@@ -107,28 +90,33 @@ export const Login = () => {
             inputId="login-password"
             InputField={PasswordInput}
             inputProps={{
+              ...register("password", {
+                required: "Please enter a valid password",
+              }),
               id: "login-password",
               name: "password",
             }}
           />
         </div>
-        {error && <div className="error">{error}</div>}
+        {Object.entries(formState.errors).length !== 0 && (
+          <div className="error">{formState.errors[0]}</div>
+        )}
         <div className="controls">
           <Button
             className="clear"
             disabled={false}
             role="secondary"
-            onClick={clearAllFields}
             text="Clear All Fields"
+            type="reset"
           />
           <Button
             className="login"
             disabled={submitDisabled}
-            onClick={doLogin}
             text="Login"
+            type="submit"
           />
         </div>
-      </div>
+      </form>
     </div>
   );
 };

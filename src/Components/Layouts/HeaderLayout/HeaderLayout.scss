@@ -7,17 +7,25 @@
 
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
   gap: .25rem;
 
   background: transparent;
 
   &__title {
-    background-color: var(--color-white-180);
+    background-color: transparent;
     padding: .25rem;
+    height: fit-content;
+    width: fit-content;
   }
 
   &__content {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-around;
+    align-items: center;
     background: transparent;
     padding: 0;
   }

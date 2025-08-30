@@ -1,0 +1,11 @@
+@import '../../../../global.scss';
+
+.login-status {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: transparent;
+    width: 145px;
+    margin-left: 5px;
+    flex-grow: 0;
+}
