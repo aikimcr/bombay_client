@@ -1,21 +1,65 @@
-$header-background-color: rgba(94, 72, 69, 1);
-$header-color: rgba(250, 250, 250, 1);
-$header-bar-parts-background-color: rgba(125, 93, 91, 1);
+:root {
+    --color-black: rgb(0, 0, 0);
+    --color-black-25: rgb(25, 25, 25);
+    --color-black-50: rgb(50, 50, 50);
 
-$messaging-background-color: rgba(125, 93, 91, 1);
-$messaging-color: rgba(250, 250, 250, 1);
+    --color-white: rgb(255, 255, 255);
+    --color-white-200: rgb(200, 200, 200);
+    --color-white-180: rgb(180, 180, 180);
 
-$navigation-background-color: rgba(151, 152, 187, 1);
-$navigation-color: black;
+    --color-peach-175: rgb(175, 149, 100);
+    --color-peach-255: rgb(255, 229, 180);
 
-$sidebar-background-color: $navigation-background-color;
-$sidebar-color: $navigation-color;
+    --color-blue-220: rgb(6, 6, 220);
+    --color-blue-250: rgb(27, 27, 250);
 
-$standard-font-size: 20px;
-$button-font-size: $standard-font-size + 10px;
+    --container-background-color: var(--color-white-200);
+    --container-color: var(--color-black-50);
+    --container-border: .5rem solid var(--color-black-25);
+    --form-container-border: .25rem solid var(--color-peach-175);
+
+    --header-background-color: rgb(0, 255, 0);
+    --header-color: rgb(255, 255, 0);
+    --header-bar-parts-background-color: rgb(255, 0, 0);
+
+    --messaging-background-color: rgb(0, 0, 255);
+    --messaging-color: rgb(255, 0, 255);
+
+    --navigation-background-color: white;
+    --navigation-color: black;
+
+    --sidebar-background-color: $navigation-background-color;
+    --sidebar-color: $navigation-color;
+
+    --standard-font-size: 2rem;
+
+    --title-font-size: 4rem;
+
+    --card-background: rgba(127, 127, 127, 0.5);
+
+    --standard-button-size: calc(var(var(--standard-font-size)) + 1rem);
+    --primary-button-background-color: rgb(76, 76, 243);
+    --primary-button-color: rgb(25, 25, 25);
+    --secondary-button-background-color: var(--color-black-50);
+    --secondary-button-color: var(--color-white-200);
+}
+
+@mixin standard-container {
+    background-color: var(--container-background-color);
+    color: var(--black-50);
+    border: var(--container-border);
+    padding: 1rem;
+}
+
+@mixin form-container {
+    background-color: var(--color-peach-255);
+    color: var(--black-50);
+    border: var(--form-container-border);
+    border-radius: 2rem;
+    padding: 2.5rem;
+}
 
 @mixin utiliity-component-background {
-    background-image: radial-gradient(rgba(15, 15, 15, 0.7), rgba(63, 63, 63, 0.7), rgba(127, 127, 127, 0.7));
 
     a {
         color: white;
@@ -28,8 +72,8 @@ body,
 div,
 input {
     box-sizing: border-box;
-    font-size: $standard-font-size;
-    line-height: $standard-font-size;
+    font-size: var(--standard-font-size);
+    line-height: var(--standard-font-size);
 }
 
 input[type="submit"],
@@ -39,10 +83,10 @@ input[type="button"],
     padding: 0 10px;
     background-color: rgb(32, 32, 32);
     color: white;
-    height: $button-font-size;
-    line-height: $button-font-size - 5px; // Subtract 5px to account for the padding
+    height: var(--standard-button-size);
+    line-height: var(--standard-button-size) - 5px; // Subtract 5px to account for the padding
     cursor: pointer;
-    border-radius: calc($button-font-size / 2);
+    border-radius: calc(var(--standard-button-size) / 2);
 
     &:hover {
         background-color: rgb(80, 75, 227);
@@ -64,8 +108,8 @@ input[type="button"],
 
 label,
 .label {
-    height: $standard-font-size;
-    line-height: $standard-font-size;
+    height: var(--standard-font-size);
+    line-height: var(--standard-font-size);
     width: 100px;
     overflow: hidden;
 }
@@ -77,7 +121,7 @@ input .input {
     left: 0;
     right: 0;
     width: 100%;
-    height: $standard-font-size;
+    height: var(--standard-font-size);
 }
 
 // Parent element must have height specificed.  100% should work.
@@ -86,7 +130,7 @@ input .input {
     overflow-y: auto;
     overflow-x: $overflow-x;
 
-    >* {
+    > * {
         margin-top: 0;
         margin-bottom: 0;
         padding-top: 0;
@@ -105,7 +149,7 @@ input .input {
     width: 100%;
 
     display: grid;
-    grid-template-rows: $button-font-size + 10px auto;
+    grid-template-rows: var(--standard-button-size) + 10px auto;
     grid-template-areas:
         "header"
         "content"
@@ -113,7 +157,7 @@ input .input {
 
 .list-controls {
     grid-area: header;
-    height: $button-font-size + 10px;
+    height: var(--standard-button-size) + 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -121,7 +165,7 @@ input .input {
     padding: 0 10px;
 
     .title {
-        font-size: $standard-font-size * 2;
+        font-size: var(--title-font-size);
         font-weight: bold;
     }
 }
@@ -145,39 +189,40 @@ input .input {
         position: relative;
         top: 5em;
         left: calc(50% - 6ch);
-        font-size: $standard-font-size * 2;
+        font-size: var(--title-font-size);
         content: 'No items found';
     }
 }
 
-$layout-allowance: 200px;
-$minimum-card-width: 400px;
+// This was a dumb idea. Do it another way.  Do Not Commit
+// $layout-allowance: 200px;
+// $minimum-card-width: 400px;
 
-@media(min-width: calc($minimum-card-width * 2 + $layout-allowance)) {
-    .card-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+// @media(min-width: calc($minimum-card-width * 2 + $layout-allowance)) {
+//     .card-list {
+//         grid-template-columns: repeat(2, 1fr);
+//     }
+// }
 
-@media(min-width: calc($minimum-card-width * 3 + $layout-allowance)) {
-    .card-list {
-        grid-template-columns: repeat(3, 1fr);
+// @media(min-width: calc($minimum-card-width * 3 + $layout-allowance)) {
+//     .card-list {
+//         grid-template-columns: repeat(3, 1fr);
 
-        &:has(> .card.wide) {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-}
+//         &:has(> .card.wide) {
+//             grid-template-columns: repeat(2, 1fr);
+//         }
+//     }
+// }
 
-@media(min-width: calc($minimum-card-width * 4 + $layout-allowance)) {
-    .card-list {
-        grid-template-columns: repeat(4, 1fr);
+// @media(min-width: calc($minimum-card-width * 4 + $layout-allowance)) {
+//     .card-list {
+//         grid-template-columns: repeat(4, 1fr);
 
-        &:has(> .card.wide) {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-}
+//         &:has(> .card.wide) {
+//             grid-template-columns: repeat(4, 1fr);
+//         }
+//     }
+// }
 
 .picker-component {
     position: absolute;
@@ -203,23 +248,21 @@ $minimum-card-width: 400px;
 }
 
 .picker-item {
-    background-color: $messaging-background-color;
-    color: $messaging-color;
+    background-color: var(--messaging-background-color);
+    color: var(--messaging-color);
     @include ellipsisText;
-    font-size: $standard-font-size;
-    line-height: $standard-font-size;
+    font-size: var(--standard-font-size);
+    line-height: var(--standard-font-size);
     padding: 0.5em 1em;
 }
 
-$card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
-
 .card {
-    background: $card-background;
+    background: var(--card-background);
     box-shadow: 5px 5px 10px 1px rgb(0, 0, 0);
-    font-size: $standard-font-size;
-    line-height: $standard-font-size;
+    font-size: var(--standard-font-size);
+    line-height: var(--standard-font-size);
     width: 100%;
-    min-width: $minimum-card-width;
+    min-width: var(--minimum-card-width);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -228,20 +271,20 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
 
     &.wide {
         grid-column: span 2;
-        min-width: calc($minimum-card-width * 2);
+        min-width: calc(var(--minimum-card-width) * 2);
     }
 
     .header {
         border-bottom: thin black solid;
-        background-color: $header-background-color;
-        color: $header-color;
+        background-color: var(--header-background-color);
+        color: var(--header-color);
     }
 
     .name {
         padding: 0 1em;
         border: thin black solid;
-        background-color: $sidebar-background-color;
-        color: $sidebar-color;
+        background-color: var(--sidebar-background-color);
+        color: var(--sidebar-color);
     }
 
     &:has(> .details:empty) {
@@ -270,12 +313,12 @@ $card-background: linear-gradient(rgb(250, 180, 160), rgb(160, 180, 250));
 
         .long-text {
             background-color: rgba(128, 128, 200, .3);
-            @include scrollListContainer(auto);
             min-width: 25ch;
             max-width: 100ch;
             min-height: 5ch;
             max-height: 25ch;
             padding: .5em;
+            @include scrollListContainer(auto);
 
             &:has(> pre:empty) {
                 display: none;

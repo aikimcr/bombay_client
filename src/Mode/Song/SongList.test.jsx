@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 
 import { act, render } from "@testing-library/react";
 

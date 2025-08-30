@@ -1,0 +1,24 @@
+@import '../../../global.scss';
+
+.header-layout {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto 1fr;
+  gap: .25rem;
+
+  background: transparent;
+
+  &__title {
+    background-color: var(--color-white-180);
+    padding: .25rem;
+  }
+
+  &__content {
+    background: transparent;
+    padding: 0;
+  }
+}

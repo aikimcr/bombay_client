@@ -1,0 +1,32 @@
+.button {
+  color: var(--primary-button-color);
+  background-color: var(--primary-button-background-color);
+  border-radius: 2rem;
+  border-style: ridge;
+  border-width: .25em;
+  border-color: var(--primary-button-background-color);
+  font-size: var(--standard-font-size);
+  line-height: var(--standard-font-size);
+  padding: .25em .5em;
+  cursor: pointer;
+
+  &__secondary {
+    color: var(--secondary-button-color);
+    background-color: var(--secondary-button-background-color);
+    border-color: var(--secondary-button-background-color);
+  }
+
+  &:hover:not(:disabled) {
+    border-style: outset;
+  }
+
+  &:active:not(:disabled) {
+    border-style: inset;
+  }
+
+  &:disabled {
+    cursor: default;
+    color: rgb(50%, 50%, 50%);
+    opacity: .5;
+  }
+}
