@@ -1,6 +1,6 @@
 import { getFromURLString, prepareURLFromArgs } from "./Network";
 
-export async function fetchBootstrap() {
+export const fetchBootstrap = async () => {
   try {
     const requestURL = prepareURLFromArgs("bootstrap");
     const result = await getFromURLString(requestURL.toString());
@@ -8,4 +8,4 @@ export async function fetchBootstrap() {
   } catch (err) {
     return Promise.reject(err);
   }
-}
+};

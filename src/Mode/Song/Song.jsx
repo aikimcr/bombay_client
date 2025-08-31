@@ -12,7 +12,7 @@ import LabeledSelect from "../../Components/Widgets/LabeledSelect.jsx";
 import LabeledRange from "../../Components/Widgets/LabeledRange.jsx";
 import LabeledTextArea from "../../Components/Widgets/LabeledTextArea.jsx";
 
-function Song({ song }) {
+export const Song = ({ song }) => {
   const { getBootstrap } = useContext(BombayUtilityContext);
 
   const [artistModel, setArtistModel] = useState(song ? song.artist() : null);
@@ -63,10 +63,8 @@ function Song({ song }) {
       />
     </>
   );
-}
+};
 
 Song.propTypes = {
   song: PropTypes.object,
 };
-
-export default Song;

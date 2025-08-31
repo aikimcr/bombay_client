@@ -4,10 +4,10 @@ import "./SongList.scss";
 
 import SongCollection from "../../Model/SongCollection";
 
-import SongListItem from "./SongListItem.jsx";
-import Song from "./Song.jsx";
-import FormModal from "../../Modal/FormModal.jsx";
-import useModelCollection from "../../Hooks/useModelCollection";
+import SongListItem from "./SongListItem";
+import { Song } from "./Song";
+import FormModal from "../../Modal/FormModal";
+import { useModelCollection } from "../../Hooks/useModelCollection";
 import { ProtectedRoute } from "../../Components";
 import BombayLoginContext from "../../Context/BombayLoginContext";
 
@@ -25,13 +25,13 @@ export const SongList = (props) => {
   const [showAdd, setShowAdd] = useState(false);
 
   async function submitNewSong(songDef) {
-    await songCollection.current.save(songDef);
+    await songCollection.save(songDef);
     refreshCollection();
   }
 
   return (
     <ProtectedRoute>
-      <div className="list-component">
+      <div className="list-component" data-testid="song-list-component">
         <div className="list-controls">
           <button className="btn" onClick={() => setShowAdd(true)}>
             New
@@ -51,9 +51,9 @@ export const SongList = (props) => {
         </div>
         <div className="song-list-container list-container" ref={topRef}>
           <ul className="song-list card-list">
-            {songCollection?.current == null
+            {songCollection == null
               ? ""
-              : songCollection.current.map((song) => {
+              : songCollection.map((song) => {
                   const key = `song-list-${song.get("id")}`;
                   return <SongListItem className key={key} song={song} />;
                 })}

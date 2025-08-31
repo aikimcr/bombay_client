@@ -9,7 +9,7 @@ import ArtistCollection from "../../Model/ArtistCollection";
 import ArtistListItem from "./ArtistListItem.jsx";
 import Artist from "./Artist.jsx";
 import FormModal from "../../Modal/FormModal.jsx";
-import useModelCollection from "../../Hooks/useModelCollection";
+import { useModelCollection } from "../../Hooks/useModelCollection";
 import { ProtectedRoute } from "../../Components";
 
 export const ArtistList = (props) => {
@@ -26,13 +26,13 @@ export const ArtistList = (props) => {
   const [showAdd, setShowAdd] = useState(false);
 
   async function submitNewArtist(artistDef) {
-    await artistCollection.current.save(artistDef);
+    await artistCollection.save(artistDef);
     refreshCollection();
   }
 
   return (
     <ProtectedRoute>
-      <div className="list-component">
+      <div className="list-component" data-testid="artist-list-component">
         <div className="list-controls">
           <button className="btn" onClick={() => setShowAdd(true)}>
             New
@@ -52,9 +52,9 @@ export const ArtistList = (props) => {
         </div>
         <div className="artist-list-container list-container" ref={topRef}>
           <ul className="artist-list card-list">
-            {artistCollection?.current == null
+            {artistCollection == null
               ? ""
-              : artistCollection.current.map((artist) => {
+              : artistCollection.map((artist) => {
                   const key = `artist-list-${artist.get("id")}`;
                   return <ArtistListItem className key={key} artist={artist} />;
                 })}

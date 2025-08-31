@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Component should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="picker-component"
+    data-testid="picker-component"
+  >
+    <div
+      class="list-container"
+    >
+      <ul
+        class="picker-list"
+      >
+        <li
+          class="picker-item"
+          data-model-id="1"
+          data-testid="picker-item"
+        >
+          Kaylin Kihn
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="2"
+          data-testid="picker-item"
+        >
+          Lance Morar
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="3"
+          data-testid="picker-item"
+        >
+          Felix Senger
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="4"
+          data-testid="picker-item"
+        >
+          Alyson Harvey
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="5"
+          data-testid="picker-item"
+        >
+          Lenore Kuvalis
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="6"
+          data-testid="picker-item"
+        >
+          Gertrude Kilback
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="7"
+          data-testid="picker-item"
+        >
+          Kobe Brown
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="8"
+          data-testid="picker-item"
+        >
+          Arnulfo Bartoletti
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="9"
+          data-testid="picker-item"
+        >
+          Ariane Beer
+        </li>
+        <li
+          class="picker-item"
+          data-model-id="10"
+          data-testid="picker-item"
+        >
+          Norwood Pollich
+        </li>
+      </ul>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -25,23 +25,29 @@ export async function loginStatus(expireMinutes = 30) {
 
   if (token) {
     // Precalculate some stuff to make debugging a little easier.
-    const now = Date.now() / 1000;
+    const now = parseInt(Date.now() / 1000);
     const tokenAge = now - token?.iat || 0;
     const expireSeconds = expireMinutes * 60;
 
     if (tokenAge <= expireSeconds) {
       return true;
     } else {
-      const requestURL = prepareURLFromArgs("login");
-      const result = await getFromURLString(requestURL.toString());
+      try {
+        const requestURL = prepareURLFromArgs("login");
+        const resultPromise = getFromURLString(requestURL.toString());
+        const result = await resultPromise;
 
-      if (result.loggedIn) {
-        setToken(result.token);
-      } else {
-        deleteToken();
+        if (result.loggedIn) {
+          setToken(result.token);
+        } else {
+          deleteToken();
+        }
+
+        return result.loggedIn;
+      } catch (err) {
+        console.error(err);
+        return false;
       }
-
-      return result.loggedIn;
     }
   }
 

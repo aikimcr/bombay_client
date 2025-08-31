@@ -1,20 +1,48 @@
 import { useState } from "react";
 import { BrowserRouter } from "react-router";
 
-import { act, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 
-import * as Login from "../../Network/Login";
-jest.mock("../../Network/Login");
+import {
+  mockLoginStatus,
+  mockRefreshToken,
+  mockLogin,
+  mockLogout,
+} from "../../Network/testing";
+
+jest.mock("../../Network/Login", () => {
+  const originalModule = jest.requireActual("../../Network/Login");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: mockLoginStatus,
+    refreshToken: mockRefreshToken,
+    login: mockLogin,
+    logout: mockLogout,
+  };
+});
+
+import { mockModelFetcher, mockUseModelCollection } from "../../Hooks/testing";
+jest.mock("../../Hooks/useModelCollection", () => {
+  const originalModule = jest.requireActual("../../Hooks/useModelCollection");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    useModelCollection: mockUseModelCollection,
+  };
+});
 
 import * as Network from "../../Network/Network";
-import useIntersectionObserver, * as mockObserver from "../../Hooks/useIntersectionObserver";
+import * as mockObserver from "../../Hooks/useIntersectionObserver";
 
 import { makeModels, makeAModel } from "../../testHelpers/modelTools";
 
 import BombayLoginContext from "../../Context/BombayLoginContext";
 import BombayUtilityContext from "../../Context/BombayUtilityContext";
 
-import ArtistList from "./ArtistList.jsx";
+import { ArtistList } from "./ArtistList.jsx";
 
 jest.useFakeTimers();
 
@@ -55,17 +83,10 @@ const testToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
 
 beforeEach(() => {
-  const modalRoot = document.createElement("div");
-  modalRoot.id = "modal-root";
-  document.body.append(modalRoot);
-
   localStorage.setItem("jwttoken", testToken);
 });
 
 afterEach(() => {
-  const modalRoot = document.getElementById("modal-root");
-  modalRoot.remove();
-
   while (mockObserver.mockObserver.observers.length > 0) {
     mockObserver.mockObserver.observers.pop();
   }
@@ -98,110 +119,172 @@ function getAreas(result) {
   return [listElement, controls, observer, listContainer, index];
 }
 
-it("should render the list", async () => {
-  const loginPromise = Login._setupMocks();
+const setUpModels = () => {
+  const artistNames = [
+    "Same & Dave",
+    "Aerosmith",
+    "Prince",
+    "DNCE",
+    "Sabrina Carpenter",
+    "Metallica",
+    "Ben E. King",
+    "Van Halen",
+    "Led Zeppelin",
+    "Black Sabbath",
+    "Steppenwolf",
+    "Tom Petty",
+    "Rolling Stones",
+    "Olivia Rodrigo",
+    "Santana",
+    "The Who",
+    "Deep Purple",
+    "Donovan",
+    "Jimi Hendrix",
+    "T. Rex",
+  ];
+  const [_fetchBody, models] = makeModels(10, {}, "artist", (def) => {
+    const idString = def.id || "1";
+    const id = parseInt(idString) - 1;
+    def.name = artistNames[id];
+  });
+
+  const modelPromise = PromiseWithResolvers();
+  mockModelFetcher.mockReturnValueOnce(modelPromise.promise);
+  return [modelPromise, models];
+};
+
+it("Component should match snapshot", async () => {
+  const [modelPromise, models] = setUpModels();
+
+  const loginPromise = PromiseWithResolvers();
+  mockLoginStatus.mockReturnValue(loginPromise);
   loginPromise.resolve({
     loggedIn: true,
     token: testToken,
   });
 
-  const { resolve } = Network._setupMocks();
+  const { asFragment } = render(
+    <FakeContent>
+      <ArtistList />
+    </FakeContent>,
+  );
+
+  await act(async () => {
+    modelPromise.resolve(models);
+  });
+
+  expect(asFragment()).toMatchSnapshot();
+});
+
+it("should render the list", async () => {
+  const [modelPromise, models] = setUpModels();
+
+  const loginPromise = PromiseWithResolvers();
+  mockLoginStatus.mockReturnValue(loginPromise);
+  loginPromise.resolve({
+    loggedIn: true,
+    token: testToken,
+  });
+
   const result = render(
     <FakeContent>
       <ArtistList />
     </FakeContent>,
   );
 
-  const [fetchBody, models] = makeModels(10, {}, "artist");
-
   await act(async () => {
-    resolve(fetchBody);
+    modelPromise.resolve(models);
   });
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
 
-  const [listElement] = getAreas(result);
-
-  expect(listElement.nextSibling).toBe(null);
-  expect(listElement.className).toBe("artist-list card-list");
-  expect(listElement.childElementCount).toBe(models.length);
+  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
+  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
 });
 
 it("should render the next page", async () => {
-  const loginPromise = Login._setupMocks();
+  const [modelPromise1, models1] = setUpModels();
+  const [modelPromise2, models2] = setUpModels();
+
+  const loginPromise = PromiseWithResolvers();
+  mockLoginStatus.mockReturnValue(loginPromise);
   loginPromise.resolve({
     loggedIn: true,
     token: testToken,
   });
 
-  const { resolve: resolve1 } = Network._setupMocks();
   const result = render(
     <FakeContent>
       <ArtistList />
     </FakeContent>,
   );
 
-  const [fetchBody1, models1] = makeModels(10, {}, "artist");
-
   await act(async () => {
-    resolve1(fetchBody1);
+    modelPromise1.resolve(models1);
   });
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
-  const [listElement, , observer] = getAreas(result);
-
-  expect(listElement.childElementCount).toBe(models1.length);
-
-  const { resolve: resolve2 } = Network._setupMockPromise();
-  const [fetchBody2, models2] = makeModels(
-    10,
-    { offset: 10, limit: 10 },
-    "artist",
+  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
+  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(
+    models1.length,
   );
 
+  const observer = mockObserver.mockObserver.observers[0];
+
   await act(async () => {
-    observer._fireIntersect(listElement.lastChild);
-    resolve2(fetchBody2);
+    observer._fireIntersect(
+      screen.getAllByTestId("artist-list-card").slice(-1)[0],
+    );
+    modelPromise2.resolve(models2);
   });
 
-  expect(listElement.childElementCount).toBe(models1.length + models2.length);
+  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(
+    models1.length + models2.length,
+  );
 });
 
 it("should stop when it runs out of data", async () => {
-  const loginPromise = Login._setupMocks();
+  const [modelPromise, models] = setUpModels();
+
+  const loginPromise = PromiseWithResolvers();
+  mockLoginStatus.mockReturnValue(loginPromise);
   loginPromise.resolve({
     loggedIn: true,
     token: testToken,
   });
 
-  const { resolve } = Network._setupMocks();
   const result = render(
     <FakeContent>
       <ArtistList />
     </FakeContent>,
   );
 
-  const [fetchBody, models] = makeModels(10, {}, "artist");
-
   await act(async () => {
-    resolve(fetchBody);
+    modelPromise.resolve(models);
   });
 
-  const [listElement, , observer] = getAreas(result);
-  expect(listElement.childElementCount).toBe(models.length);
+  expect(mockObserver.mockObserver.observers.length).toBe(1);
+  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
+  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
 
-  const { reject } = Network._setupMockPromise();
+  const observer = mockObserver.mockObserver.observers[0];
 
   await act(async () => {
-    observer._fireIntersect(listElement.lastChild);
-    reject({ status: 404, message: "Not Found" });
+    observer._fireIntersect(
+      screen.getAllByTestId("artist-list-card").slice(-1)[0],
+    );
+    modelPromise.reject({ status: 404, message: "Not Found" });
   });
 
-  expect(listElement.childElementCount).toBe(models.length);
+  expect(mockObserver.mockObserver.observers.length).toBe(1);
+  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
+  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
 });
 
-it("should add an artist", async () => {
-  const loginPromise = Login._setupMocks();
+// Move this to testing the artist editing component.
+it.skip("should add an artist", async () => {
+  const loginPromise = PromiseWithResolvers();
+  mockLoginStatus.mockReturnValue(loginPromise);
   loginPromise.resolve({
     loggedIn: true,
     token: testToken,
@@ -209,7 +292,6 @@ it("should add an artist", async () => {
 
   const modalRoot = document.getElementById("modal-root");
 
-  const { resolve } = Network._setupMocks();
   const result = render(
     <FakeContent>
       <ArtistList />

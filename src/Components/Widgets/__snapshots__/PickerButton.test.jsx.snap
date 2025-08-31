@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Component should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="picker-button"
+    data-modelname="table1"
+    data-targetfield="table2_id"
+  >
+    <label
+      for="table1-name-isNew"
+    >
+      Pick A Model
+    </label>
+    <input
+      name="table2_id"
+      type="number"
+      value="0"
+    />
+    <button
+      class="button button__primary"
+      id="table1-name-isNew"
+    >
+      &lt;Please Choose&gt;
+    </button>
+  </div>
+</DocumentFragment>
+`;

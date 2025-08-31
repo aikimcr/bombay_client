@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="login-container"
+  >
+    <form
+      class="login-form"
+    >
+      <h1
+        class="login-header"
+      >
+        Please Log In
+      </h1>
+      <div
+        class="info"
+      >
+        <div
+          class="labeled-input"
+        >
+          <label
+            class="labeled-input__label"
+            for="login-user-name"
+          >
+            User Name
+          </label>
+          <input
+            class="text-input undefined"
+            id="login-user-name"
+            name="username"
+          />
+        </div>
+        <div
+          class="labeled-input"
+        >
+          <label
+            class="labeled-input__label"
+            for="login-password"
+          >
+            Password
+          </label>
+          <input
+            class="password-input"
+            id="login-password"
+            name="password"
+            type="password"
+          />
+          <button
+            class="password-input__eye password-input__closed-eye"
+          >
+            <i
+              class="fa-solid fa-eye-slash"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="controls"
+      >
+        <button
+          class="clear button button__secondary"
+          type="reset"
+        >
+          Clear All Fields
+        </button>
+        <button
+          class="login button button__primary"
+          disabled=""
+          type="submit"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+  <button
+    class="change-test-login"
+    data-testid="change-test-login"
+  >
+    Change Login
+  </button>
+</DocumentFragment>
+`;

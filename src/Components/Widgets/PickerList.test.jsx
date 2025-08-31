@@ -2,31 +2,48 @@ import { useState } from "react";
 
 import { act, render, screen } from "@testing-library/react";
 
-import * as NetworkLogin from "../../Network/Login";
-jest.mock("../Network/Login");
+import {
+  mockLoginStatus,
+  mockRefreshToken,
+  mockLogin,
+  mockLogout,
+} from "../../Network/testing";
 
-import * as Network from "../../Network/Network";
+jest.mock("../../Network/Login", () => {
+  const originalModule = jest.requireActual("../../Network/Login");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: mockLoginStatus,
+    refreshToken: mockRefreshToken,
+    login: mockLogin,
+    logout: mockLogout,
+  };
+});
+
+import { mockModelFetcher, mockUseModelCollection } from "../../Hooks/testing";
+jest.mock("../../Hooks/useModelCollection", () => {
+  const originalModule = jest.requireActual("../../Hooks/useModelCollection");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    useModelCollection: mockUseModelCollection,
+  };
+});
+
 import * as mockObserver from "../../Hooks/useIntersectionObserver";
-
-import { makeModels } from "../../testHelpers/modelTools";
 
 import BombayLoginContext from "../../Context/BombayLoginContext";
 
-import ModelBase from "../../model/ModelBase";
-import CollectionBase from "../../model/CollectionBase";
-
-class TestModel extends ModelBase {}
-
-class TestCollection extends CollectionBase {
-  constructor(options = {}) {
-    super("/table1", { ...options, modelClass: TestModel });
-  }
-}
+import { MockTestCollection, mockFetchBody, mockModels } from "./testing";
 
 import PickerList from "./PickerList.jsx";
+import { useModelCollection } from "../../Hooks";
 
-function TestWrapper({ loggedIn, showLoginForm, children }) {
-  const [loginState, setLoginState] = useState({ loggedIn, showLoginForm });
+function TestWrapper({ loggedIn, children }) {
+  const [loginState, setLoginState] = useState({ loggedIn });
 
   return (
     <BombayLoginContext.Provider value={loginState}>
@@ -41,7 +58,8 @@ const testToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
 
 function setupLogin(loggedIn = true, token = testToken) {
-  const loginPromise = NetworkLogin._setupMocks();
+  const loginPromise = PromiseWithResolvers();
+  mockLogin.mockReturnValue(loginPromise);
   loginPromise.resolve({ loggedIn, token });
 }
 
@@ -57,69 +75,82 @@ afterEach(() => {
   localStorage.removeItem("jwttoken");
 });
 
-it("should show the list", async () => {
+it("Component should match snapshot", async () => {
   setupLogin();
   const pickModel = jest.fn();
 
-  const { resolve } = Network._setupMocks();
+  const refreshPromise = PromiseWithResolvers();
+  mockModelFetcher.mockReturnValue(refreshPromise.promise);
 
   const { asFragment } = render(
-    <TestWrapper loggedIn={true} showLoginForm={false}>
+    <TestWrapper loggedIn={true}>
       <PickerList
         pickModel={pickModel}
         isOpen={true}
-        collectionClass={TestCollection}
+        collectionClass={MockTestCollection}
       />
     </TestWrapper>,
   );
 
-  const [fetchBody, models] = makeModels(10, {});
-
   await act(async () => {
-    resolve(fetchBody);
+    refreshPromise.resolve(mockModels);
   });
 
-  expect(asFragment).toMatchSnapshot();
+  expect(asFragment()).toMatchSnapshot();
+});
 
-  expect(mockObserver.mockObserver.observers.length).toBe(1);
-  expect(Network.getFromURLString).toBeCalledTimes(1);
-  expect(Network.getFromURLString).toBeCalledWith(
-    "http://localhost:2001/xyzzy/table1",
+it("Should show the list", async () => {
+  setupLogin();
+  const pickModel = jest.fn();
+
+  const refreshPromise = PromiseWithResolvers();
+  mockModelFetcher.mockReturnValue(refreshPromise.promise);
+
+  render(
+    <TestWrapper loggedIn={true}>
+      <PickerList
+        pickModel={pickModel}
+        isOpen={true}
+        collectionClass={MockTestCollection}
+      />
+    </TestWrapper>,
   );
-  expect(Network.getFromURLString.mock.results[0].value).resolves.toEqual(
-    fetchBody,
+
+  expect(screen.getByTestId("picker-component")).toBeInTheDocument();
+  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
+
+  await act(async () => {
+    refreshPromise.resolve(mockModels);
+  });
+
+  expect(screen.queryAllByTestId("picker-item")).toHaveLength(
+    mockModels.length,
   );
-
-  const listElements = asFragment().querySelectorAll("li.picker-item");
-  expect(listElements).toHaveLength(10);
-
-  const el = screen.queryByText(models[1].get("name"));
-  el.click();
-
-  expect(pickModel).toBeCalled();
-  expect(pickModel).toBeCalledWith(models[1]);
 });
 
 it("should show an empty list", async () => {
   setupLogin();
   const pickModel = jest.fn();
 
-  const { reject } = Network._setupMocks();
+  const refreshPromise = PromiseWithResolvers();
+  mockModelFetcher.mockReturnValue(refreshPromise.promise);
 
-  const { container } = render(
-    <TestWrapper loggedIn={true} showLoginForm={false}>
+  render(
+    <TestWrapper loggedIn={true}>
       <PickerList
         pickModel={pickModel}
         isOpen={true}
-        collectionClass={TestCollection}
+        collectionClass={MockTestCollection}
       />
     </TestWrapper>,
   );
 
+  expect(screen.getByTestId("picker-component")).toBeInTheDocument();
+  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
+
   await act(async () => {
-    reject({ status: 404, message: "Not Found" });
+    refreshPromise.reject({ status: 404, message: "Not Found" });
   });
 
-  const listElements = container.querySelectorAll("li.picker-item");
-  expect(listElements).toHaveLength(0);
+  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
 });

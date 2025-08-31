@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Component should match snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="card wide"
+    data-testid="song-list-card"
+  >
+    <div
+      class="header"
+    >
+      Song
+    </div>
+    <div
+      class="name"
+    >
+      Piano Man
+    </div>
+    <div
+      class="details"
+    >
+      <div
+        class="label"
+      >
+        Artist
+      </div>
+      <div
+        class="text"
+      >
+        Billy Joel
+      </div>
+      <div
+        class="label"
+      >
+        Key
+      </div>
+      <div
+        class="text"
+      >
+        C
+      </div>
+      <div
+        class="label"
+      >
+        Tempo
+      </div>
+      <div
+        class="text"
+      >
+        120
+      </div>
+      <div
+        class="label"
+      >
+        Lyrics
+      </div>
+      <div
+        class="long-text"
+      >
+        <pre>
+          O Solo Mio! The troubles I have seen
+        </pre>
+      </div>
+    </div>
+  </li>
+  <div
+    data-testid="edit-song-modal"
+  >
+    Form Modal
+  </div>
+</DocumentFragment>
+`;

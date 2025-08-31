@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 
 import "./SongList.scss";
 
-import Song from "./Song.jsx";
-import FormModal from "../../Modal/FormModal.jsx";
+import { Song } from "./Song";
+import FormModal from "../../Modal/FormModal";
 
-function SongListItem({ song }) {
+export const SongListItem = ({ song }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [displayName, setDisplayName] = useState(song.get("name"));
   const [artistName, setArtistName] = useState(song.artist().get("name"));
@@ -19,8 +19,12 @@ function SongListItem({ song }) {
   }
 
   return (
-    <React.Fragment>
-      <li className="card wide" onClick={() => setShowEdit(true)}>
+    <>
+      <li
+        className="card wide"
+        data-testid="song-list-card"
+        onClick={() => setShowEdit(true)}
+      >
         <div className="header">Song</div>
         <div className="name">{displayName}</div>
         <div className="details">
@@ -52,9 +56,9 @@ function SongListItem({ song }) {
       >
         <Song song={song} />
       </FormModal>
-    </React.Fragment>
+    </>
   );
-}
+};
 
 SongListItem.propTypes = {
   song: PropTypes.object,

@@ -1,33 +1,76 @@
-import { act, render, screen } from "@testing-library/react";
 import { useState } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import * as NetworkLogin from "../../Network/Login";
-jest.mock("../Network/Login");
+import {
+  mockGetFromURLString,
+  mockLogin,
+  mockLoginStatus,
+  mockLogout,
+  mockPostToURLString,
+  mockPrepareURLFromArgs,
+  mockPutToURLString,
+  mockRefreshToken,
+  mockServerBasePath,
+  mockServerHost,
+  mockServerPort,
+  mockServerProtocol,
+} from "../../Network/testing";
 
-import * as Network from "../../Network/Network";
-import * as mockObserver from "../../Hooks/useIntersectionObserver";
+jest.mock("../../Network/Login", () => {
+  const originalModule = jest.requireActual("../../Network/Login");
 
-import { makeModels } from "../../testHelpers/modelTools";
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: mockLoginStatus,
+    refreshToken: mockRefreshToken,
+    login: mockLogin,
+    logout: mockLogout,
+  };
+});
+
+jest.mock("../../Network/Network", () => {
+  const originalModule = jest.requireActual("../../Network/Network");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    serverProtocol: mockServerProtocol,
+    serverHost: mockServerHost,
+    serverBasePath: mockServerBasePath,
+    serverPort: mockServerPort,
+    prepareURLFromArgs: mockPrepareURLFromArgs,
+    getFromURLString: mockGetFromURLString,
+    postToURLString: mockPostToURLString,
+    putToURLString: mockPutToURLString,
+  };
+});
+
+import {
+  MockTestCollection,
+  mockFetchBody,
+  mockModels,
+  MockPickerList,
+} from "./testing";
+
+jest.mock(".", () => {
+  const originalModule = jest.requireActual(".");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    PickerList: MockPickerList,
+  };
+});
 
 import BombayLoginContext from "../../Context/BombayLoginContext";
-
-import ModelBase from "../../model/ModelBase";
-import CollectionBase from "../../model/CollectionBase";
-
-class TestModel extends ModelBase {}
-
-class TestCollection extends CollectionBase {
-  constructor(options = {}) {
-    super("/table1", { ...options, modelClass: TestModel });
-  }
-}
 
 import PickerButton from "./PickerButton.jsx";
 
 let testSetLoggedIn;
 
-function TestWrapper({ loggedIn, showLoginForm, children }) {
-  const [loginState, setLoginState] = useState({ loggedIn, showLoginForm });
+function TestWrapper({ loggedIn, children }) {
+  const [loginState, setLoginState] = useState({ loggedIn });
 
   testSetLoggedIn = (isLoggedIn) => {
     setLoginState((oldState) => {
@@ -48,7 +91,7 @@ const testToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
 
 function setupLogin(loggedIn = true, token = testToken) {
-  const loginPromise = NetworkLogin._setupMocks();
+  const loginPromise = PromiseWithResolvers();
   loginPromise.resolve({ loggedIn, token });
 }
 
@@ -57,24 +100,21 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  while (mockObserver.mockObserver.observers.length > 0) {
-    mockObserver.mockObserver.observers.pop();
-  }
-
   localStorage.removeItem("jwttoken");
 });
 
-it("should show the button", async () => {
+it("Component should match snapshot", async () => {
   setupLogin();
+
+  const getPromise = PromiseWithResolvers();
+  mockGetFromURLString.mockReturnValue(getPromise.promise);
 
   const onModelPicked = jest.fn();
 
-  const { resolve } = Network._setupMocks();
-
-  const { asFragment, container } = render(
-    <TestWrapper loggedIn={true} showLoginForm={false}>
+  const { asFragment } = render(
+    <TestWrapper loggedIn={true}>
       <PickerButton
-        collectionClass={TestCollection}
+        collectionClass={MockTestCollection}
         modelName="table1"
         fieldName="id"
         targetField="table2_id"
@@ -84,31 +124,53 @@ it("should show the button", async () => {
     </TestWrapper>,
   );
 
-  expect(asFragment).toMatchSnapshot();
-
-  expect(mockObserver.mockObserver.observers.length).toBe(0);
-  const [fetchBody] = makeModels(10, {});
-
   await act(async () => {
-    resolve(fetchBody);
+    getPromise.resolve(mockFetchBody);
   });
 
-  expect(mockObserver.mockObserver.observers.length).toBe(0);
-  const listComponent = container.querySelector(".picker-component");
-  expect(listComponent).toBeNull();
+  expect(asFragment()).toMatchSnapshot();
+});
+
+it("should hide the list on load", async () => {
+  setupLogin();
+
+  const getPromise = PromiseWithResolvers();
+  mockGetFromURLString.mockReturnValue(getPromise.promise);
+
+  const onModelPicked = jest.fn();
+
+  render(
+    <TestWrapper loggedIn={true}>
+      <PickerButton
+        collectionClass={MockTestCollection}
+        modelName="table1"
+        fieldName="id"
+        targetField="table2_id"
+        labelText="Pick A Model"
+        onModelPicked={onModelPicked}
+      />
+    </TestWrapper>,
+  );
+
+  await act(async () => {
+    getPromise.resolve(mockFetchBody);
+  });
+
+  expect(screen.queryByTestId("mock-picker-list")).toBeNull();
 });
 
 it("should show the list on click", async () => {
   setupLogin();
 
+  const getPromise = PromiseWithResolvers();
+  mockGetFromURLString.mockReturnValue(getPromise.promise);
+
   const onModelPicked = jest.fn();
 
-  const { resolve } = Network._setupMocks();
-
-  const { container, queryByText } = render(
-    <TestWrapper loggedIn={true} showLoginForm={false}>
+  render(
+    <TestWrapper loggedIn={true}>
       <PickerButton
-        collectionClass={TestCollection}
+        collectionClass={MockTestCollection}
         modelName="table1"
         fieldName="id"
         targetField="table2_id"
@@ -118,34 +180,35 @@ it("should show the list on click", async () => {
     </TestWrapper>,
   );
 
-  let listComponent = container.querySelector(".picker-component");
-  expect(listComponent).toBeNull;
-  expect(mockObserver.mockObserver.observers.length).toBe(0);
-
-  const showButton = queryByText(/Please Choose/);
-  const [fetchBody] = makeModels(10, {});
-
   await act(async () => {
-    showButton.click();
-    resolve(fetchBody);
+    getPromise.resolve(mockFetchBody);
   });
 
-  expect(mockObserver.mockObserver.observers.length).toBe(1);
-  listComponent = container.querySelector(".picker-component");
+  let listComponent = screen.queryByTestId("mock-picker-list");
+  expect(listComponent).toBeNull;
+
+  const showButton = screen.getByText(/Please Choose/);
+
+  await act(async () => {
+    fireEvent.click(showButton);
+  });
+
+  listComponent = screen.getByTestId("mock-picker-list");
   expect(listComponent).toBeInTheDocument();
 });
 
 it("should call the callback and close the list when an item is clicked", async () => {
   setupLogin();
 
+  const getPromise = PromiseWithResolvers();
+  mockGetFromURLString.mockReturnValue(getPromise.promise);
+
   const onModelPicked = jest.fn();
 
-  const { resolve } = Network._setupMocks();
-
-  const { container, queryByText } = render(
-    <TestWrapper loggedIn={true} showLoginForm={false}>
+  render(
+    <TestWrapper loggedIn={true}>
       <PickerButton
-        collectionClass={TestCollection}
+        collectionClass={MockTestCollection}
         modelName="table1"
         fieldName="id"
         targetField="table2_id"
@@ -155,41 +218,42 @@ it("should call the callback and close the list when an item is clicked", async 
     </TestWrapper>,
   );
 
-  const showButton = queryByText(/Please Choose/);
-  const [fetchBody, models] = makeModels(10, {}, undefined, (def) => {
-    def.table2_id = parseInt(Math.random() * 100);
+  await act(async () => {
+    getPromise.resolve(mockFetchBody);
   });
 
+  const showButton = screen.getByText(/Please Choose/);
+
   await act(async () => {
-    showButton.click();
-    resolve(fetchBody);
+    fireEvent.click(showButton);
   });
 
   expect(onModelPicked).not.toBeCalled();
 
-  expect(mockObserver.mockObserver.observers.length).toBe(1);
-  const el = queryByText(models[2].get("name"));
+  const el = screen.getByText("Pick Model");
 
   await act(async () => {
-    el.click();
+    fireEvent.click(el);
   });
 
   expect(onModelPicked).toBeCalled();
-  expect(onModelPicked).toBeCalledWith(models[2]);
-  const listComponent = container.querySelector(".picker-component");
+  expect(onModelPicked).toBeCalledWith(mockModels[2]);
+
+  const listComponent = screen.queryByTestId("mock-picker-list");
   expect(listComponent).toBeNull;
 });
 
 it("should close the list without calling if the button is pushed again", async () => {
   setupLogin();
 
+  const getPromise = PromiseWithResolvers();
+  mockGetFromURLString.mockReturnValue(getPromise.promise);
+
   const onModelPicked = jest.fn();
 
-  const { resolve } = Network._setupMocks();
-
-  const { container, queryByText } = render(
+  render(
     <PickerButton
-      collectionClass={TestCollection}
+      collectionClass={MockTestCollection}
       modelName="table1"
       targetField="table2_id"
       fieldName="table2_id"
@@ -198,18 +262,19 @@ it("should close the list without calling if the button is pushed again", async 
     />,
   );
 
-  const showButton = queryByText(/Please Choose/);
-  const [fetchBody, models] = makeModels(10, {});
+  await act(async () => {
+    getPromise.resolve(mockFetchBody);
+  });
+
+  const showButton = screen.queryByText(/Please Choose/);
 
   await act(async () => {
-    showButton.click();
-    resolve(fetchBody);
+    fireEvent.click(showButton);
   });
 
   expect(onModelPicked).not.toBeCalled();
 
-  expect(mockObserver.mockObserver.observers.length).toBe(1);
-  let listComponent = container.querySelector(".picker-component");
+  let listComponent = screen.getByTestId("mock-picker-list");
   expect(listComponent).toBeInTheDocument();
 
   expect(onModelPicked).not.toBeCalled();
@@ -218,6 +283,6 @@ it("should close the list without calling if the button is pushed again", async 
     showButton.click();
   });
 
-  listComponent = container.querySelector(".picker-component");
+  listComponent = screen.queryByTestId("mock-picker-list");
   expect(listComponent).not.toBeInTheDocument();
 });

@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import PickerList from "./PickerList.jsx";
-import Button from "./Button.jsx";
+import { PickerList } from ".";
+import { Button } from "./Buttons";
 
 import "./OldLabeledInput.scss";
-
 function PickerButton(props) {
   const topRef = useRef(null);
   const inputRef = useRef(null);
@@ -52,7 +51,7 @@ function PickerButton(props) {
 
       <Button
         id={buttonId}
-        label={buttonLabel}
+        text={buttonLabel}
         disabled={false}
         onClick={pickAModel}
       />

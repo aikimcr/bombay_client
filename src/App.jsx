@@ -6,10 +6,15 @@ import BombayUtilityContext from "./Context/BombayUtilityContext";
 import ConfigurationContext from "./Context/ConfiguratonContext";
 
 import { fetchBootstrap } from "./Network/Bootstrap";
-import useLoginTracking from "./Hooks/useLoginTracking";
+import { useLoginTracking } from "./Hooks/useLoginTracking";
 
 import "./App.scss";
-import { AppLayout, AppRoutes, HeaderLayout, LoginStatusDisplay } from "./Components";
+import {
+  AppLayout,
+  AppRoutes,
+  HeaderLayout,
+  LoginStatusDisplay,
+} from "./Components";
 
 export const App = () => {
   const [bootstrap, setBootstrap] = useState(null);
@@ -17,19 +22,17 @@ export const App = () => {
 
   const [loginState, setLoginState] = useLoginTracking();
 
-  const callFetchBootstrap = useCallback(async () => {
-    try {
-      const result = await fetchBootstrap();
-      setBootstrap(result);
-      return result;
-    } catch (err) {
-      console.error(err);
-    }
+  const callFetchBootstrap = useEffect(() => {
+    (async () => {
+      try {
+        const result = await fetchBootstrap();
+        setBootstrap(result);
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
+    })();
   }, []);
-
-  useEffect(() => {
-    callFetchBootstrap();
-  }, [callFetchBootstrap]);
 
   const getBootstrap = () => bootstrap;
 
@@ -60,8 +63,12 @@ export const App = () => {
     routerBase,
   };
 
+  if (!bootstrap) {
+    return null;
+  }
+
   return (
-    <div className="App">
+    <div className="App" data-testid="app">
       <ConfigurationContext.Provider value={appConfig}>
         <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>

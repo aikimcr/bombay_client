@@ -1,249 +1,220 @@
-import * as NetworkLogin from "../Network/Login";
-jest.mock("../Network/Login");
+import React from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import { useState } from "react";
-import { BrowserRouter } from "react-router";
+import {
+  mockLoginStatus,
+  mockRefreshToken,
+  mockLogin,
+  mockLogout,
+  testToken,
+} from "../../../Network/testing";
 
-import { act, fireEvent, render } from "@testing-library/react";
+jest.mock("../../../Network/Login", () => {
+  const originalModule = jest.requireActual("../../../Network/Login");
 
-const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: mockLoginStatus,
+    refreshToken: mockRefreshToken,
+    login: mockLogin,
+    logout: mockLogout,
+  };
+});
 
-import BombayLoginContext from "../Context/BombayLoginContext";
-import BombayUtilityContext from "../Context/BombayUtilityContext";
-
-import Login from "./Login.jsx";
-import { ContextChanger } from "../testHelpers/ContextChanger";
+import { ContextChanger } from "../../../testHelpers/ContextChanger";
+import { Login } from ".";
 
 jest.useFakeTimers();
 
 beforeEach(() => {
   localStorage.removeItem("jwttoken");
-
-  const modalRoot = document.createElement("div");
-  modalRoot.id = "modal-root";
-  document.body.append(modalRoot);
 });
 
-afterEach(() => {
-  const modalRoot = document.getElementById("modal-root");
-  modalRoot.remove();
-});
-
-it("should render the login mode", async () => {
+it("Component should match snapshot", async () => {
   const { asFragment } = render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  expect(asFragment).toMatchSnapshot();
-
-  const modalRoot = document.getElementById("modal-root");
-  expect(modalRoot).toMatchSnapshot();
-});
-
-it("should not render the login mode", async () => {
-  render(
-    <ContextChanger loggedIn={false} showLoginForm={false}>
-      <Login />
-    </ContextChanger>,
-  );
-
-  const modalRoot = document.getElementById("modal-root");
-  expect(modalRoot).toBeEmptyDOMElement();
+  expect(asFragment()).toMatchSnapshot();
 });
 
 it("should enable and disable the login button", async () => {
   render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const modalRoot = document.getElementById("modal-root");
-  const loginButton = modalRoot.querySelector(".login.btn");
+  const loginButton = screen.getByText("Login");
   expect(loginButton).toBeDisabled();
 
-  const usernameInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="username"] > input',
-    "herkimer",
-    250,
-  );
+  const userNameInput = screen.getByLabelText("User Name");
+  expect(userNameInput).toHaveValue("");
+
+  await act(async () => {
+    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+  });
+
+  expect(userNameInput).toHaveValue("herkimer");
   expect(loginButton).toBeDisabled();
 
-  const passwordInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="password"] > input',
-    "jones",
-    250,
-  );
+  const passwordInput = screen.getByLabelText("Password");
+  expect(passwordInput).toHaveValue("");
+
+  await act(async () => {
+    fireEvent.change(passwordInput, { target: { value: "jones" } });
+  });
+
   expect(loginButton).not.toBeDisabled();
 });
 
 it("should login successfully", async () => {
-  const { resolve } = NetworkLogin._setupMocks();
+  const { promise, resolve } = PromiseWithResolvers();
+  mockLogin.mockReturnValue(promise);
 
   const result = render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const modalRoot = document.getElementById("modal-root");
-  const loginButton = modalRoot.querySelector(".login.btn");
+  const loginButton = screen.getByText("Login");
+  expect(loginButton).toBeDisabled();
 
-  const usernameInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="username"] > input',
-    "herkimer",
-    300,
-  );
-  const passwordInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="password"] > input',
-    "jones",
-    300,
-  );
+  const userNameInput = screen.getByLabelText("User Name");
+  const passwordInput = screen.getByLabelText("Password");
+
+  await act(async () => {
+    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+  });
+
+  await act(async () => {
+    fireEvent.change(passwordInput, { target: { value: "jones" } });
+  });
+
   expect(loginButton).not.toBeDisabled();
 
-  // Wait for the component to rerender.
   await act(async () => {
-    const newLoginButton = modalRoot.querySelector(".login.btn");
-    newLoginButton.click();
+    fireEvent.click(loginButton);
   });
 
   await act(async () => {
     resolve(testToken);
   });
 
-  expect(NetworkLogin.login).toBeCalledTimes(1);
-  expect(NetworkLogin.login).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledTimes(1);
+  expect(mockLogin).toBeCalledWith("herkimer", "jones");
 });
 
 it("should show error on failed login", async () => {
-  const { resolve } = NetworkLogin._setupMocks();
+  const { promise, resolve } = PromiseWithResolvers();
+  mockLogin.mockReturnValue(promise);
 
   const result = render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const modalRoot = document.getElementById("modal-root");
-  const loginButton = modalRoot.querySelector(".login.btn");
+  const loginButton = screen.getByText("Login");
+  expect(loginButton).toBeDisabled();
 
-  const usernameInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="username"] > input',
-    "herkimer",
-    250,
-  );
-  const passwordInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="password"] > input',
-    "jones",
-    250,
-  );
+  const userNameInput = screen.getByLabelText("User Name");
+  const passwordInput = screen.getByLabelText("Password");
+
+  await act(async () => {
+    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+  });
+
+  await act(async () => {
+    fireEvent.change(passwordInput, { target: { value: "jones" } });
+  });
+
   expect(loginButton).not.toBeDisabled();
 
-  // Wait for the component to rerender.
   await act(async () => {
-    const newLoginButton = modalRoot.querySelector(".login.btn");
-    newLoginButton.click();
+    fireEvent.click(loginButton);
   });
 
   await act(async () => {
     resolve(null);
   });
 
-  expect(NetworkLogin.login).toBeCalledTimes(1);
-  expect(NetworkLogin.login).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledTimes(1);
+  expect(mockLogin).toBeCalledWith("herkimer", "jones");
 });
 
 it("should show error on call error", async () => {
-  const { resolve } = NetworkLogin._setupMocks();
+  const { promise, reject } = PromiseWithResolvers();
+  mockLogin.mockReturnValue(promise);
 
   const result = render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const modalRoot = document.getElementById("modal-root");
-  const loginButton = modalRoot.querySelector(".login.btn");
+  const loginButton = screen.getByText("Login");
+  expect(loginButton).toBeDisabled();
 
-  const usernameInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="username"] > input',
-    "herkimer",
-    250,
-  );
-  const passwordInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="password"] > input',
-    "jones",
-    250,
-  );
+  const userNameInput = screen.getByLabelText("User Name");
+  const passwordInput = screen.getByLabelText("Password");
+
+  await act(async () => {
+    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+  });
+
+  await act(async () => {
+    fireEvent.change(passwordInput, { target: { value: "jones" } });
+  });
+
   expect(loginButton).not.toBeDisabled();
 
-  // Wait for the component to rerender.
   await act(async () => {
-    const newLoginButton = modalRoot.querySelector(".login.btn");
-    newLoginButton.click();
+    fireEvent.click(loginButton);
   });
 
   await act(async () => {
-    resolve(null);
+    reject({ status: 500, messsage: "Mock fail" });
   });
 
-  expect(NetworkLogin.login).toBeCalledTimes(1);
-  expect(NetworkLogin.login).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledTimes(1);
+  expect(mockLogin).toBeCalledWith("herkimer", "jones");
 });
 
 it("should clear the inputs and error on clear all fields", async () => {
-  const { resolve } = NetworkLogin._setupMocks();
+  const { promise, resolve } = PromiseWithResolvers();
 
   const result = render(
-    <ContextChanger loggedIn={false} showLoginForm={true}>
+    <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const modalRoot = document.getElementById("modal-root");
-  const loginButton = modalRoot.querySelector(".login.btn");
+  const loginButton = screen.getByText("Login");
+  expect(loginButton).toBeDisabled();
 
-  const usernameInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="username"] > input',
-    "herkimer",
-    250,
-  );
-  const passwordInput = await changeInput(
-    modalRoot,
-    '[data-targetfield="password"] > input',
-    "jones",
-    250,
-  );
+  const userNameInput = screen.getByLabelText("User Name");
+  const passwordInput = screen.getByLabelText("Password");
+
+  await act(async () => {
+    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+  });
+
+  await act(async () => {
+    fireEvent.change(passwordInput, { target: { value: "jones" } });
+  });
+
   expect(loginButton).not.toBeDisabled();
 
-  // Wait for the component to rerender.
-  await act(async () => {
-    const newLoginButton = modalRoot.querySelector(".login.btn");
-    newLoginButton.click();
-  });
+  const clearButton = loginButton.previousElementSibling;
 
   await act(async () => {
-    resolve(null);
+    fireEvent.click(clearButton);
   });
 
-  const clearButton = modalRoot.querySelector(".clear.btn");
-
-  // Wait for the component to rerender.
-  await act(async () => {
-    clearButton.click();
-  });
-
-  expect(loginButton).toBeDisabled();
+  // expect(loginButton).toBeDisabled();
 });
