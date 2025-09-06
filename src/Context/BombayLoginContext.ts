@@ -5,9 +5,13 @@ interface BombayLoginContextValues {
   setLoggedIn?: Dispatch<boolean>;
 }
 
-export const BombayLoginContext = createContext({
+const initialBombayLoginContextValues: BombayLoginContextValues = {
   loggedIn: false,
   setLoggedIn: null,
-});
+};
+
+export const BombayLoginContext = createContext(
+  initialBombayLoginContextValues,
+);
 
 export default BombayLoginContext;

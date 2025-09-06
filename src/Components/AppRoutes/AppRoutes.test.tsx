@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import * as ReactRouter from 'react-router';
 import { AppRoutes } from './AppRoutes';
 
@@ -13,7 +13,7 @@ jest.mock('../../Mode/PageNotFound');
 
 describe('Test AppRoutes', () => {
   it('Should match snapshot', () => {
-    const { asFragment, baseElement } = render(
+    const { asFragment } = render(
       <MemoryRouter>
         <AppRoutes />
       </MemoryRouter>,

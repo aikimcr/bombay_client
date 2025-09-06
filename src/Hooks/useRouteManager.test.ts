@@ -1,7 +1,6 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useLocation, useNavigate } from 'react-router';
-import { useRouteManager } from './useRouteManager';
+import { RouteParams, useRouteManager } from './useRouteManager';
 import * as Utilities from '../Utilities';
 
 // Mock react-router hooks
@@ -53,7 +52,7 @@ describe('useRouteManager', () => {
 
     // Set up replaceRouteParams mock
     mockReplaceRouteParams.mockImplementation(
-      (template: string, params: any) => {
+      (template: string, params: RouteParams) => {
         if (!params) {
           return template;
         }
