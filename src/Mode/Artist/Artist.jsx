@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import OldLabeledInput from "../../Components/Widgets/OldLabeledInput.jsx";
+import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
 
 export const Artist = (props) => {
   return (

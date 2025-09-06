@@ -1,16 +1,16 @@
-import { useState, useContext, createRef } from "react";
+import { useState, useContext, createRef } from 'react';
 
-import "./ArtistList.scss";
+import './ArtistList.scss';
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
-import ArtistCollection from "../../Model/ArtistCollection";
+import ArtistCollection from '../../Model/ArtistCollection';
 
-import ArtistListItem from "./ArtistListItem.jsx";
-import Artist from "./Artist.jsx";
-import FormModal from "../../Modal/FormModal.jsx";
-import { useModelCollection } from "../../Hooks/useModelCollection";
-import { ProtectedRoute } from "../../Components";
+import ArtistListItem from './ArtistListItem.jsx';
+import Artist from './Artist.jsx';
+import FormModal from '../../Modal/FormModal.jsx';
+import { useModelCollection } from '../../Hooks/useModelCollection';
+import { ProtectedRoute } from '../../Components';
 
 export const ArtistList = (props) => {
   const topRef = createRef();
@@ -53,9 +53,9 @@ export const ArtistList = (props) => {
         <div className="artist-list-container list-container" ref={topRef}>
           <ul className="artist-list card-list">
             {artistCollection == null
-              ? ""
+              ? ''
               : artistCollection.map((artist) => {
-                  const key = `artist-list-${artist.get("id")}`;
+                  const key = `artist-list-${artist.get('id')}`;
                   return <ArtistListItem className key={key} artist={artist} />;
                 })}
           </ul>

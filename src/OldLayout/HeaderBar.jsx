@@ -1,9 +1,9 @@
-import "./HeaderBar.scss";
+import './HeaderBar.scss';
 
-import LoginStatus from "../Components/Widgets/LoginStatus.jsx";
+import LoginStatus from '../Components/Widgets/LoginStatus.jsx';
 
 function HeaderBar(props) {
-  const title = props.title || "Bombay Band Management System";
+  const title = props.title || 'Bombay Band Management System';
 
   return (
     <div className="header-bar">

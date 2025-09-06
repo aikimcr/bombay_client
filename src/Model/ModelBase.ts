@@ -1,6 +1,6 @@
-import { getFromURLString, putToURLString } from "../Network/Network";
-import { loginStatus } from "../Network/Login";
-import { forceLoginState } from "../Hooks/useLoginTracking";
+import { getFromURLString, putToURLString } from '../Network/Network';
+import { loginStatus } from '../Network/Login';
+import { forceLoginState } from '../Hooks/useLoginTracking';
 
 type ModelScalar = string | number | symbol;
 type ModelArray = ModelScalar[];
@@ -67,7 +67,7 @@ export class ModelBase {
       forceLoginState(false);
       return Promise.reject({
         status: 401,
-        message: "Not Logged In",
+        message: 'Not Logged In',
       });
     }
 
@@ -96,7 +96,7 @@ export class ModelBase {
   }
 
   addRef(modelName: string, refModel: RefModel): string {
-    const refUrl = refModel.get("url") as string;
+    const refUrl = refModel.get('url') as string;
     this.#refModels[refUrl] = refModel;
 
     // Adding the reference retrieval method to the instantiated object.  This needs to be done a better way.
@@ -126,7 +126,7 @@ export class ModelBase {
   }
 
   set(fieldName: string | ModelData, value?: ModelEntry): this {
-    if (typeof fieldName === "object" && fieldName !== null) {
+    if (typeof fieldName === 'object' && fieldName !== null) {
       this.#data = {
         ...this.#data,
         ...fieldName,

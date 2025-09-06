@@ -1,15 +1,15 @@
-import { useState, useContext, createRef } from "react";
+import { useState, useContext, createRef } from 'react';
 
-import "./SongList.scss";
+import './SongList.scss';
 
-import SongCollection from "../../Model/SongCollection";
+import SongCollection from '../../Model/SongCollection';
 
-import SongListItem from "./SongListItem";
-import { Song } from "./Song";
-import FormModal from "../../Modal/FormModal";
-import { useModelCollection } from "../../Hooks/useModelCollection";
-import { ProtectedRoute } from "../../Components";
-import BombayLoginContext from "../../Context/BombayLoginContext";
+import SongListItem from './SongListItem';
+import { Song } from './Song';
+import FormModal from '../../Modal/FormModal';
+import { useModelCollection } from '../../Hooks/useModelCollection';
+import { ProtectedRoute } from '../../Components';
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
 export const SongList = (props) => {
   const topRef = createRef();
@@ -52,9 +52,9 @@ export const SongList = (props) => {
         <div className="song-list-container list-container" ref={topRef}>
           <ul className="song-list card-list">
             {songCollection == null
-              ? ""
+              ? ''
               : songCollection.map((song) => {
-                  const key = `song-list-${song.get("id")}`;
+                  const key = `song-list-${song.get('id')}`;
                   return <SongListItem className key={key} song={song} />;
                 })}
           </ul>

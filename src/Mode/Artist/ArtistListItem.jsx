@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import "./ArtistList.scss";
+import './ArtistList.scss';
 
-import { Artist } from "./Artist.jsx";
-import FormModal from "../../Modal/FormModal.jsx";
+import { Artist } from './Artist.jsx';
+import FormModal from '../../Modal/FormModal.jsx';
 
 function ArtistListItem(props) {
   const [showEdit, setShowEdit] = useState(false);
-  const [displayName, setDisplayName] = useState(props.artist.get("name"));
+  const [displayName, setDisplayName] = useState(props.artist.get('name'));
 
   async function updateArtist(modelDef) {
     await props.artist.set(modelDef).save();
-    setDisplayName(props.artist.get("name"));
+    setDisplayName(props.artist.get('name'));
   }
 
   return (

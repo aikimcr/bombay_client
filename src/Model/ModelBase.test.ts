@@ -16,10 +16,10 @@ import {
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Login", () => {
-  const originalModule = jest.requireActual("../Network/Login");
+jest.mock('../Network/Login', () => {
+  const originalModule = jest.requireActual('../Network/Login');
 
   return {
     __esModule: true,
@@ -31,8 +31,8 @@ jest.mock("../Network/Login", () => {
   };
 });
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -48,48 +48,48 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import * as Network from "../Network/Network";
+import * as Network from '../Network/Network';
 
-import { makeAModel } from "../testHelpers/modelTools";
+import { makeAModel } from '../testHelpers/modelTools';
 
-import ModelBase from "./ModelBase";
+import ModelBase from './ModelBase';
 
 function setupLogin(loggedIn = true) {
   mockLoginStatus.mockResolvedValue(loggedIn);
 }
 
-describe("ModelBase", () => {
-  it("should instantiate a model", async () => {
+describe('ModelBase', () => {
+  it('should instantiate a model', async () => {
     setupLogin();
     const model = new ModelBase(null, {
       id: 119,
-      name: "xyzzy",
+      name: 'xyzzy',
     });
 
     expect(ModelBase.isModel(model)).toBeTruthy();
-    expect(model.get("id")).toBe(119);
-    expect(model.get("name")).toBe("xyzzy");
+    expect(model.get('id')).toBe(119);
+    expect(model.get('name')).toBe('xyzzy');
 
     // Method under test must be wrapped in a function or the throw is not caught.
-    expect(() => model.get("shoesize")).toThrow('No field "shoesize" is set');
-    model.set("shoesize", 36);
-    expect(model.get("shoesize")).toBe(36);
+    expect(() => model.get('shoesize')).toThrow('No field "shoesize" is set');
+    model.set('shoesize', 36);
+    expect(model.get('shoesize')).toBe(36);
   });
 
-  it("should create a model from a definition", async () => {
+  it('should create a model from a definition', async () => {
     setupLogin();
     // const { resolve } = Network._setupMocks();
     const model = ModelBase.from({
       id: 63,
-      name: "Plover",
+      name: 'Plover',
     });
 
     expect(ModelBase.isModel(model)).toBeTruthy();
-    expect(model.get("id")).toBe(63);
-    expect(model.get("name")).toBe("Plover");
+    expect(model.get('id')).toBe(63);
+    expect(model.get('name')).toBe('Plover');
   });
 
-  it("should fetch a model", async () => {
+  it('should fetch a model', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
@@ -111,7 +111,7 @@ describe("ModelBase", () => {
     expect(Network.getFromURLString).toHaveBeenCalledWith(fetchBody.url);
   });
 
-  it("should save changes to the model", async () => {
+  it('should save changes to the model', async () => {
     setupLogin();
 
     const putPromise = PromiseWithResolvers();
@@ -121,10 +121,10 @@ describe("ModelBase", () => {
     const model = ModelBase.from(oldBody);
     expect(model.toJSON()).toEqual(oldBody);
 
-    const newName = "Updated Name";
-    model.set("name", newName);
+    const newName = 'Updated Name';
+    model.set('name', newName);
     expect(model.toJSON()).not.toEqual(oldBody);
-    expect(model.get("name")).toEqual(newName);
+    expect(model.get('name')).toEqual(newName);
 
     const savePromise = model.save();
     putPromise.resolve({
@@ -143,26 +143,26 @@ describe("ModelBase", () => {
   });
 
   // Test this, but this is really the wrong way to do this.
-  it("should add a reference model", async () => {
+  it('should add a reference model', async () => {
     setupLogin();
 
-    const [mainBody] = makeAModel("foobar");
-    const [refBody] = makeAModel("xyzzy");
+    const [mainBody] = makeAModel('foobar');
+    const [refBody] = makeAModel('xyzzy');
 
     const mainModel = ModelBase.from(mainBody);
     // Url calculations should be idempotent
-    expect(mainModel.idUrl()).toEqual("http://localhost:2001/foobar/1");
+    expect(mainModel.idUrl()).toEqual('http://localhost:2001/foobar/1');
 
     const refModel = ModelBase.from(refBody);
-    expect(refModel.idUrl()).toEqual("http://localhost:2001/xyzzy/1");
+    expect(refModel.idUrl()).toEqual('http://localhost:2001/xyzzy/1');
 
     expect(mainModel.idUrl()).not.toEqual(refModel.idUrl());
 
     expect(() => {
-      mainModel.addRef("xyzzy", refModel);
+      mainModel.addRef('xyzzy', refModel);
     }).not.toThrow();
 
-    expect(mainModel.getRef("http://localhost:2001/xyzzy/1").toJSON()).toEqual(
+    expect(mainModel.getRef('http://localhost:2001/xyzzy/1').toJSON()).toEqual(
       refModel.toJSON(),
     );
     expect(mainModel.xyzzy()).toBeDefined();

@@ -1,29 +1,29 @@
-import PropTypes from "prop-types";
-import { useRef } from "react";
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 
 function OldLabeledInput(props) {
   const topRef = useRef(null);
 
-  const modelId = props.model ? props.model.get("id") : "isNew";
+  const modelId = props.model ? props.model.get('id') : 'isNew';
   const inputId = `${props.modelName}-${props.fieldName}-${modelId}`;
-  const defaultValue = props.model ? props.model.get(props.fieldName) : "";
-  const type = props.type ? props.type : "text";
-  const isPassword = type === "password";
+  const defaultValue = props.model ? props.model.get(props.fieldName) : '';
+  const type = props.type ? props.type : 'text';
+  const isPassword = type === 'password';
 
   function toggleHide(evt) {
     const el = evt.currentTarget;
-    const pwd = topRef.current.querySelector("input");
+    const pwd = topRef.current.querySelector('input');
 
-    if (el.dataset.hidden === "true") {
+    if (el.dataset.hidden === 'true') {
       el.dataset.hidden = false;
-      el.value = "Hide";
-      pwd.setAttribute("type", "text");
+      el.value = 'Hide';
+      pwd.setAttribute('type', 'text');
     } else {
       el.dataset.hidden = true;
-      el.value = "Show";
-      pwd.setAttribute("type", "password");
+      el.value = 'Show';
+      pwd.setAttribute('type', 'password');
     }
   }
 
@@ -51,7 +51,7 @@ function OldLabeledInput(props) {
           value="Show"
         />
       ) : (
-        ""
+        ''
       )}
     </div>
   );

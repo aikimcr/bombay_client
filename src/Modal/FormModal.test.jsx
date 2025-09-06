@@ -1,18 +1,18 @@
-import { act, render } from "@testing-library/react";
-import { useState } from "react";
+import { act, render } from '@testing-library/react';
+import { useState } from 'react';
 
-import FormModal from "./FormModal.jsx";
+import FormModal from './FormModal.jsx';
 
 jest.useFakeTimers();
 
 beforeEach(() => {
-  const modalRoot = document.createElement("div");
-  modalRoot.id = "modal-root";
+  const modalRoot = document.createElement('div');
+  modalRoot.id = 'modal-root';
   document.body.append(modalRoot);
 });
 
 afterEach(() => {
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   modalRoot.remove();
 });
 
@@ -66,14 +66,14 @@ function ModalWrapper(props) {
   );
 }
 
-it("should show the modal", async () => {
+it('should show the modal', async () => {
   let closes = 0;
 
   function handleClose(evt) {
     closes++;
   }
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   const result = render(<ModalWrapper onClose={handleClose} />);
 
   const wrapper = result.container;
@@ -92,20 +92,20 @@ it("should show the modal", async () => {
   expect(closes).toEqual(0);
 
   const modal = modalRoot.firstChild;
-  modal.querySelector(".close").click();
+  modal.querySelector('.close').click();
   expect(wrapper.childElementCount).toEqual(1);
   expect(modalRoot.childElementCount).toEqual(0);
   expect(closes).toEqual(1);
 });
 
-it("should close on cancel", async () => {
+it('should close on cancel', async () => {
   let closes = 0;
 
   function handleClose(evt) {
     closes++;
   }
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   const result = render(<ModalWrapper onClose={handleClose} />);
 
   const wrapper = result.container;
@@ -128,7 +128,7 @@ it("should close on cancel", async () => {
   expect(closes).toEqual(1);
 });
 
-it("should call onSumbit when submit is clicked", async () => {
+it('should call onSumbit when submit is clicked', async () => {
   let closes = 0;
 
   function handleClose(evt) {
@@ -143,7 +143,7 @@ it("should call onSumbit when submit is clicked", async () => {
     submits++;
   }
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   const result = render(
     <ModalWrapper onClose={handleClose} onSubmit={handleSubmit} />,
   );
@@ -163,9 +163,9 @@ it("should call onSumbit when submit is clicked", async () => {
   const submitButton = modalRoot.querySelector('[type="submit"]');
 
   const testInput = await changeInput(
-    modalRoot.querySelector(".testDiv"),
-    "input",
-    "Hello?",
+    modalRoot.querySelector('.testDiv'),
+    'input',
+    'Hello?',
     250,
   );
   act(() => {
@@ -178,11 +178,11 @@ it("should call onSumbit when submit is clicked", async () => {
 
   expect(lastFormData).toEqual({
     CHECKBOX: false,
-    DATE: "2022-10-20T00:00:00.000Z",
+    DATE: '2022-10-20T00:00:00.000Z',
     NUMBER: 1,
-    RADIO: "duey",
+    RADIO: 'duey',
     RANGE: 20,
-    SELECT: "Bacteria",
-    TEXT: "Hello?",
+    SELECT: 'Bacteria',
+    TEXT: 'Hello?',
   });
 });

@@ -1,16 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext, useState } from 'react';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import BombayUtilityContext from "../../Context/BombayUtilityContext";
+import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
-import ArtistCollection from "../../Model/ArtistCollection";
+import ArtistCollection from '../../Model/ArtistCollection';
 
-import OldLabeledInput from "../../Components/Widgets/OldLabeledInput.jsx";
-import PickerButton from "../../Components/Widgets/PickerButton.jsx";
-import LabeledSelect from "../../Components/Widgets/LabeledSelect.jsx";
-import LabeledRange from "../../Components/Widgets/LabeledRange.jsx";
-import LabeledTextArea from "../../Components/Widgets/LabeledTextArea.jsx";
+import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
+import PickerButton from '../../Components/Widgets/PickerButton.jsx';
+import LabeledSelect from '../../Components/Widgets/LabeledSelect.jsx';
+import LabeledRange from '../../Components/Widgets/LabeledRange.jsx';
+import LabeledTextArea from '../../Components/Widgets/LabeledTextArea.jsx';
 
 export const Song = ({ song }) => {
   const { getBootstrap } = useContext(BombayUtilityContext);

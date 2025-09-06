@@ -1,5 +1,5 @@
-import React from "react";
-import { ComponentMock } from "../../../testHelpers/mocks/ComponentMock";
+import React from 'react';
+import { ComponentMock } from '../../../testHelpers/mocks/ComponentMock';
 
 export const Artist = (props) => {
   return (

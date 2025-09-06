@@ -1,10 +1,10 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen } from '@testing-library/react';
 
-import Button from "./Button.jsx";
+import Button from './Button.jsx';
 
 jest.useFakeTimers();
 
-it("should show a simple button", async () => {
+it('should show a simple button', async () => {
   const clickHandler = jest.fn();
   const disabled = false;
 
@@ -15,7 +15,7 @@ it("should show a simple button", async () => {
   expect(asFragment).toMatchSnapshot();
 });
 
-it("should respond to click", async () => {
+it('should respond to click', async () => {
   const clickHandler = jest.fn();
   const disabled = false;
 
@@ -26,7 +26,7 @@ it("should respond to click", async () => {
   expect(clickHandler).toBeCalled();
 });
 
-it("should ignore the click", async () => {
+it('should ignore the click', async () => {
   const clickHandler = jest.fn();
   const disabled = true;
 
@@ -37,7 +37,7 @@ it("should ignore the click", async () => {
   expect(clickHandler).not.toBeCalled();
 });
 
-it("should respect classnames", async () => {
+it('should respect classnames', async () => {
   const clickHandler = jest.fn();
   const disabled = true;
 
@@ -50,6 +50,6 @@ it("should respect classnames", async () => {
     />,
   );
   const actualButton = screen.getByText(/xyzzy/);
-  expect(actualButton).toHaveClass("btn");
-  expect(actualButton).toHaveClass("foobar");
+  expect(actualButton).toHaveClass('btn');
+  expect(actualButton).toHaveClass('foobar');
 });

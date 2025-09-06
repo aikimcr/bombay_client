@@ -9,10 +9,10 @@ import {
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Login", () => {
-  const originalModule = jest.requireActual("../Network/Login");
+jest.mock('../Network/Login', () => {
+  const originalModule = jest.requireActual('../Network/Login');
 
   return {
     __esModule: true,
@@ -24,8 +24,8 @@ jest.mock("../Network/Login", () => {
   };
 });
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -39,54 +39,52 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import { makeAModel } from "../testHelpers/modelTools";
+import { makeAModel } from '../testHelpers/modelTools';
 
-import ModelBase from "./ModelBase";
-import ArtistModel from "./ArtistModel";
+import ModelBase from './ModelBase';
+import ArtistModel from './ArtistModel';
 
 function setupLogin(loggedIn = true) {
   mockLoginStatus.mockResolvedValue(loggedIn);
 }
 
-describe("ArtistModel", () => {
-  it("should instantiate a model", async () => {
+describe('ArtistModel', () => {
+  it('should instantiate a model', async () => {
     setupLogin();
     const model = new ArtistModel(null, {
       id: 119,
-      name: "xyzzy",
+      name: 'xyzzy',
     });
 
     expect(ArtistModel.isModel(model)).toBeTruthy();
-    expect(model.get("id")).toBe(119);
-    expect(model.get("name")).toBe("xyzzy");
+    expect(model.get('id')).toBe(119);
+    expect(model.get('name')).toBe('xyzzy');
 
     // Method under test must be wrapped in a function or the throw is not caught.
-    expect(() => model.get("shoesize")).toThrow(
-      'No field "shoesize" is set',
-    );
-    model.set("shoesize", 36);
-    expect(model.get("shoesize")).toBe(36);
+    expect(() => model.get('shoesize')).toThrow('No field "shoesize" is set');
+    model.set('shoesize', 36);
+    expect(model.get('shoesize')).toBe(36);
   });
 
-  it("should create a model from a definition", async () => {
+  it('should create a model from a definition', async () => {
     setupLogin();
     const model = ArtistModel.from({
       id: 63,
-      name: "Plover",
+      name: 'Plover',
     });
 
     expect(ArtistModel.isModel(model)).toBeTruthy();
-    expect(model.get("id")).toBe(63);
-    expect(model.get("name")).toBe("Plover");
+    expect(model.get('id')).toBe(63);
+    expect(model.get('name')).toBe('Plover');
   });
 
-  it("should fetch an artist model", async () => {
+  it('should fetch an artist model', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValueOnce(getPromise.promise);
 
-    const [fetchBody, fetchModel] = makeAModel("artist");
+    const [fetchBody, fetchModel] = makeAModel('artist');
 
     const model = new ArtistModel(fetchBody.url);
 
@@ -102,20 +100,20 @@ describe("ArtistModel", () => {
     expect(mockGetFromURLString).toHaveBeenCalledWith(fetchBody.url);
   });
 
-  it("should save changes to the artist model", async () => {
+  it('should save changes to the artist model', async () => {
     setupLogin();
 
     const putPromise = PromiseWithResolvers();
     mockPutToURLString.mockReturnValue(putPromise.promise);
 
-    const [oldBody] = makeAModel("artist");
+    const [oldBody] = makeAModel('artist');
     const model = ArtistModel.from(oldBody);
     expect(model.toJSON()).toEqual(oldBody);
 
-    const newName = "Updated Artist Name";
-    model.set("name", newName);
+    const newName = 'Updated Artist Name';
+    model.set('name', newName);
     expect(model.toJSON()).not.toEqual(oldBody);
-    expect(model.get("name")).toEqual(newName);
+    expect(model.get('name')).toEqual(newName);
 
     const savePromise = model.save();
     putPromise.resolve({
@@ -133,11 +131,11 @@ describe("ArtistModel", () => {
     });
   });
 
-  it("should not recognize a base model as an artist model", async () => {
+  it('should not recognize a base model as an artist model', async () => {
     setupLogin();
     // If the class extension is done correctly, TypeScript should just handle this.
-    const [baseDef] = makeAModel("table1");
-    const [artistDef] = makeAModel("artist");
+    const [baseDef] = makeAModel('table1');
+    const [artistDef] = makeAModel('artist');
 
     const baseModel = new ModelBase(baseDef.url, baseDef);
     const artistModel = new ArtistModel(artistDef.url, artistDef);

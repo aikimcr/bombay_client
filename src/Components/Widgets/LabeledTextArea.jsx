@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
-import { useRef } from "react";
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 
 function LabeledTextArea(props) {
   const topRef = useRef(null);
 
-  const modelId = props.model ? props.model.get("id") : "isNew";
+  const modelId = props.model ? props.model.get('id') : 'isNew';
   const inputId = `${props.modelName}-${props.fieldName}-${modelId}`;
-  const defaultValue = props.model ? props.model.get(props.fieldName) : "";
+  const defaultValue = props.model ? props.model.get(props.fieldName) : '';
 
   const rows = props.rows || 300;
   const cols = props.cols || 100;

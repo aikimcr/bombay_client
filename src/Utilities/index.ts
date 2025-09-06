@@ -1,1 +1,1 @@
-export * from "./routeManager";
+export * from './routeManager';

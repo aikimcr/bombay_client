@@ -1,22 +1,22 @@
-import PropTypes from "prop-types";
-import { useRef } from "react";
-import CloseOrClear from "./CloseOrClear.jsx";
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
+import CloseOrClear from './CloseOrClear.jsx';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 
 function LabeledRange(props) {
   const topRef = useRef(null);
 
-  const modelId = props.model ? props.model.get("id") : "isNew";
+  const modelId = props.model ? props.model.get('id') : 'isNew';
   const inputId = `${props.modelName}-${props.fieldName}-${modelId}`;
-  const defaultValue = props.model ? props.model.get(props.fieldName) : "";
+  const defaultValue = props.model ? props.model.get(props.fieldName) : '';
 
   function changeHandler(evt) {
     evt.preventDefault();
 
     const newValue = evt.target.value;
 
-    const fields = topRef.current.querySelectorAll("input");
+    const fields = topRef.current.querySelectorAll('input');
     fields.forEach((field) => {
       field.value = newValue;
     });
@@ -25,7 +25,7 @@ function LabeledRange(props) {
   function clearValue(evt) {
     evt.preventDefault();
 
-    const fields = topRef.current.querySelectorAll("input");
+    const fields = topRef.current.querySelectorAll('input');
     fields.forEach((field) => {
       field.value = null;
     });

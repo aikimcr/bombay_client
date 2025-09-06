@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { useState } from 'react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
-jest.mock("./Song");
-jest.mock("../../Modal/FormModal", () => {
-  const originalModule = jest.requireActual("../../Modal/FormModal");
+jest.mock('./Song');
+jest.mock('../../Modal/FormModal', () => {
+  const originalModule = jest.requireActual('../../Modal/FormModal');
 
   return {
     __esModule: true,
@@ -17,10 +17,10 @@ import {
   mockRefreshToken,
   mockLogin,
   mockLogout,
-} from "../../Network/testing";
+} from '../../Network/testing';
 
-jest.mock("../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../Network/Login");
+jest.mock('../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../Network/Login');
 
   return {
     __esModule: true,
@@ -32,21 +32,21 @@ jest.mock("../../Network/Login", () => {
   };
 });
 
-import * as Network from "../../Network/Network";
+import * as Network from '../../Network/Network';
 
-import { makeModels, makeAModel } from "../../testHelpers/modelTools";
+import { makeModels, makeAModel } from '../../testHelpers/modelTools';
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
-import BombayUtilityContext from "../../Context/BombayUtilityContext";
+import BombayLoginContext from '../../Context/BombayLoginContext';
+import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
-import { SongListItem } from "./SongListItem";
+import { SongListItem } from './SongListItem';
 
 jest.useFakeTimers();
 
 const mockUtility = {
   getBootstrap: () => {
     return {
-      keySignatures: ["A", "B", "C", "D", "E", "F", "G"],
+      keySignatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     };
   },
 };
@@ -71,18 +71,18 @@ function setupLogin(loggedIn = true) {
 }
 
 const makeTestSong = () => {
-  const [_artistModelDef, artistModel] = makeAModel("artist", (def) => {
-    def.name = "Billy Joel";
+  const [_artistModelDef, artistModel] = makeAModel('artist', (def) => {
+    def.name = 'Billy Joel';
   });
-  const [_modelDef, model] = makeAModel("song", (def) => {
-    def.name = "Piano Man";
+  const [_modelDef, model] = makeAModel('song', (def) => {
+    def.name = 'Piano Man';
     def.artist = artistModel;
   });
 
   return model;
 };
 
-it("Component should match snapshot", async () => {
+it('Component should match snapshot', async () => {
   const model = makeTestSong();
 
   const { asFragment } = render(<SongListItem song={model} />, {
@@ -92,7 +92,7 @@ it("Component should match snapshot", async () => {
   expect(asFragment()).toMatchSnapshot();
 });
 
-it("should open the editor modal", async () => {
+it('should open the editor modal', async () => {
   setupLogin();
 
   const model = makeTestSong();
@@ -100,17 +100,17 @@ it("should open the editor modal", async () => {
     wrapper: renderWrapper,
   });
 
-  const songCard = screen.getByTestId("song-list-card");
+  const songCard = screen.getByTestId('song-list-card');
 
   await act(async () => {
     fireEvent.click(songCard);
   });
 
-  expect(screen.getByTestId("edit-song-modal")).toBeInTheDocument();
+  expect(screen.getByTestId('edit-song-modal')).toBeInTheDocument();
 });
 
 // Move these tests to the SongForm component
-it.skip("should save changes to the model", async () => {
+it.skip('should save changes to the model', async () => {
   setupLogin();
 
   const [mockGetPromise, mockGetResolve] = makeResolvablePromise();
@@ -144,15 +144,15 @@ it.skip("should save changes to the model", async () => {
     index.firstChild.click();
   });
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   expect(modalRoot.childElementCount).toEqual(1);
 
   const submitButton = modalRoot.querySelector('[type="submit"]');
 
   await changeInput(
     modalRoot.querySelector('[data-targetfield="name"'),
-    "input",
-    "Herkimer",
+    'input',
+    'Herkimer',
     250,
   );
 
@@ -161,17 +161,17 @@ it.skip("should save changes to the model", async () => {
   });
 
   await act(async () => {
-    mockPutResolve({ ...modelDef, name: "Herkimer" });
+    mockPutResolve({ ...modelDef, name: 'Herkimer' });
   });
 
   expect(Network.putToURLString).toBeCalledTimes(1);
   expect(Network.putToURLString).toBeCalledWith(modelDef.url, {
     ...songModelDef,
-    name: "Herkimer",
+    name: 'Herkimer',
   });
 });
 
-it.skip("should update the artist name", async () => {
+it.skip('should update the artist name', async () => {
   setupLogin();
 
   const [mockGetPromise, mockGetResolve] = makeResolvablePromise();
@@ -185,7 +185,7 @@ it.skip("should update the artist name", async () => {
     return mockPutPromise;
   });
 
-  const [modelDef, songModel] = makeAModel("song");
+  const [modelDef, songModel] = makeAModel('song');
   const oldArtistDef = modelDef.artist;
   const songModelDef = { ...modelDef };
   delete songModelDef.artist;
@@ -200,17 +200,17 @@ it.skip("should update the artist name", async () => {
     index.firstChild.click();
   });
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
   expect(modalRoot.childElementCount).toEqual(1);
 
   const submitButton = modalRoot.querySelector('[type="submit"]');
-  const editButton = modalRoot.querySelector(".picker-button button");
+  const editButton = modalRoot.querySelector('.picker-button button');
   expect(editButton.textContent).toEqual(oldArtistDef.name);
 
-  const [newArtistDef, newArtistModel] = makeAModel("artist");
+  const [newArtistDef, newArtistModel] = makeAModel('artist');
   const fetchBody = {
     data: [oldArtistDef, newArtistDef],
-    url: "xyzzy",
+    url: 'xyzzy',
   };
 
   await act(async () => {
@@ -218,7 +218,7 @@ it.skip("should update the artist name", async () => {
     mockGetResolve(fetchBody);
   });
 
-  const newArtistLine = modalRoot.querySelector("li.picker-item:last-child");
+  const newArtistLine = modalRoot.querySelector('li.picker-item:last-child');
   expect(newArtistLine).toHaveTextContent(newArtistDef.name);
 
   songModelDef.artist_id = newArtistDef.id;

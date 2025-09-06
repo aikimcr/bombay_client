@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
-import { useRef, useState } from "react";
-import { PickerList } from ".";
-import { Button } from "./Buttons";
+import PropTypes from 'prop-types';
+import { useRef, useState } from 'react';
+import { PickerList } from '.';
+import { Button } from './Buttons';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 function PickerButton(props) {
   const topRef = useRef(null);
   const inputRef = useRef(null);
 
-  const modelId = props.model ? props.model.get("id") : "isNew";
+  const modelId = props.model ? props.model.get('id') : 'isNew';
   const buttonId = `${props.modelName}-name-${modelId}`;
 
   const [showPickerList, setShowPickerList] = useState(false);
@@ -17,10 +17,10 @@ function PickerButton(props) {
   );
 
   const buttonLabel = currentModel
-    ? currentModel.get("name")
-    : "<Please Choose>";
+    ? currentModel.get('name')
+    : '<Please Choose>';
 
-  const initialValue = currentModel ? currentModel.get("id") : 0;
+  const initialValue = currentModel ? currentModel.get('id') : 0;
 
   function modelPicked(newModel) {
     setCurrentModel(newModel);

@@ -1,9 +1,6 @@
-import { useEffect, useRef, RefObject } from "react";
+import { useEffect, useRef, RefObject } from 'react';
 
-import {
-  IntersectionObserverOptions,
-  UseIntersectionObserverReturn,
-} from "../useIntersectionObserver";
+import { IntersectionObserverOptions } from '../useIntersectionObserver';
 export class mockEntry {
   boundingClientRect: DOMRectReadOnly;
   intersectionRatio: number;
@@ -41,9 +38,9 @@ export class mockObserver {
     mockObserver.observers.push(this);
   }
 
-  observe(target: Element) {}
+  observe(_target: Element) {}
 
-  unobserve(target: Element) {}
+  unobserve(_target: Element) {}
 
   takeRecords() {
     return this.entries;

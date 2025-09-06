@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 
-import "./LoginStatusDisplay.scss";
+import './LoginStatusDisplay.scss';
 
-import BombayLoginContext from "../../../../Context/BombayLoginContext";
+import BombayLoginContext from '../../../../Context/BombayLoginContext';
 
-import { logout } from "../../../../Network/Login";
-import { Button } from "../..";
-import { useRouteManager } from "../../../../Hooks/useRouteManager";
+import { logout } from '../../../../Network/Login';
+import { Button } from '../..';
+import { useRouteManager } from '../../../../Hooks/useRouteManager';
 
 export const LoginStatusDisplay: React.FC = () => {
   const routeManager = useRouteManager();
@@ -18,7 +18,7 @@ export const LoginStatusDisplay: React.FC = () => {
   };
 
   const showLogin = (): void => {
-    routeManager.navigateToRoute("/login");
+    routeManager.navigateToRoute('/login');
   };
 
   return (

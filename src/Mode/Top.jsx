@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { Link, Outlet } from "react-router";
+import { useContext } from 'react';
+import { Link, Outlet } from 'react-router';
 
-import BombayLoginContext from "../Context/BombayLoginContext";
-import Button from "../Components/Widgets/Button";
+import BombayLoginContext from '../Context/BombayLoginContext';
+import Button from '../Components/Widgets/Button';
 
-import "./Top.scss";
+import './Top.scss';
 
 export const Top = () => {
   return (

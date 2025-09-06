@@ -1,15 +1,15 @@
-import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import React from 'react';
+import { act, render, screen } from '@testing-library/react';
 
 import {
   mockLoginStatus,
   mockRefreshToken,
   mockLogin,
   mockLogout,
-} from "../../../../Network/testing";
+} from '../../../../Network/testing';
 
-jest.mock("../../../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../../../Network/Login");
+jest.mock('../../../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../../../Network/Login');
 
   return {
     __esModule: true,
@@ -24,11 +24,11 @@ jest.mock("../../../../Network/Login", () => {
 import {
   mockUseRouteManager,
   mockNavigateToRoute,
-} from "../../../../Hooks/testing/mocks/mockUseRouteManager";
+} from '../../../../Hooks/testing/mocks/mockUseRouteManager';
 
-jest.mock("../../../../Hooks/useRouteManager", () => {
+jest.mock('../../../../Hooks/useRouteManager', () => {
   const originalModule = jest.requireActual(
-    "../../../../Hooks/useRouteManager",
+    '../../../../Hooks/useRouteManager',
   );
 
   return {
@@ -38,12 +38,12 @@ jest.mock("../../../../Hooks/useRouteManager", () => {
   };
 });
 
-import { LoginStatusDisplay } from ".";
-import { ContextChanger } from "../../../../testHelpers/ContextChanger";
+import { LoginStatusDisplay } from '.';
+import { ContextChanger } from '../../../../testHelpers/ContextChanger';
 
-describe("LoginStatusDisplay", () => {
-  describe("when logged out", () => {
-    it("should show the login button", async () => {
+describe('LoginStatusDisplay', () => {
+  describe('when logged out', () => {
+    it('should show the login button', async () => {
       const { asFragment } = render(
         <ContextChanger initialLoggedIn={false}>
           <LoginStatusDisplay />
@@ -52,31 +52,31 @@ describe("LoginStatusDisplay", () => {
 
       expect(asFragment).toMatchSnapshot();
 
-      const loginButton = screen.getByText("Login");
+      const loginButton = screen.getByText('Login');
       expect(loginButton).toBeVisible();
-      expect(loginButton.tagName).toBe("BUTTON");
+      expect(loginButton.tagName).toBe('BUTTON');
     });
 
-    it("should navigate to login route when the login button is pressed", async () => {
+    it('should navigate to login route when the login button is pressed', async () => {
       render(
         <ContextChanger initialLoggedIn={false}>
           <LoginStatusDisplay />
         </ContextChanger>,
       );
 
-      const loginButton = screen.getByText("Login");
+      const loginButton = screen.getByText('Login');
       expect(loginButton).toBeInTheDocument();
 
       await act(async () => {
         loginButton.click();
       });
 
-      expect(mockNavigateToRoute).toHaveBeenCalledWith("/login");
+      expect(mockNavigateToRoute).toHaveBeenCalledWith('/login');
     });
   });
 
-  describe("when logged in", () => {
-    it("should show the logout button", async () => {
+  describe('when logged in', () => {
+    it('should show the logout button', async () => {
       const { asFragment } = render(
         <ContextChanger initialLoggedIn={true}>
           <LoginStatusDisplay />
@@ -84,12 +84,12 @@ describe("LoginStatusDisplay", () => {
       );
       expect(asFragment).toMatchSnapshot();
 
-      const logoutButton = screen.getByText("Logout");
+      const logoutButton = screen.getByText('Logout');
       expect(logoutButton).toBeVisible();
-      expect(logoutButton.tagName).toBe("BUTTON");
+      expect(logoutButton.tagName).toBe('BUTTON');
     });
 
-    it("should logout when the logout button is pressed", async () => {
+    it('should logout when the logout button is pressed', async () => {
       const logoutPromise = PromiseWithResolvers();
       mockLogout.mockReturnValue(logoutPromise.promise);
 
@@ -99,10 +99,10 @@ describe("LoginStatusDisplay", () => {
         </ContextChanger>,
       );
 
-      let loginForm = screen.queryByText("Showing Log In Form");
+      let loginForm = screen.queryByText('Showing Log In Form');
       expect(loginForm).toBeNull();
 
-      const logoutButton = screen.getByText("Logout");
+      const logoutButton = screen.getByText('Logout');
 
       await act(async () => {
         logoutButton.click();
@@ -114,7 +114,7 @@ describe("LoginStatusDisplay", () => {
 
       expect(mockLogout).toHaveBeenCalledTimes(1);
 
-      loginForm = screen.queryByText("Showing Log In Form");
+      loginForm = screen.queryByText('Showing Log In Form');
       expect(loginForm).toBeNull();
     });
   });

@@ -1,7 +1,7 @@
-import React from "react";
-import { replaceRouteParams } from "../../../Utilities";
+import React from 'react';
+import { replaceRouteParams } from '../../../Utilities';
 
-export let mockCurrentPath = "/";
+export let mockCurrentPath = '/';
 export const mockNavigateToRoute = jest.fn((routeTemplate, params = null) => {
   currentPath = replaceRouteParams(routeTemplate, params);
 });

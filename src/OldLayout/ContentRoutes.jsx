@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { Routes, Route } from "react-router";
+import { useContext } from 'react';
+import { Routes, Route } from 'react-router';
 
-import BombayLoginContext from "../Context/BombayLoginContext";
+import BombayLoginContext from '../Context/BombayLoginContext';
 
-import Login from "../Login/Login.jsx";
+import Login from '../Login/Login.jsx';
 
-import Top from "../Mode/Top.jsx";
+import Top from '../Mode/Top.jsx';
 // import ArtistList from "../Mode/Artist/ArtistList.jsx";
 // import SongList from "../Mode/Song/SongList.jsx";
-import PageNotFound from "../Mode/PageNotFound.jsx";
+import PageNotFound from '../Mode/PageNotFound.jsx';
 
 function ContentRoutes(props) {
   const { loggedIn } = useContext(BombayLoginContext);

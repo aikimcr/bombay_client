@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import "./PageNotFound.scss";
+import './PageNotFound.scss';
 
 export const PageNotFound = () => {
   // Use disapointed face emoji &#x1f61e;

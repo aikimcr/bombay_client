@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { BombayLoginContext } from "../Context/BombayLoginContext";
-import { MemoryRouter } from "react-router";
+import { BombayLoginContext } from '../Context/BombayLoginContext';
+import { MemoryRouter } from 'react-router';
 
 // Use this to turn the crank on context changes.
 export const ContextChanger = ({ initialLoggedIn, children }) => {

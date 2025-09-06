@@ -1,6 +1,6 @@
-import ArtistModel from "./ArtistModel";
-import ModelBase, { ModelData } from "./ModelBase";
-import { putToURLString } from "../Network/Network";
+import ArtistModel from './ArtistModel';
+import ModelBase, { ModelData } from './ModelBase';
+import { putToURLString } from '../Network/Network';
 
 // At this point, there isn't anything to add.
 class SongModel extends ModelBase {
@@ -15,7 +15,7 @@ class SongModel extends ModelBase {
     delete def.artist;
 
     super.createRefmodels(def);
-    (this as any).artistUrl = this.addRef("artist", artist);
+    (this as any).artistUrl = this.addRef('artist', artist);
   }
 
   toJSON(): ModelData {

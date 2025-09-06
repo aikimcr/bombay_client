@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext, useRef, useCallback } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 
-import BombayLoginContext from "../Context/BombayLoginContext";
-import useIntersectionObserver from "./useIntersectionObserver";
+import BombayLoginContext from '../Context/BombayLoginContext';
+import useIntersectionObserver from './useIntersectionObserver';
 
 export const useModelCollection = ({ CollectionClass, topRef }) => {
   const { loggedIn } = useContext(BombayLoginContext);
@@ -73,7 +73,7 @@ export const useModelCollection = ({ CollectionClass, topRef }) => {
     }
 
     if (collection && collection.hasNextPage()) {
-      const myElement = topRef.current?.querySelector("li:last-child");
+      const myElement = topRef.current?.querySelector('li:last-child');
 
       if (myElement) {
         observer.current.observe(myElement);
