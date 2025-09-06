@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { loginStatus, refreshToken } from "../Network/Login";
+import { loginStatus, refreshToken } from '../Network/Login';
 // Allow external forcing of the state
 let setLoggedIn;
 export function forceLoginState(newState) {
@@ -54,15 +54,15 @@ export const useLoginTracking = () => {
   }, []);
 
   const setListeners = useCallback(() => {
-    document.addEventListener("keydown", checkActivity);
-    document.addEventListener("mousedown", checkActivity);
-    document.addEventListener("mousemove", checkActivity);
+    document.addEventListener('keydown', checkActivity);
+    document.addEventListener('mousedown', checkActivity);
+    document.addEventListener('mousemove', checkActivity);
   }, [checkActivity]);
 
   const removeListeners = useCallback(() => {
-    document.removeEventListener("mousemove", checkActivity);
-    document.removeEventListener("mousedown", checkActivity);
-    document.removeEventListener("keydown", checkActivity);
+    document.removeEventListener('mousemove', checkActivity);
+    document.removeEventListener('mousedown', checkActivity);
+    document.removeEventListener('keydown', checkActivity);
   }, [checkActivity]);
 
   const checkLogin = useCallback(

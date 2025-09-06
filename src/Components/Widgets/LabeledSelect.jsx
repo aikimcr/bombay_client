@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import { useRef } from "react";
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 
 // This is generally not considered a Good Idea, but this
 // particular component is small and has no utility outside this module.
@@ -17,11 +17,11 @@ LabeledSelectOption.propTypes = {
 function LabeledSelect(props) {
   const topRef = useRef(null);
 
-  const modelId = props.model ? props.model.get("id") : "isNew";
+  const modelId = props.model ? props.model.get('id') : 'isNew';
   const inputId = `${props.modelName}-${props.fieldName}-${modelId}`;
   const unsetLabel = props.unsetLabel || `Please Select ${props.labelText}`;
-  const modelValue = props.model ? props.model.get(props.fieldName) : "";
-  const defaultValue = modelValue == null ? "" : modelValue;
+  const modelValue = props.model ? props.model.get(props.fieldName) : '';
+  const defaultValue = modelValue == null ? '' : modelValue;
 
   return (
     <div

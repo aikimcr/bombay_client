@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Button } from "../../Buttons";
+import React, { useEffect } from 'react';
+import { Button } from '../../Buttons';
 
-import { mockModels } from "..";
+import { mockModels } from '..';
 
 export const MockPickerList = ({ pickModel, isOpen, collectionClass }) => {
   const clickHandler = (evt, model) => {

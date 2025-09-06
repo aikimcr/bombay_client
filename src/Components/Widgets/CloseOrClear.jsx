@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import "./OldLabeledInput.scss";
+import './OldLabeledInput.scss';
 
 function CloseOrClear(props) {
-  const buttonClass = props.className || "close-or-clear";
+  const buttonClass = props.className || 'close-or-clear';
 
   return (
     <button className={buttonClass} onClick={props.onClick}>

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import "./LabeledInput.scss";
+import './LabeledInput.scss';
 
 export const LabeledInput = ({
   labelText,

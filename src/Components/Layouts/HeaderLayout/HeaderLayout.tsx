@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
-import "./HeaderLayout.scss";
+import './HeaderLayout.scss';
 
 interface HeaderLayoutProps {
   title: string;

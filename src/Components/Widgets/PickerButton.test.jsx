@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { useState } from 'react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import {
   mockGetFromURLString,
@@ -14,10 +14,10 @@ import {
   mockServerHost,
   mockServerPort,
   mockServerProtocol,
-} from "../../Network/testing";
+} from '../../Network/testing';
 
-jest.mock("../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../Network/Login");
+jest.mock('../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../Network/Login');
 
   return {
     __esModule: true,
@@ -29,8 +29,8 @@ jest.mock("../../Network/Login", () => {
   };
 });
 
-jest.mock("../../Network/Network", () => {
-  const originalModule = jest.requireActual("../../Network/Network");
+jest.mock('../../Network/Network', () => {
+  const originalModule = jest.requireActual('../../Network/Network');
 
   return {
     __esModule: true,
@@ -51,10 +51,10 @@ import {
   mockFetchBody,
   mockModels,
   MockPickerList,
-} from "./testing";
+} from './testing';
 
-jest.mock(".", () => {
-  const originalModule = jest.requireActual(".");
+jest.mock('.', () => {
+  const originalModule = jest.requireActual('.');
 
   return {
     __esModule: true,
@@ -63,9 +63,9 @@ jest.mock(".", () => {
   };
 });
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
-import PickerButton from "./PickerButton.jsx";
+import PickerButton from './PickerButton.jsx';
 
 let testSetLoggedIn;
 
@@ -88,7 +88,7 @@ function TestWrapper({ loggedIn, children }) {
 jest.useFakeTimers();
 
 const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 function setupLogin(loggedIn = true, token = testToken) {
   const loginPromise = PromiseWithResolvers();
@@ -96,14 +96,14 @@ function setupLogin(loggedIn = true, token = testToken) {
 }
 
 beforeEach(() => {
-  localStorage.setItem("jwttoken", testToken);
+  localStorage.setItem('jwttoken', testToken);
 });
 
 afterEach(() => {
-  localStorage.removeItem("jwttoken");
+  localStorage.removeItem('jwttoken');
 });
 
-it("Component should match snapshot", async () => {
+it('Component should match snapshot', async () => {
   setupLogin();
 
   const getPromise = PromiseWithResolvers();
@@ -131,7 +131,7 @@ it("Component should match snapshot", async () => {
   expect(asFragment()).toMatchSnapshot();
 });
 
-it("should hide the list on load", async () => {
+it('should hide the list on load', async () => {
   setupLogin();
 
   const getPromise = PromiseWithResolvers();
@@ -156,10 +156,10 @@ it("should hide the list on load", async () => {
     getPromise.resolve(mockFetchBody);
   });
 
-  expect(screen.queryByTestId("mock-picker-list")).toBeNull();
+  expect(screen.queryByTestId('mock-picker-list')).toBeNull();
 });
 
-it("should show the list on click", async () => {
+it('should show the list on click', async () => {
   setupLogin();
 
   const getPromise = PromiseWithResolvers();
@@ -184,7 +184,7 @@ it("should show the list on click", async () => {
     getPromise.resolve(mockFetchBody);
   });
 
-  let listComponent = screen.queryByTestId("mock-picker-list");
+  let listComponent = screen.queryByTestId('mock-picker-list');
   expect(listComponent).toBeNull;
 
   const showButton = screen.getByText(/Please Choose/);
@@ -193,11 +193,11 @@ it("should show the list on click", async () => {
     fireEvent.click(showButton);
   });
 
-  listComponent = screen.getByTestId("mock-picker-list");
+  listComponent = screen.getByTestId('mock-picker-list');
   expect(listComponent).toBeInTheDocument();
 });
 
-it("should call the callback and close the list when an item is clicked", async () => {
+it('should call the callback and close the list when an item is clicked', async () => {
   setupLogin();
 
   const getPromise = PromiseWithResolvers();
@@ -230,7 +230,7 @@ it("should call the callback and close the list when an item is clicked", async 
 
   expect(onModelPicked).not.toBeCalled();
 
-  const el = screen.getByText("Pick Model");
+  const el = screen.getByText('Pick Model');
 
   await act(async () => {
     fireEvent.click(el);
@@ -239,11 +239,11 @@ it("should call the callback and close the list when an item is clicked", async 
   expect(onModelPicked).toBeCalled();
   expect(onModelPicked).toBeCalledWith(mockModels[2]);
 
-  const listComponent = screen.queryByTestId("mock-picker-list");
+  const listComponent = screen.queryByTestId('mock-picker-list');
   expect(listComponent).toBeNull;
 });
 
-it("should close the list without calling if the button is pushed again", async () => {
+it('should close the list without calling if the button is pushed again', async () => {
   setupLogin();
 
   const getPromise = PromiseWithResolvers();
@@ -274,7 +274,7 @@ it("should close the list without calling if the button is pushed again", async 
 
   expect(onModelPicked).not.toBeCalled();
 
-  let listComponent = screen.getByTestId("mock-picker-list");
+  let listComponent = screen.getByTestId('mock-picker-list');
   expect(listComponent).toBeInTheDocument();
 
   expect(onModelPicked).not.toBeCalled();
@@ -283,6 +283,6 @@ it("should close the list without calling if the button is pushed again", async 
     showButton.click();
   });
 
-  listComponent = screen.queryByTestId("mock-picker-list");
+  listComponent = screen.queryByTestId('mock-picker-list');
   expect(listComponent).not.toBeInTheDocument();
 });

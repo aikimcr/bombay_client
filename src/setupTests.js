@@ -2,18 +2,18 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import { expect, jest, test } from "@jest/globals";
-import "@testing-library/jest-dom";
-import { act, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { TextDecoder, TextEncoder } from "text-encoding";
+import { expect, jest, test } from '@jest/globals';
+import '@testing-library/jest-dom';
+import { act, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { TextDecoder, TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import useIntersectionObserver, * as mockObserver from "./Hooks/useIntersectionObserver";
-jest.mock("./Hooks/useIntersectionObserver");
+import useIntersectionObserver, * as mockObserver from './Hooks/useIntersectionObserver';
+jest.mock('./Hooks/useIntersectionObserver');
 
 globalThis.PromiseWithResolvers = () => {
   // @ts-expect-error Jest/Typescript stupidity with Promise.
@@ -21,7 +21,7 @@ globalThis.PromiseWithResolvers = () => {
 };
 
 globalThis.toggleLogin = function () {
-  const changeButton = document.querySelector(".change-test-login");
+  const changeButton = document.querySelector('.change-test-login');
   userEvent.click(changeButton);
 };
 

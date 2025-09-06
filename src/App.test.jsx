@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { act, render, screen } from "@testing-library/react";
+import { useContext } from 'react';
+import { act, render, screen } from '@testing-library/react';
 
-import { mockUseLoginTracking } from "./Hooks/testing";
+import { mockUseLoginTracking } from './Hooks/testing';
 
-jest.mock("./Hooks/useLoginTracking", () => {
-  const originalModule = jest.requireActual("./Hooks/useLoginTracking");
+jest.mock('./Hooks/useLoginTracking', () => {
+  const originalModule = jest.requireActual('./Hooks/useLoginTracking');
 
   return {
     __esModule: true,
@@ -13,10 +13,10 @@ jest.mock("./Hooks/useLoginTracking", () => {
   };
 });
 
-import { mockFetchBootstrap } from "./Network/testing";
+import { mockFetchBootstrap } from './Network/testing';
 
-jest.mock("./Network/Bootstrap", () => {
-  const originalModule = jest.requireActual("./Network/Bootstrap");
+jest.mock('./Network/Bootstrap', () => {
+  const originalModule = jest.requireActual('./Network/Bootstrap');
 
   return {
     __esModule: true,
@@ -25,8 +25,8 @@ jest.mock("./Network/Bootstrap", () => {
   };
 });
 
-jest.mock("./Components", () => {
-  const originalModule = jest.requireActual("./Components");
+jest.mock('./Components', () => {
+  const originalModule = jest.requireActual('./Components');
 
   return {
     __esModule: true,
@@ -35,14 +35,14 @@ jest.mock("./Components", () => {
   };
 });
 
-import { App } from "./App";
+import { App } from './App';
 
 const testBootstrap = {
-  key_signatures: ["A", "B", "C", "D", "E", "F", "G"],
+  key_signatures: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
 };
 
-describe("Test App", () => {
-  test("Compoment matches snapshopt", async () => {
+describe('Test App', () => {
+  test('Compoment matches snapshopt', async () => {
     const bootstrapPromise = PromiseWithResolvers();
     mockFetchBootstrap.mockReturnValue(bootstrapPromise.promise);
 
@@ -55,7 +55,7 @@ describe("Test App", () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  test("Renders App Framework", async () => {
+  test('Renders App Framework', async () => {
     const bootstrapPromise = PromiseWithResolvers();
     mockFetchBootstrap.mockReturnValue(bootstrapPromise.promise);
 
@@ -67,7 +67,7 @@ describe("Test App", () => {
       bootstrapPromise.resolve(testBootstrap);
     });
 
-    expect(screen.getByTestId("app")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-login-status")).toBeInTheDocument();
+    expect(screen.getByTestId('app')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-login-status')).toBeInTheDocument();
   });
 });

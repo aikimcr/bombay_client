@@ -11,10 +11,10 @@ import {
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Login", () => {
-  const originalModule = jest.requireActual("../Network/Login");
+jest.mock('../Network/Login', () => {
+  const originalModule = jest.requireActual('../Network/Login');
 
   return {
     __esModule: true,
@@ -26,8 +26,8 @@ jest.mock("../Network/Login", () => {
   };
 });
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -43,42 +43,42 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import { makeAModel } from "../testHelpers/modelTools";
+import { makeAModel } from '../testHelpers/modelTools';
 
-import ModelBase from "./ModelBase";
-import SongModel from "./SongModel";
+import ModelBase from './ModelBase';
+import SongModel from './SongModel';
 
 function setupLogin(loggedIn = true) {
   mockLoginStatus.mockResolvedValue(loggedIn);
 }
 
-describe("SongModel", () => {
-  it("should instantiate a model", async () => {
+describe('SongModel', () => {
+  it('should instantiate a model', async () => {
     setupLogin();
-    const [def] = makeAModel("song");
+    const [def] = makeAModel('song');
     const model = SongModel.from(def);
 
     expect(SongModel.isModel(model)).toBeTruthy();
-    expect(model.get("id")).toEqual(def.id);
-    expect(model.get("name")).toEqual(def.name);
-    expect(model.get("artist_id")).toEqual(def.artist_id);
+    expect(model.get('id')).toEqual(def.id);
+    expect(model.get('name')).toEqual(def.name);
+    expect(model.get('artist_id')).toEqual(def.artist_id);
     expect(model.idUrl()).toEqual(def.url);
 
     expect(model.artist).toBeDefined();
     const artist = model.artist();
     expect(artist).toBeDefined();
-    expect(artist.get("id")).toEqual(model.get("artist_id"));
-    expect(artist.get("name")).toEqual(def.artist.name);
+    expect(artist.get('id')).toEqual(model.get('artist_id'));
+    expect(artist.get('name')).toEqual(def.artist.name);
     expect(artist.idUrl()).toEqual(def.artist.url);
   });
 
-  it("should fetch a song model", async () => {
+  it('should fetch a song model', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValueOnce(getPromise.promise);
 
-    const [fetchBody, fetchModel] = makeAModel("song");
+    const [fetchBody, fetchModel] = makeAModel('song');
 
     const model = new SongModel(fetchBody.url);
 
@@ -94,20 +94,20 @@ describe("SongModel", () => {
     expect(mockGetFromURLString).toHaveBeenCalledWith(fetchBody.url);
   });
 
-  it("should save changes to the song model", async () => {
+  it('should save changes to the song model', async () => {
     setupLogin();
 
     const putPromise = PromiseWithResolvers();
     mockPutToURLString.mockReturnValue(putPromise.promise);
 
-    const [oldBody] = makeAModel("song");
+    const [oldBody] = makeAModel('song');
     const model = SongModel.from(oldBody);
     expect(model.toJSON()).toEqual(oldBody);
 
-    const newName = "Updated Song Name";
-    model.set("name", newName);
+    const newName = 'Updated Song Name';
+    model.set('name', newName);
     expect(model.toJSON()).not.toEqual(oldBody);
-    expect(model.get("name")).toEqual(newName);
+    expect(model.get('name')).toEqual(newName);
 
     const savePromise = model.save();
     putPromise.resolve({
@@ -125,11 +125,11 @@ describe("SongModel", () => {
     });
   });
 
-  it("should not recognize a base model as a song model", async () => {
+  it('should not recognize a base model as a song model', async () => {
     setupLogin();
     // If the class extension is done correctly, TypeScript should just handle this.
-    const [baseDef] = makeAModel("table1");
-    const [songDef] = makeAModel("song");
+    const [baseDef] = makeAModel('table1');
+    const [songDef] = makeAModel('song');
 
     const baseModel = new ModelBase(baseDef.url, baseDef);
     const songModel = new SongModel(songDef.url, songDef);
@@ -141,14 +141,14 @@ describe("SongModel", () => {
     expect(SongModel.isModel(songModel)).toBeTruthy();
   });
 
-  it("should update the artist model", async () => {
+  it('should update the artist model', async () => {
     setupLogin();
     const mockPromise = PromiseWithResolvers();
     // The mock is not recognized unless it is done this way.
     mockPutToURLString.mockReturnValue(mockPromise.promise);
 
-    const [modelDef, songModel] = makeAModel("song");
-    const [newArtistDef, newArtistModel] = makeAModel("artist");
+    const [modelDef, songModel] = makeAModel('song');
+    const [newArtistDef, newArtistModel] = makeAModel('artist');
     const songModelDef = { ...modelDef };
     delete songModelDef.artist;
 
@@ -166,14 +166,14 @@ describe("SongModel", () => {
       ...songModelDef,
       artist: newArtistDef,
     });
-    expect(songModel.get("artist_id")).toEqual(newArtistModel.get("id"));
+    expect(songModel.get('artist_id')).toEqual(newArtistModel.get('id'));
     expect(songModel.artist()).toEqual(newArtistModel);
   });
 
-  it("should handle artist reference correctly", async () => {
+  it('should handle artist reference correctly', async () => {
     setupLogin();
 
-    const [songDef] = makeAModel("song");
+    const [songDef] = makeAModel('song');
     const model = SongModel.from(songDef);
 
     // Test that the artist reference is properly set up
@@ -183,7 +183,7 @@ describe("SongModel", () => {
     // Test that we can retrieve the artist
     const artist = model.artist();
     expect(artist).toBeDefined();
-    expect(artist.get("id")).toEqual(songDef.artist.id);
-    expect(artist.get("name")).toEqual(songDef.artist.name);
+    expect(artist.get('id')).toEqual(songDef.artist.id);
+    expect(artist.get('name')).toEqual(songDef.artist.name);
   });
 });

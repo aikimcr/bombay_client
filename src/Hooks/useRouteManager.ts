@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { replaceRouteParams } from "../Utilities";
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
+import { replaceRouteParams } from '../Utilities';
 
 type RouteParams = Record<string, string | number | symbol>;
 

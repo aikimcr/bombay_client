@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { BrowserRouter } from "react-router";
+import { useState } from 'react';
+import { BrowserRouter } from 'react-router';
 
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen } from '@testing-library/react';
 
 import {
   mockLoginStatus,
   mockRefreshToken,
   mockLogin,
   mockLogout,
-} from "../../Network/testing";
+} from '../../Network/testing';
 
-jest.mock("../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../Network/Login");
+jest.mock('../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../Network/Login');
 
   return {
     __esModule: true,
@@ -23,9 +23,9 @@ jest.mock("../../Network/Login", () => {
   };
 });
 
-import { mockModelFetcher, mockUseModelCollection } from "../../Hooks/testing";
-jest.mock("../../Hooks/useModelCollection", () => {
-  const originalModule = jest.requireActual("../../Hooks/useModelCollection");
+import { mockModelFetcher, mockUseModelCollection } from '../../Hooks/testing';
+jest.mock('../../Hooks/useModelCollection', () => {
+  const originalModule = jest.requireActual('../../Hooks/useModelCollection');
 
   return {
     __esModule: true,
@@ -34,15 +34,15 @@ jest.mock("../../Hooks/useModelCollection", () => {
   };
 });
 
-import * as Network from "../../Network/Network";
-import * as mockObserver from "../../Hooks/useIntersectionObserver";
+import * as Network from '../../Network/Network';
+import * as mockObserver from '../../Hooks/useIntersectionObserver';
 
-import { makeModels, makeAModel } from "../../testHelpers/modelTools";
+import { makeModels, makeAModel } from '../../testHelpers/modelTools';
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
-import BombayUtilityContext from "../../Context/BombayUtilityContext";
+import BombayLoginContext from '../../Context/BombayLoginContext';
+import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
-import { ArtistList } from "./ArtistList.jsx";
+import { ArtistList } from './ArtistList.jsx';
 
 jest.useFakeTimers();
 
@@ -51,14 +51,14 @@ function FakeContent(props) {
     loggedIn: true,
     showLoginForm: false,
   });
-  const [modeState, setModeState] = useState("artist");
+  const [modeState, setModeState] = useState('artist');
 
   const checkLoginState = async () => {
     setLoginState(true);
   };
 
   const setMode = async (newMode) => {
-    setModeState("artist");
+    setModeState('artist');
   };
 
   const utilities = {
@@ -80,10 +80,10 @@ function FakeContent(props) {
 jest.useFakeTimers();
 
 const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 beforeEach(() => {
-  localStorage.setItem("jwttoken", testToken);
+  localStorage.setItem('jwttoken', testToken);
 });
 
 afterEach(() => {
@@ -91,7 +91,7 @@ afterEach(() => {
     mockObserver.mockObserver.observers.pop();
   }
 
-  localStorage.removeItem("jwttoken");
+  localStorage.removeItem('jwttoken');
 });
 
 function getAreas(result) {
@@ -105,14 +105,14 @@ function getAreas(result) {
   expect(listComponent.childElementCount).toEqual(2);
 
   const controls = listComponent.firstChild;
-  expect(controls.className).toEqual("list-controls");
+  expect(controls.className).toEqual('list-controls');
   expect(controls.childElementCount).toEqual(3);
 
   const listContainer = listComponent.lastChild;
-  expect(listContainer).toHaveClass("artist-list-container");
-  expect(listContainer).toHaveClass("list-container");
+  expect(listContainer).toHaveClass('artist-list-container');
+  expect(listContainer).toHaveClass('list-container');
   expect(listContainer.childElementCount).toEqual(1);
-  expect(observer.options.root.lastChild).toHaveClass("artist-list-container");
+  expect(observer.options.root.lastChild).toHaveClass('artist-list-container');
 
   const listElement = listContainer.firstChild;
 
@@ -121,29 +121,29 @@ function getAreas(result) {
 
 const setUpModels = () => {
   const artistNames = [
-    "Same & Dave",
-    "Aerosmith",
-    "Prince",
-    "DNCE",
-    "Sabrina Carpenter",
-    "Metallica",
-    "Ben E. King",
-    "Van Halen",
-    "Led Zeppelin",
-    "Black Sabbath",
-    "Steppenwolf",
-    "Tom Petty",
-    "Rolling Stones",
-    "Olivia Rodrigo",
-    "Santana",
-    "The Who",
-    "Deep Purple",
-    "Donovan",
-    "Jimi Hendrix",
-    "T. Rex",
+    'Same & Dave',
+    'Aerosmith',
+    'Prince',
+    'DNCE',
+    'Sabrina Carpenter',
+    'Metallica',
+    'Ben E. King',
+    'Van Halen',
+    'Led Zeppelin',
+    'Black Sabbath',
+    'Steppenwolf',
+    'Tom Petty',
+    'Rolling Stones',
+    'Olivia Rodrigo',
+    'Santana',
+    'The Who',
+    'Deep Purple',
+    'Donovan',
+    'Jimi Hendrix',
+    'T. Rex',
   ];
-  const [_fetchBody, models] = makeModels(10, {}, "artist", (def) => {
-    const idString = def.id || "1";
+  const [_fetchBody, models] = makeModels(10, {}, 'artist', (def) => {
+    const idString = def.id || '1';
     const id = parseInt(idString) - 1;
     def.name = artistNames[id];
   });
@@ -153,7 +153,7 @@ const setUpModels = () => {
   return [modelPromise, models];
 };
 
-it("Component should match snapshot", async () => {
+it('Component should match snapshot', async () => {
   const [modelPromise, models] = setUpModels();
 
   const loginPromise = PromiseWithResolvers();
@@ -176,7 +176,7 @@ it("Component should match snapshot", async () => {
   expect(asFragment()).toMatchSnapshot();
 });
 
-it("should render the list", async () => {
+it('should render the list', async () => {
   const [modelPromise, models] = setUpModels();
 
   const loginPromise = PromiseWithResolvers();
@@ -198,11 +198,11 @@ it("should render the list", async () => {
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
 
-  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
-  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
+  expect(screen.getByTestId('artist-list-component')).toBeInTheDocument();
+  expect(screen.getAllByTestId('artist-list-card')).toHaveLength(models.length);
 });
 
-it("should render the next page", async () => {
+it('should render the next page', async () => {
   const [modelPromise1, models1] = setUpModels();
   const [modelPromise2, models2] = setUpModels();
 
@@ -224,8 +224,8 @@ it("should render the next page", async () => {
   });
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
-  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
-  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(
+  expect(screen.getByTestId('artist-list-component')).toBeInTheDocument();
+  expect(screen.getAllByTestId('artist-list-card')).toHaveLength(
     models1.length,
   );
 
@@ -233,17 +233,17 @@ it("should render the next page", async () => {
 
   await act(async () => {
     observer._fireIntersect(
-      screen.getAllByTestId("artist-list-card").slice(-1)[0],
+      screen.getAllByTestId('artist-list-card').slice(-1)[0],
     );
     modelPromise2.resolve(models2);
   });
 
-  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(
+  expect(screen.getAllByTestId('artist-list-card')).toHaveLength(
     models1.length + models2.length,
   );
 });
 
-it("should stop when it runs out of data", async () => {
+it('should stop when it runs out of data', async () => {
   const [modelPromise, models] = setUpModels();
 
   const loginPromise = PromiseWithResolvers();
@@ -264,25 +264,25 @@ it("should stop when it runs out of data", async () => {
   });
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
-  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
-  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
+  expect(screen.getByTestId('artist-list-component')).toBeInTheDocument();
+  expect(screen.getAllByTestId('artist-list-card')).toHaveLength(models.length);
 
   const observer = mockObserver.mockObserver.observers[0];
 
   await act(async () => {
     observer._fireIntersect(
-      screen.getAllByTestId("artist-list-card").slice(-1)[0],
+      screen.getAllByTestId('artist-list-card').slice(-1)[0],
     );
-    modelPromise.reject({ status: 404, message: "Not Found" });
+    modelPromise.reject({ status: 404, message: 'Not Found' });
   });
 
   expect(mockObserver.mockObserver.observers.length).toBe(1);
-  expect(screen.getByTestId("artist-list-component")).toBeInTheDocument();
-  expect(screen.getAllByTestId("artist-list-card")).toHaveLength(models.length);
+  expect(screen.getByTestId('artist-list-component')).toBeInTheDocument();
+  expect(screen.getAllByTestId('artist-list-card')).toHaveLength(models.length);
 });
 
 // Move this to testing the artist editing component.
-it.skip("should add an artist", async () => {
+it.skip('should add an artist', async () => {
   const loginPromise = PromiseWithResolvers();
   mockLoginStatus.mockReturnValue(loginPromise);
   loginPromise.resolve({
@@ -290,7 +290,7 @@ it.skip("should add an artist", async () => {
     token: testToken,
   });
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
 
   const result = render(
     <FakeContent>
@@ -298,8 +298,8 @@ it.skip("should add an artist", async () => {
     </FakeContent>,
   );
 
-  const [fetchBody] = makeModels(10, {}, "artist");
-  const collectionUrl = Network.prepareURLFromArgs("artist").toString();
+  const [fetchBody] = makeModels(10, {}, 'artist');
+  const collectionUrl = Network.prepareURLFromArgs('artist').toString();
 
   await act(async () => {
     resolve(fetchBody);
@@ -321,11 +321,11 @@ it.skip("should add an artist", async () => {
 
   const submitButton = modalRoot.querySelector('[type="submit"]');
 
-  const [saveDef] = makeAModel("artist");
+  const [saveDef] = makeAModel('artist');
   await changeInput(
     modalRoot.querySelector('[data-targetfield="name"'),
-    "input",
-    "Herkimer",
+    'input',
+    'Herkimer',
     250,
   );
 
@@ -337,6 +337,6 @@ it.skip("should add an artist", async () => {
 
   expect(Network.postToURLString).toBeCalledTimes(1);
   expect(Network.postToURLString).toBeCalledWith(collectionUrl, {
-    name: "Herkimer",
+    name: 'Herkimer',
   });
 });

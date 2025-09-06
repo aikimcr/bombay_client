@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
 export const ComponentMock = (props) => {
   const renderProps = () => {
     let keySeq = 1;
 
     return Object.keys(props).map((key) => {
-      if (key === "children") {
+      if (key === 'children') {
         return null;
       }
 

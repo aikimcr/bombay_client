@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import "./PasswordInput.scss";
-import classnames from "classnames";
+import './PasswordInput.scss';
+import classnames from 'classnames';
 
 export const PasswordInput = ({ id, className, ...rest }) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const classNames = classnames([className, "password-input"], {
-    "password-input--show-password": showPassword,
+  const classNames = classnames([className, 'password-input'], {
+    'password-input--show-password': showPassword,
   });
 
   const toggleShowPassword = () => {
@@ -20,7 +20,7 @@ export const PasswordInput = ({ id, className, ...rest }) => {
         {...rest}
         id={id}
         className={classNames}
-        type={showPassword ? "text" : "password"}
+        type={showPassword ? 'text' : 'password'}
       />
       {showPassword ? (
         <button

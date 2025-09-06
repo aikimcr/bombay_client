@@ -2,11 +2,11 @@ import {
   getFromURLString,
   postToURLString,
   prepareURLFromArgs,
-} from "../Network/Network";
-import { loginStatus } from "../Network/Login";
+} from '../Network/Network';
+import { loginStatus } from '../Network/Login';
 
-import ModelBase, { ModelData } from "./ModelBase";
-import { forceLoginState } from "../Hooks/useLoginTracking";
+import ModelBase, { ModelData } from './ModelBase';
+import { forceLoginState } from '../Hooks/useLoginTracking';
 
 export interface CollectionOptions {
   modelClass?: typeof ModelBase;
@@ -143,7 +143,7 @@ export class CollectionBase {
     }
 
     if (data && data.length > 0) {
-      const currentIds = this.#models.map((model) => model.get("id"));
+      const currentIds = this.#models.map((model) => model.get('id'));
       const newModels = data
         .filter((def) => !currentIds.includes(def.id))
         .map((def) => this.#modelClass.from(def));

@@ -1,14 +1,14 @@
-import { createPortal } from "react-dom";
+import { createPortal } from 'react-dom';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import "./Modal.scss";
-import CloseOrClear from "../Components/Widgets/CloseOrClear";
+import './Modal.scss';
+import CloseOrClear from '../Components/Widgets/CloseOrClear';
 
 function Modal(props) {
   if (!props.open) return null;
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
 
   return createPortal(
     <div className="modal">

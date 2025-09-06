@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import BombayLoginContext from "../../../Context/BombayLoginContext";
-import { loginStatus, login } from "../../../Network/Login";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import BombayLoginContext from '../../../Context/BombayLoginContext';
+import { loginStatus, login } from '../../../Network/Login';
 import {
   Button,
   LabeledInput,
   PasswordInput,
   TextInput,
-} from "../../../Components";
-import { useRouteManager } from "../../../Hooks/useRouteManager";
+} from '../../../Components';
+import { useRouteManager } from '../../../Hooks/useRouteManager';
 
-import "./Login.scss";
+import './Login.scss';
 
 export const Login = () => {
   const routeManager = useRouteManager();
@@ -31,7 +31,7 @@ export const Login = () => {
       await login(username, password);
     } catch (err) {
       if (err.status === 401) {
-        setError("Username or password is incorrect.");
+        setError('Username or password is incorrect.');
       } else {
         setError(`${err.status}: ${err.message}`);
       }
@@ -48,8 +48,8 @@ export const Login = () => {
   const handleReset = () => {
     setSubmitDisabled(true);
     reset({
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     });
   };
 
@@ -64,7 +64,7 @@ export const Login = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      routeManager.navigateToRoute("/artistList");
+      routeManager.navigateToRoute('/artistList');
     }
   }, [loggedIn]);
 
@@ -82,11 +82,11 @@ export const Login = () => {
             inputId="login-user-name"
             InputField={TextInput}
             inputProps={{
-              ...register("username", {
-                required: "Please enter a valid username",
+              ...register('username', {
+                required: 'Please enter a valid username',
               }),
-              id: "login-user-name",
-              name: "username",
+              id: 'login-user-name',
+              name: 'username',
             }}
           />
           <LabeledInput
@@ -94,11 +94,11 @@ export const Login = () => {
             inputId="login-password"
             InputField={PasswordInput}
             inputProps={{
-              ...register("password", {
-                required: "Please enter a valid password",
+              ...register('password', {
+                required: 'Please enter a valid password',
               }),
-              id: "login-password",
-              name: "password",
+              id: 'login-password',
+              name: 'password',
             }}
           />
         </div>

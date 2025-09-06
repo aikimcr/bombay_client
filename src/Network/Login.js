@@ -1,23 +1,23 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import {
   prepareURLFromArgs,
   getFromURLString,
   postToURLString,
   putToURLString,
-} from "./Network";
+} from './Network';
 
 function setToken(token) {
-  localStorage.setItem("jwttoken", token);
+  localStorage.setItem('jwttoken', token);
 }
 
 function getToken() {
-  const token = localStorage.getItem("jwttoken");
+  const token = localStorage.getItem('jwttoken');
   if (token) return jwtDecode(token);
   return null;
 }
 
 function deleteToken() {
-  localStorage.removeItem("jwttoken");
+  localStorage.removeItem('jwttoken');
 }
 
 export async function loginStatus(expireMinutes = 30) {
@@ -33,7 +33,7 @@ export async function loginStatus(expireMinutes = 30) {
       return true;
     } else {
       try {
-        const requestURL = prepareURLFromArgs("login");
+        const requestURL = prepareURLFromArgs('login');
         const resultPromise = getFromURLString(requestURL.toString());
         const result = await resultPromise;
 
@@ -56,7 +56,7 @@ export async function loginStatus(expireMinutes = 30) {
 
 export async function refreshToken() {
   try {
-    const requestUrl = prepareURLFromArgs("login");
+    const requestUrl = prepareURLFromArgs('login');
     const result = await putToURLString(requestUrl.toString(), {});
     setToken(result);
     return getToken();
@@ -68,7 +68,7 @@ export async function refreshToken() {
 
 export async function login(username, password) {
   try {
-    const requestURL = prepareURLFromArgs("login");
+    const requestURL = prepareURLFromArgs('login');
     const result = await postToURLString(requestURL.toString(), {
       username,
       password,
@@ -83,7 +83,7 @@ export async function login(username, password) {
 
 export async function logout() {
   try {
-    const requestURL = prepareURLFromArgs("logout");
+    const requestURL = prepareURLFromArgs('logout');
     const result = await postToURLString(requestURL.toString());
     deleteToken();
     return result;

@@ -1,1 +1,1 @@
-export * from "./MockPickerList";
+export * from './MockPickerList';

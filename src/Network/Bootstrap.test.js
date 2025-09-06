@@ -7,10 +7,10 @@ import {
   mockServerHost,
   mockServerPort,
   mockServerProtocol,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -26,18 +26,18 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import { fetchBootstrap } from "./Bootstrap";
+import { fetchBootstrap } from './Bootstrap';
 
-it("should get the bootstrap", async () => {
+it('should get the bootstrap', async () => {
   const bootstrapUrlPromise = PromiseWithResolvers();
   mockGetFromURLString.mockReturnValueOnce(bootstrapUrlPromise.promise);
   mockPrepareURLFromArgs.mockReturnValue(
-    "http://localhost:2001/xyzzy/bootstrap",
+    'http://localhost:2001/xyzzy/bootstrap',
   );
 
   const bootstrapPromise = fetchBootstrap();
 
-  const body = { xyzzy: ["plover", "plugh", "bird"] };
+  const body = { xyzzy: ['plover', 'plugh', 'bird'] };
   bootstrapUrlPromise.resolve(body);
 
   const result = await bootstrapPromise;

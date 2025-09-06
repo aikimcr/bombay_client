@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen } from '@testing-library/react';
 
 import {
   mockLoginStatus,
   mockRefreshToken,
   mockLogin,
   mockLogout,
-} from "../../Network/testing";
+} from '../../Network/testing';
 
-jest.mock("../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../Network/Login");
+jest.mock('../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../Network/Login');
 
   return {
     __esModule: true,
@@ -22,9 +22,9 @@ jest.mock("../../Network/Login", () => {
   };
 });
 
-import { mockModelFetcher, mockUseModelCollection } from "../../Hooks/testing";
-jest.mock("../../Hooks/useModelCollection", () => {
-  const originalModule = jest.requireActual("../../Hooks/useModelCollection");
+import { mockModelFetcher, mockUseModelCollection } from '../../Hooks/testing';
+jest.mock('../../Hooks/useModelCollection', () => {
+  const originalModule = jest.requireActual('../../Hooks/useModelCollection');
 
   return {
     __esModule: true,
@@ -33,14 +33,14 @@ jest.mock("../../Hooks/useModelCollection", () => {
   };
 });
 
-import * as mockObserver from "../../Hooks/useIntersectionObserver";
+import * as mockObserver from '../../Hooks/useIntersectionObserver';
 
-import BombayLoginContext from "../../Context/BombayLoginContext";
+import BombayLoginContext from '../../Context/BombayLoginContext';
 
-import { MockTestCollection, mockFetchBody, mockModels } from "./testing";
+import { MockTestCollection, mockFetchBody, mockModels } from './testing';
 
-import PickerList from "./PickerList.jsx";
-import { useModelCollection } from "../../Hooks";
+import PickerList from './PickerList.jsx';
+import { useModelCollection } from '../../Hooks';
 
 function TestWrapper({ loggedIn, children }) {
   const [loginState, setLoginState] = useState({ loggedIn });
@@ -55,7 +55,7 @@ function TestWrapper({ loggedIn, children }) {
 jest.useFakeTimers();
 
 const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 function setupLogin(loggedIn = true, token = testToken) {
   const loginPromise = PromiseWithResolvers();
@@ -64,7 +64,7 @@ function setupLogin(loggedIn = true, token = testToken) {
 }
 
 beforeEach(() => {
-  localStorage.setItem("jwttoken", testToken);
+  localStorage.setItem('jwttoken', testToken);
 });
 
 afterEach(() => {
@@ -72,10 +72,10 @@ afterEach(() => {
     mockObserver.mockObserver.observers.pop();
   }
 
-  localStorage.removeItem("jwttoken");
+  localStorage.removeItem('jwttoken');
 });
 
-it("Component should match snapshot", async () => {
+it('Component should match snapshot', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
@@ -99,7 +99,7 @@ it("Component should match snapshot", async () => {
   expect(asFragment()).toMatchSnapshot();
 });
 
-it("Should show the list", async () => {
+it('Should show the list', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
@@ -116,19 +116,19 @@ it("Should show the list", async () => {
     </TestWrapper>,
   );
 
-  expect(screen.getByTestId("picker-component")).toBeInTheDocument();
-  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
+  expect(screen.getByTestId('picker-component')).toBeInTheDocument();
+  expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);
 
   await act(async () => {
     refreshPromise.resolve(mockModels);
   });
 
-  expect(screen.queryAllByTestId("picker-item")).toHaveLength(
+  expect(screen.queryAllByTestId('picker-item')).toHaveLength(
     mockModels.length,
   );
 });
 
-it("should show an empty list", async () => {
+it('should show an empty list', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
@@ -145,12 +145,12 @@ it("should show an empty list", async () => {
     </TestWrapper>,
   );
 
-  expect(screen.getByTestId("picker-component")).toBeInTheDocument();
-  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
+  expect(screen.getByTestId('picker-component')).toBeInTheDocument();
+  expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);
 
   await act(async () => {
-    refreshPromise.reject({ status: 404, message: "Not Found" });
+    refreshPromise.reject({ status: 404, message: 'Not Found' });
   });
 
-  expect(screen.queryAllByTestId("picker-item")).toHaveLength(0);
+  expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);
 });

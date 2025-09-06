@@ -1,1 +1,1 @@
-export * from "./LoginStatusDisplay";
+export * from './LoginStatusDisplay';

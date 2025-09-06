@@ -1,5 +1,5 @@
-import React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import React from 'react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import {
   mockLoginStatus,
@@ -7,10 +7,10 @@ import {
   mockLogin,
   mockLogout,
   testToken,
-} from "../../../Network/testing";
+} from '../../../Network/testing';
 
-jest.mock("../../../Network/Login", () => {
-  const originalModule = jest.requireActual("../../../Network/Login");
+jest.mock('../../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../../Network/Login');
 
   return {
     __esModule: true,
@@ -22,16 +22,16 @@ jest.mock("../../../Network/Login", () => {
   };
 });
 
-import { ContextChanger } from "../../../testHelpers/ContextChanger";
-import { Login } from ".";
+import { ContextChanger } from '../../../testHelpers/ContextChanger';
+import { Login } from '.';
 
 jest.useFakeTimers();
 
 beforeEach(() => {
-  localStorage.removeItem("jwttoken");
+  localStorage.removeItem('jwttoken');
 });
 
-it("Component should match snapshot", async () => {
+it('Component should match snapshot', async () => {
   const { asFragment } = render(
     <ContextChanger initialLoggedIn={false}>
       <Login />
@@ -41,37 +41,37 @@ it("Component should match snapshot", async () => {
   expect(asFragment()).toMatchSnapshot();
 });
 
-it("should enable and disable the login button", async () => {
+it('should enable and disable the login button', async () => {
   render(
     <ContextChanger initialLoggedIn={false}>
       <Login />
     </ContextChanger>,
   );
 
-  const loginButton = screen.getByText("Login");
+  const loginButton = screen.getByText('Login');
   expect(loginButton).toBeDisabled();
 
-  const userNameInput = screen.getByLabelText("User Name");
-  expect(userNameInput).toHaveValue("");
+  const userNameInput = screen.getByLabelText('User Name');
+  expect(userNameInput).toHaveValue('');
 
   await act(async () => {
-    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+    fireEvent.change(userNameInput, { target: { value: 'herkimer' } });
   });
 
-  expect(userNameInput).toHaveValue("herkimer");
+  expect(userNameInput).toHaveValue('herkimer');
   expect(loginButton).toBeDisabled();
 
-  const passwordInput = screen.getByLabelText("Password");
-  expect(passwordInput).toHaveValue("");
+  const passwordInput = screen.getByLabelText('Password');
+  expect(passwordInput).toHaveValue('');
 
   await act(async () => {
-    fireEvent.change(passwordInput, { target: { value: "jones" } });
+    fireEvent.change(passwordInput, { target: { value: 'jones' } });
   });
 
   expect(loginButton).not.toBeDisabled();
 });
 
-it("should login successfully", async () => {
+it('should login successfully', async () => {
   const { promise, resolve } = PromiseWithResolvers();
   mockLogin.mockReturnValue(promise);
 
@@ -81,18 +81,18 @@ it("should login successfully", async () => {
     </ContextChanger>,
   );
 
-  const loginButton = screen.getByText("Login");
+  const loginButton = screen.getByText('Login');
   expect(loginButton).toBeDisabled();
 
-  const userNameInput = screen.getByLabelText("User Name");
-  const passwordInput = screen.getByLabelText("Password");
+  const userNameInput = screen.getByLabelText('User Name');
+  const passwordInput = screen.getByLabelText('Password');
 
   await act(async () => {
-    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+    fireEvent.change(userNameInput, { target: { value: 'herkimer' } });
   });
 
   await act(async () => {
-    fireEvent.change(passwordInput, { target: { value: "jones" } });
+    fireEvent.change(passwordInput, { target: { value: 'jones' } });
   });
 
   expect(loginButton).not.toBeDisabled();
@@ -106,10 +106,10 @@ it("should login successfully", async () => {
   });
 
   expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
 });
 
-it("should show error on failed login", async () => {
+it('should show error on failed login', async () => {
   const { promise, resolve } = PromiseWithResolvers();
   mockLogin.mockReturnValue(promise);
 
@@ -119,18 +119,18 @@ it("should show error on failed login", async () => {
     </ContextChanger>,
   );
 
-  const loginButton = screen.getByText("Login");
+  const loginButton = screen.getByText('Login');
   expect(loginButton).toBeDisabled();
 
-  const userNameInput = screen.getByLabelText("User Name");
-  const passwordInput = screen.getByLabelText("Password");
+  const userNameInput = screen.getByLabelText('User Name');
+  const passwordInput = screen.getByLabelText('Password');
 
   await act(async () => {
-    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+    fireEvent.change(userNameInput, { target: { value: 'herkimer' } });
   });
 
   await act(async () => {
-    fireEvent.change(passwordInput, { target: { value: "jones" } });
+    fireEvent.change(passwordInput, { target: { value: 'jones' } });
   });
 
   expect(loginButton).not.toBeDisabled();
@@ -144,10 +144,10 @@ it("should show error on failed login", async () => {
   });
 
   expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
 });
 
-it("should show error on call error", async () => {
+it('should show error on call error', async () => {
   const { promise, reject } = PromiseWithResolvers();
   mockLogin.mockReturnValue(promise);
 
@@ -157,18 +157,18 @@ it("should show error on call error", async () => {
     </ContextChanger>,
   );
 
-  const loginButton = screen.getByText("Login");
+  const loginButton = screen.getByText('Login');
   expect(loginButton).toBeDisabled();
 
-  const userNameInput = screen.getByLabelText("User Name");
-  const passwordInput = screen.getByLabelText("Password");
+  const userNameInput = screen.getByLabelText('User Name');
+  const passwordInput = screen.getByLabelText('Password');
 
   await act(async () => {
-    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+    fireEvent.change(userNameInput, { target: { value: 'herkimer' } });
   });
 
   await act(async () => {
-    fireEvent.change(passwordInput, { target: { value: "jones" } });
+    fireEvent.change(passwordInput, { target: { value: 'jones' } });
   });
 
   expect(loginButton).not.toBeDisabled();
@@ -178,14 +178,14 @@ it("should show error on call error", async () => {
   });
 
   await act(async () => {
-    reject({ status: 500, messsage: "Mock fail" });
+    reject({ status: 500, messsage: 'Mock fail' });
   });
 
   expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith("herkimer", "jones");
+  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
 });
 
-it("should clear the inputs and error on clear all fields", async () => {
+it('should clear the inputs and error on clear all fields', async () => {
   const { promise, resolve } = PromiseWithResolvers();
 
   const result = render(
@@ -194,18 +194,18 @@ it("should clear the inputs and error on clear all fields", async () => {
     </ContextChanger>,
   );
 
-  const loginButton = screen.getByText("Login");
+  const loginButton = screen.getByText('Login');
   expect(loginButton).toBeDisabled();
 
-  const userNameInput = screen.getByLabelText("User Name");
-  const passwordInput = screen.getByLabelText("Password");
+  const userNameInput = screen.getByLabelText('User Name');
+  const passwordInput = screen.getByLabelText('Password');
 
   await act(async () => {
-    fireEvent.change(userNameInput, { target: { value: "herkimer" } });
+    fireEvent.change(userNameInput, { target: { value: 'herkimer' } });
   });
 
   await act(async () => {
-    fireEvent.change(passwordInput, { target: { value: "jones" } });
+    fireEvent.change(passwordInput, { target: { value: 'jones' } });
   });
 
   expect(loginButton).not.toBeDisabled();

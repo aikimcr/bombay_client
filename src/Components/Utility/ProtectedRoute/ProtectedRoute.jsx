@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import BombayLoginContext from "../../../Context/BombayLoginContext";
+import React, { useContext } from 'react';
+import BombayLoginContext from '../../../Context/BombayLoginContext';
 
 export const ProtectedRoute = ({ children }) => {
   const loginState = useContext(BombayLoginContext);

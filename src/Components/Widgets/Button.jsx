@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function Button(props) {
   const classList = new Set();
@@ -9,13 +9,13 @@ function Button(props) {
     propsClasses.forEach((name) => classList.add(name));
   }
 
-  classList.add("btn");
-  const className = Array.from(classList).join(" ");
+  classList.add('btn');
+  const className = Array.from(classList).join(' ');
 
   if (props.disabled) {
     return (
       <button className={className} onClick={props.onClick} disabled>
-        {" "}
+        {' '}
         {props.label}
       </button>
     );

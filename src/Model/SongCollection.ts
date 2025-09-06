@@ -1,9 +1,9 @@
-import CollectionBase, { CollectionOptions } from "./CollectionBase";
-import SongModel from "./SongModel";
+import CollectionBase, { CollectionOptions } from './CollectionBase';
+import SongModel from './SongModel';
 
 class SongCollection extends CollectionBase {
   constructor(options: CollectionOptions = {}) {
-    super("/song", {
+    super('/song', {
       ...options,
       modelClass: SongModel,
     });

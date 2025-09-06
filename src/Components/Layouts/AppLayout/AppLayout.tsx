@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
-import "./AppLayout.scss";
+import './AppLayout.scss';
 
 interface AppLayoutProps {
   header: JSX.Element;

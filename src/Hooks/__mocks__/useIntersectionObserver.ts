@@ -1,9 +1,9 @@
-import { useEffect, useRef, RefObject } from "react";
+import { useEffect, useRef, RefObject } from 'react';
 
 import {
   IntersectionObserverOptions,
   UseIntersectionObserverReturn,
-} from "../useIntersectionObserver";
+} from '../useIntersectionObserver';
 export class mockEntry {
   boundingClientRect: DOMRectReadOnly;
   intersectionRatio: number;

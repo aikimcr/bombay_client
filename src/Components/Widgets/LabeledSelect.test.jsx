@@ -1,28 +1,28 @@
-import { render } from "@testing-library/react";
+import { render } from '@testing-library/react';
 
-import LabeledSelect from "./LabeledSelect.jsx";
+import LabeledSelect from './LabeledSelect.jsx';
 
 jest.useFakeTimers();
 
 const options = [
   {
-    value: "bird",
+    value: 'bird',
   },
   {
-    value: "plane",
+    value: 'plane',
   },
   {
-    value: "jet",
+    value: 'jet',
   },
   {
-    value: "rocket",
+    value: 'rocket',
   },
   {
-    value: "bat",
+    value: 'bat',
   },
 ];
 
-it("should show a simple labeled select", async () => {
+it('should show a simple labeled select', async () => {
   const { asFragment } = render(
     <LabeledSelect
       modelName="xyzzy"
@@ -35,10 +35,10 @@ it("should show a simple labeled select", async () => {
   expect(asFragment).toMatchSnapshot();
 });
 
-it("should set the default value to the field value", async () => {
+it('should set the default value to the field value', async () => {
   const model = {
     get: jest.fn((fieldName) => {
-      return "bird";
+      return 'bird';
     }),
   };
 
@@ -54,10 +54,10 @@ it("should set the default value to the field value", async () => {
 
   const component = result.container.firstChild;
   const select = component.lastChild;
-  expect(select.value).toEqual("bird");
+  expect(select.value).toEqual('bird');
 });
 
-it("should call onChange", async () => {
+it('should call onChange', async () => {
   const changeHandler = jest.fn();
 
   const result = render(
@@ -72,7 +72,7 @@ it("should call onChange", async () => {
 
   const component = result.container.firstChild;
 
-  await changeInput(component, "select", "bird", 250);
+  await changeInput(component, 'select', 'bird', 250);
 
   expect(changeHandler.mock.calls.length).toBe(1);
   expect(changeHandler.mock.calls[0].length).toBe(1);

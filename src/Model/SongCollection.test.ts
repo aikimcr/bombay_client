@@ -23,10 +23,10 @@ import {
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Login", () => {
-  const originalModule = jest.requireActual("../Network/Login");
+jest.mock('../Network/Login', () => {
+  const originalModule = jest.requireActual('../Network/Login');
 
   return {
     __esModule: true,
@@ -38,8 +38,8 @@ jest.mock("../Network/Login", () => {
   };
 });
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -55,14 +55,14 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import { makeModels } from "../testHelpers/modelTools";
+import { makeModels } from '../testHelpers/modelTools';
 
-import CollectionBase from "./CollectionBase";
-import SongCollection from "./SongCollection";
-import SongModel from "./SongModel";
+import CollectionBase from './CollectionBase';
+import SongCollection from './SongCollection';
+import SongModel from './SongModel';
 
 const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 function setupLogin(loggedIn = true) {
   const loginPromise = PromiseWithResolvers();
@@ -70,23 +70,23 @@ function setupLogin(loggedIn = true) {
   loginPromise.resolve(loggedIn);
 }
 
-describe("SongCollection", () => {
+describe('SongCollection', () => {
   beforeEach(() => {
-    localStorage.setItem("jwttoken", testToken);
+    localStorage.setItem('jwttoken', testToken);
   });
 
   afterEach(() => {
-    localStorage.removeItem("jwttoken");
+    localStorage.removeItem('jwttoken');
   });
 
-  it("should not recognize a base collection as a song collection", async () => {
+  it('should not recognize a base collection as a song collection', async () => {
     setupLogin();
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/table"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
 
     // If the class extension is done correctly, TypeScript should just handle this.
-    const baseCollection = new CollectionBase("/table");
+    const baseCollection = new CollectionBase('/table');
 
     const songCollection = new SongCollection();
 
@@ -97,15 +97,15 @@ describe("SongCollection", () => {
     expect(SongCollection.isCollection(songCollection)).toBeTruthy();
   });
 
-  it("should fetch song collection", async () => {
+  it('should fetch song collection', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/song"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/song'));
 
     const collection = new SongCollection();
-    const [fetchBody, models] = makeModels(10, { type: "song" });
+    const [fetchBody, models] = makeModels(10, { type: 'song' });
     getPromise.resolve(fetchBody);
     await collection.ready();
 
@@ -114,25 +114,25 @@ describe("SongCollection", () => {
     expect(collection.modelClass()).toBe(SongModel);
   });
 
-  it("should save a new song", async () => {
+  it('should save a new song', async () => {
     setupLogin();
 
     const postPromise = PromiseWithResolvers();
     mockPostToURLString.mockReturnValue(postPromise.promise);
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/song"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/song'));
 
     const collection = new SongCollection();
     const newSongData = {
       id: 1,
-      name: "New Song",
+      name: 'New Song',
       artist_id: 1,
-      url: "https://xyzzy/song/1",
+      url: 'https://xyzzy/song/1',
       artist: {
         id: 1,
-        name: "Test Artist",
-        url: "https://xyzzy/artist/1",
+        name: 'Test Artist',
+        url: 'https://xyzzy/artist/1',
       },
     };
 
@@ -141,17 +141,17 @@ describe("SongCollection", () => {
     const savedSong = await savePromise;
 
     expect(savedSong).toBeDefined();
-    expect(savedSong.get("name")).toBe("New Song");
+    expect(savedSong.get('name')).toBe('New Song');
     expect(SongModel.isModel(savedSong)).toBeTruthy();
 
     expect(mockPostToURLString).toHaveBeenCalledTimes(1);
     expect(mockPostToURLString).toHaveBeenCalledWith(
-      "https://xyzzy/song",
+      'https://xyzzy/song',
       newSongData,
     );
   });
 
-  it("should handle pagination for song collection", async () => {
+  it('should handle pagination for song collection', async () => {
     setupLogin();
 
     const getPromise1 = PromiseWithResolvers();
@@ -159,11 +159,11 @@ describe("SongCollection", () => {
     mockGetFromURLString
       .mockReturnValueOnce(getPromise1.promise)
       .mockReturnValueOnce(getPromise2.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/song"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/song'));
 
     const collection = new SongCollection();
 
-    const [fetchBody1] = makeModels(10, {}, "song");
+    const [fetchBody1] = makeModels(10, {}, 'song');
     getPromise1.resolve(fetchBody1);
     await collection.ready();
 
@@ -176,7 +176,7 @@ describe("SongCollection", () => {
         offset: 10,
         limit: 10,
       },
-      "song",
+      'song',
     );
     getPromise2.resolve(fetchBody2);
 
@@ -185,15 +185,15 @@ describe("SongCollection", () => {
     expect(collection.models()).toEqual(fetchModels2);
   });
 
-  it("should handle song models with artist references", async () => {
+  it('should handle song models with artist references', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/song"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/song'));
 
     const collection = new SongCollection();
-    const [fetchBody] = makeModels(5, {}, "song");
+    const [fetchBody] = makeModels(5, {}, 'song');
     getPromise.resolve(fetchBody);
     await collection.ready();
 
@@ -203,13 +203,13 @@ describe("SongCollection", () => {
 
     songs.forEach((song) => {
       expect(SongModel.isModel(song)).toBeTruthy();
-      expect(song.get("artist_id")).toBeDefined();
+      expect(song.get('artist_id')).toBeDefined();
       expect(song.artistUrl).toBeDefined();
 
       // Test that we can retrieve the artist
       const artist = song.artist();
       expect(artist).toBeDefined();
-      expect(artist.get("id")).toEqual(song.get("artist_id"));
+      expect(artist.get('id')).toEqual(song.get('artist_id'));
     });
   });
 });

@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { BrowserRouter } from "react-router";
+import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter } from 'react-router';
 
-import BombayLoginContext from "./Context/BombayLoginContext";
-import BombayUtilityContext from "./Context/BombayUtilityContext";
-import ConfigurationContext from "./Context/ConfiguratonContext";
+import BombayLoginContext from './Context/BombayLoginContext';
+import BombayUtilityContext from './Context/BombayUtilityContext';
+import ConfigurationContext from './Context/ConfiguratonContext';
 
-import { fetchBootstrap } from "./Network/Bootstrap";
-import { useLoginTracking } from "./Hooks/useLoginTracking";
+import { fetchBootstrap } from './Network/Bootstrap';
+import { useLoginTracking } from './Hooks/useLoginTracking';
 
-import "./App.scss";
+import './App.scss';
 import {
   AppLayout,
   AppRoutes,
   HeaderLayout,
   LoginStatusDisplay,
-} from "./Components";
+} from './Components';
 
 export const App = () => {
   const [bootstrap, setBootstrap] = useState(null);
@@ -57,7 +57,7 @@ export const App = () => {
     getBootstrap,
   };
 
-  const routerBase = process.env.REACT_APP_ROUTER_BASE || "/";
+  const routerBase = process.env.REACT_APP_ROUTER_BASE || '/';
 
   const appConfig = {
     routerBase,

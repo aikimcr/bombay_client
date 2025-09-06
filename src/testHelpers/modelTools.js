@@ -1,15 +1,15 @@
 // Import this after all mocks.  Especially Network and login mocks.
 
-import casual from "casual";
+import casual from 'casual';
 
-import * as Network from "../Network/Network";
+import * as Network from '../Network/Network';
 
-import ModelBase from "../Model/ModelBase";
-import ArtistModel from "../Model/ArtistModel";
-import SongModel from "../Model/SongModel";
+import ModelBase from '../Model/ModelBase';
+import ArtistModel from '../Model/ArtistModel';
+import SongModel from '../Model/SongModel';
 
 const allNames = {};
-casual.define("uniqueName", function (nameType, clear) {
+casual.define('uniqueName', function (nameType, clear) {
   if (!allNames[nameType]) allNames[nameType] = new Set();
 
   const oldSize = allNames[nameType].size;
@@ -24,13 +24,13 @@ casual.define("uniqueName", function (nameType, clear) {
 });
 
 const idSequences = {};
-casual.define("nextId", function (sequenceName) {
+casual.define('nextId', function (sequenceName) {
   const nextOne = (idSequences[sequenceName] ?? 0) + 1;
   idSequences[sequenceName] = nextOne;
   return nextOne;
 });
 
-export function makeAModel(tableName = "table1", fieldsCallback) {
+export function makeAModel(tableName = 'table1', fieldsCallback) {
   const def = {};
   def.id = casual.nextId(tableName);
   def.name = casual.uniqueName(tableName);
@@ -42,20 +42,20 @@ export function makeAModel(tableName = "table1", fieldsCallback) {
   let modelClass = ModelBase;
 
   switch (tableName) {
-    case "artist":
+    case 'artist':
       modelClass = ArtistModel;
       break;
 
-    case "song":
+    case 'song':
       modelClass = SongModel;
-      def.key_signature = "C";
+      def.key_signature = 'C';
       def.tempo = 120;
-      def.lyrics = "O Solo Mio! The troubles I have seen";
+      def.lyrics = 'O Solo Mio! The troubles I have seen';
 
       if (def.artist) {
         def.artist_id = def.artist.id;
       } else {
-        const [artist] = makeAModel("artist");
+        const [artist] = makeAModel('artist');
         def.artist_id = artist.id;
         def.artist = artist;
       }
@@ -72,7 +72,7 @@ export function makeAModel(tableName = "table1", fieldsCallback) {
 export function makeModels(
   length = 10,
   query = {},
-  tableName = "table1",
+  tableName = 'table1',
   fieldsCallback,
 ) {
   const result = {

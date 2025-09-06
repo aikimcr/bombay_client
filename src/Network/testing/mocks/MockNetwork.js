@@ -1,8 +1,8 @@
-const RealNetwork = jest.requireActual("../../Network");
+const RealNetwork = jest.requireActual('../../Network');
 
-export const mockServerProtocol = "https";
-export const mockServerHost = "fake";
-export const mockServerBasePath = "xyzzy";
+export const mockServerProtocol = 'https';
+export const mockServerHost = 'fake';
+export const mockServerBasePath = 'xyzzy';
 export const mockServerPort = null;
 
 export const mockPrepareURLFromArgs = jest.fn();

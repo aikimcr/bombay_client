@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import useIntersectionObserver from "../../useIntersectionObserver";
+import React, { useEffect, useState } from 'react';
+import useIntersectionObserver from '../../useIntersectionObserver';
 
 export const mockModelFetcher = jest.fn();
 
@@ -68,7 +68,7 @@ export const mockUseModelCollection = ({
     }
 
     if (collection && collection.hasNextPage()) {
-      const myElement = topRef.current?.querySelector("li:last-child");
+      const myElement = topRef.current?.querySelector('li:last-child');
 
       if (myElement) {
         observer.current.observe(myElement);

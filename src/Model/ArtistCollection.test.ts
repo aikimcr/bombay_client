@@ -23,10 +23,10 @@ import {
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
-} from "../Network/testing";
+} from '../Network/testing';
 
-jest.mock("../Network/Login", () => {
-  const originalModule = jest.requireActual("../Network/Login");
+jest.mock('../Network/Login', () => {
+  const originalModule = jest.requireActual('../Network/Login');
 
   return {
     __esModule: true,
@@ -38,8 +38,8 @@ jest.mock("../Network/Login", () => {
   };
 });
 
-jest.mock("../Network/Network", () => {
-  const originalModule = jest.requireActual("../Network/Network");
+jest.mock('../Network/Network', () => {
+  const originalModule = jest.requireActual('../Network/Network');
 
   return {
     __esModule: true,
@@ -55,14 +55,14 @@ jest.mock("../Network/Network", () => {
   };
 });
 
-import { makeModels } from "../testHelpers/modelTools";
+import { makeModels } from '../testHelpers/modelTools';
 
-import CollectionBase from "./CollectionBase";
-import ArtistCollection from "./ArtistCollection";
-import ArtistModel from "./ArtistModel";
+import CollectionBase from './CollectionBase';
+import ArtistCollection from './ArtistCollection';
+import ArtistModel from './ArtistModel';
 
 const testToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4";
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
 
 function setupLogin(loggedIn = true) {
   const loginPromise = PromiseWithResolvers();
@@ -70,24 +70,24 @@ function setupLogin(loggedIn = true) {
   loginPromise.resolve(loggedIn);
 }
 
-describe("ArtistCollection", () => {
+describe('ArtistCollection', () => {
   beforeEach(() => {
-    localStorage.setItem("jwttoken", testToken);
+    localStorage.setItem('jwttoken', testToken);
   });
 
   afterEach(() => {
-    localStorage.removeItem("jwttoken");
+    localStorage.removeItem('jwttoken');
   });
 
-  it("should not recognize a base collection as an artist collection", async () => {
+  it('should not recognize a base collection as an artist collection', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/table"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
 
     // If the class extension is done correctly, TypeScript should just handle this.
-    const baseCollection = new CollectionBase("/table");
+    const baseCollection = new CollectionBase('/table');
     const artistCollection = new ArtistCollection();
 
     expect(CollectionBase.isCollection(baseCollection)).toBeTruthy();
@@ -97,15 +97,15 @@ describe("ArtistCollection", () => {
     expect(ArtistCollection.isCollection(artistCollection)).toBeTruthy();
   });
 
-  it("should fetch artist collection", async () => {
+  it('should fetch artist collection', async () => {
     setupLogin();
 
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/artist"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
 
     const collection = new ArtistCollection();
-    const [fetchBody, models] = makeModels(10, { type: "artist" });
+    const [fetchBody, models] = makeModels(10, { type: 'artist' });
     getPromise.resolve(fetchBody);
     await collection.ready();
 
@@ -114,20 +114,20 @@ describe("ArtistCollection", () => {
     expect(collection.modelClass()).toBe(ArtistModel);
   });
 
-  it("should save a new artist", async () => {
+  it('should save a new artist', async () => {
     setupLogin();
 
     const postPromise = PromiseWithResolvers();
     mockPostToURLString.mockReturnValue(postPromise.promise);
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/artist"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
 
     const collection = new ArtistCollection();
     const newArtistData = {
       id: 1,
-      name: "New Artist",
-      url: "https://xyzzy/artist/1",
+      name: 'New Artist',
+      url: 'https://xyzzy/artist/1',
     };
 
     const savePromise = collection.save(newArtistData);
@@ -135,17 +135,17 @@ describe("ArtistCollection", () => {
     const savedArtist = await savePromise;
 
     expect(savedArtist).toBeDefined();
-    expect(savedArtist.get("name")).toBe("New Artist");
+    expect(savedArtist.get('name')).toBe('New Artist');
     expect(ArtistModel.isModel(savedArtist)).toBeTruthy();
 
     expect(mockPostToURLString).toHaveBeenCalledTimes(1);
     expect(mockPostToURLString).toHaveBeenCalledWith(
-      "https://xyzzy/artist",
+      'https://xyzzy/artist',
       newArtistData,
     );
   });
 
-  it("should handle pagination for artist collection", async () => {
+  it('should handle pagination for artist collection', async () => {
     setupLogin();
 
     const getPromise1 = PromiseWithResolvers();
@@ -153,11 +153,11 @@ describe("ArtistCollection", () => {
     mockGetFromURLString
       .mockReturnValueOnce(getPromise1.promise)
       .mockReturnValueOnce(getPromise2.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL("https://xyzzy/artist"));
+    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
 
     const collection = new ArtistCollection();
 
-    const [fetchBody1, models1] = makeModels(10, { type: "artist" });
+    const [fetchBody1, models1] = makeModels(10, { type: 'artist' });
     getPromise1.resolve(fetchBody1);
     await collection.ready();
 
@@ -165,7 +165,7 @@ describe("ArtistCollection", () => {
 
     const fetchPromise2 = collection.fetchNextPage();
     const [fetchBody2, models2] = makeModels(10, {
-      type: "artist",
+      type: 'artist',
       offset: 10,
       limit: 10,
     });
