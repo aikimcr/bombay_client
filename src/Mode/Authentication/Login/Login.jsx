@@ -8,15 +8,14 @@ import {
   PasswordInput,
   TextInput,
 } from "../../../Components";
+import { useRouteManager } from "../../../Hooks/useRouteManager";
 
 import "./Login.scss";
-import { useRouteManager } from "../../../Hooks/useRouteManager";
 
 export const Login = () => {
   const routeManager = useRouteManager();
 
-  const { loggedIn, setLoggedIn, showLoginForm } =
-    useContext(BombayLoginContext);
+  const { loggedIn, setLoggedIn } = useContext(BombayLoginContext);
 
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
@@ -28,13 +27,15 @@ export const Login = () => {
   const doLogin = async (data) => {
     const { username, password } = data;
 
-    await login(username, password).catch((err) => {
+    try {
+      await login(username, password);
+    } catch (err) {
       if (err.status === 401) {
         setError("Username or password is incorrect.");
       } else {
         setError(`${err.status}: ${err.message}`);
       }
-    });
+    }
 
     const loginOkay = await loginStatus();
     setLoggedIn(loginOkay);
@@ -45,8 +46,11 @@ export const Login = () => {
   };
 
   const handleReset = () => {
-    reset();
     setSubmitDisabled(true);
+    reset({
+      username: "",
+      password: "",
+    });
   };
 
   useEffect(() => {

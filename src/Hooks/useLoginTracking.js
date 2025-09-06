@@ -11,7 +11,7 @@ function toMilliseconds(minutes) {
   return minutes * 60 * 1000;
 }
 
-export function useLoginTracking() {
+export const useLoginTracking = () => {
   const [loginState, setLoginState] = useState(false);
   const [activitySeen, setActivitySeen] = useState(true);
 
@@ -112,6 +112,6 @@ export function useLoginTracking() {
   }, [checkLoginState]);
 
   return [loginState, setLoginState];
-}
+};
 
 export default useLoginTracking;

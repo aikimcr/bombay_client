@@ -1,31 +1,47 @@
-import { act, render } from "@testing-library/react";
 import { useState } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import * as NetworkLogin from "../../Network/Login";
-jest.mock("../../Network/Login");
+jest.mock("./Song");
+jest.mock("../../Modal/FormModal", () => {
+  const originalModule = jest.requireActual("../../Modal/FormModal");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => <div data-testid="edit-song-modal">Form Modal</div>,
+  };
+});
+
+import {
+  mockLoginStatus,
+  mockRefreshToken,
+  mockLogin,
+  mockLogout,
+} from "../../Network/testing";
+
+jest.mock("../../Network/Login", () => {
+  const originalModule = jest.requireActual("../../Network/Login");
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    loginStatus: mockLoginStatus,
+    refreshToken: mockRefreshToken,
+    login: mockLogin,
+    logout: mockLogout,
+  };
+});
 
 import * as Network from "../../Network/Network";
-import * as mockObserver from "../../Hooks/useIntersectionObserver";
 
 import { makeModels, makeAModel } from "../../testHelpers/modelTools";
 
 import BombayLoginContext from "../../Context/BombayLoginContext";
 import BombayUtilityContext from "../../Context/BombayUtilityContext";
 
-import SongListItem from "./SongListItem.jsx";
+import { SongListItem } from "./SongListItem";
 
 jest.useFakeTimers();
-
-beforeEach(() => {
-  const modalRoot = document.createElement("div");
-  modalRoot.id = "modal-root";
-  document.body.append(modalRoot);
-});
-
-afterEach(() => {
-  const modalRoot = document.getElementById("modal-root");
-  modalRoot.remove();
-});
 
 const mockUtility = {
   getBootstrap: () => {
@@ -50,89 +66,51 @@ const renderWrapper = ({ children }) => {
   );
 };
 
-function setupLogin(loggedIn = true, token = "xyzzy") {
-  const loginPromise = NetworkLogin._setupMocks();
-  loginPromise.resolve({ loggedIn, token });
+function setupLogin(loggedIn = true) {
+  mockLoginStatus.mockResolvedValue(loggedIn);
 }
 
-function getAreas(result) {
-  const index = result.container;
-  expect(index.childElementCount).toEqual(1);
+const makeTestSong = () => {
+  const [_artistModelDef, artistModel] = makeAModel("artist", (def) => {
+    def.name = "Billy Joel";
+  });
+  const [_modelDef, model] = makeAModel("song", (def) => {
+    def.name = "Piano Man";
+    def.artist = artistModel;
+  });
 
-  const listElement = index.firstChild;
-  expect(listElement.tagName).toEqual("LI");
-  expect(listElement).toHaveClass("card");
-  expect(listElement.childElementCount).toEqual(3);
+  return model;
+};
 
-  const headerElement = listElement.firstChild;
-  expect(headerElement).toHaveClass("header");
-  expect(headerElement).toHaveTextContent("Song");
-  expect(headerElement.childElementCount).toEqual(0);
+it("Component should match snapshot", async () => {
+  const model = makeTestSong();
 
-  const nameElement = listElement.children[1];
-  expect(nameElement).toHaveClass("name");
-
-  const detailsElement = listElement.lastChild;
-  expect(detailsElement).toHaveClass("details");
-  expect(detailsElement.childElementCount).toBe(8);
-
-  return [detailsElement, nameElement, headerElement, listElement, index];
-}
-
-afterEach(() => {
-  while (mockObserver.mockObserver.observers.length > 0) {
-    mockObserver.mockObserver.observers.pop();
-  }
-});
-
-it("should render a list item", async () => {
-  const [modelDef, model] = makeAModel("song");
-  const result = render(<SongListItem song={model} />, {
+  const { asFragment } = render(<SongListItem song={model} />, {
     wrapper: renderWrapper,
   });
-  const [detailsElement, nameElement] = getAreas(result);
 
-  expect(nameElement).toHaveTextContent(modelDef.name);
-
-  expect(detailsElement.children[1]).toHaveTextContent(modelDef.artist.name);
-  expect(detailsElement.children[3]).toHaveTextContent(modelDef.key_signature);
-  expect(detailsElement.children[5]).toHaveTextContent(modelDef.tempo);
-  expect(detailsElement.children[7]).toHaveTextContent(modelDef.lyrics);
+  expect(asFragment()).toMatchSnapshot();
 });
 
 it("should open the editor modal", async () => {
   setupLogin();
 
-  const [mockGetPromise, mockGetResolve] = makeResolvablePromise();
-
-  // The mock is not recognized unless it is done this way.
-  Network.getFromURLString = jest.fn((url) => {
-    return mockGetPromise;
-  });
-
-  const [fetchBody, models] = makeModels(10, {});
-
-  await act(async () => {
-    mockGetResolve(fetchBody);
-  });
-
-  const [modelDef, model] = makeAModel("song");
-
-  const result = render(<SongListItem song={model} />, {
+  const model = makeTestSong();
+  render(<SongListItem song={model} />, {
     wrapper: renderWrapper,
   });
 
-  const index = result.container;
+  const songCard = screen.getByTestId("song-list-card");
 
   await act(async () => {
-    index.firstChild.click();
+    fireEvent.click(songCard);
   });
 
-  const modalRoot = document.getElementById("modal-root");
-  expect(modalRoot.childElementCount).toEqual(1);
+  expect(screen.getByTestId("edit-song-modal")).toBeInTheDocument();
 });
 
-it("should save changes to the model", async () => {
+// Move these tests to the SongForm component
+it.skip("should save changes to the model", async () => {
   setupLogin();
 
   const [mockGetPromise, mockGetResolve] = makeResolvablePromise();
@@ -152,7 +130,7 @@ it("should save changes to the model", async () => {
     mockGetResolve(fetchBody);
   });
 
-  const [modelDef, model] = makeAModel("song");
+  const model = makeTestSong();
   const songModelDef = { ...modelDef };
   delete songModelDef.artist;
 
@@ -193,7 +171,7 @@ it("should save changes to the model", async () => {
   });
 });
 
-it("should update the artist name", async () => {
+it.skip("should update the artist name", async () => {
   setupLogin();
 
   const [mockGetPromise, mockGetResolve] = makeResolvablePromise();

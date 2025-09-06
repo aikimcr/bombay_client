@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test App Compoment matches snapshopt 1`] = `
+<DocumentFragment>
+  <div
+    class="App"
+    data-testid="app"
+  >
+    <div
+      class="app-layout"
+    >
+      <header
+        class="app-layout__header"
+      >
+        <div
+          class="header-layout"
+        >
+          <header
+            class="header-layout__title"
+          >
+            Bombay Band Manager
+          </header>
+          <div
+            class="header-layout__content"
+          />
+          <footer
+            class="header-layout__footer"
+          >
+            <div
+              data-testid="mock-login-status"
+            >
+              Login
+            </div>
+          </footer>
+        </div>
+      </header>
+      <div
+        class="app-layout__content"
+      >
+        <div
+          class="top"
+        >
+          <h1
+            class="top__title"
+          >
+            Welcome to the Bombay Band Manager System
+          </h1>
+          <div
+            class="top__content"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

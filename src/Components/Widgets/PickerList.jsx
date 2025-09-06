@@ -2,9 +2,9 @@ import { createRef, useContext } from "react";
 import PropTypes from "prop-types";
 
 import BombayLoginContext from "../../Context/BombayLoginContext";
-import useModelCollection from "../../Hooks/useModelCollection";
+import { useModelCollection } from "../../Hooks/useModelCollection";
 
-function PickerList({ pickModel, isOpen, collectionClass }) {
+export function PickerList({ pickModel, isOpen, collectionClass }) {
   const topRef = createRef();
 
   const loginState = useContext(BombayLoginContext);
@@ -23,16 +23,17 @@ function PickerList({ pickModel, isOpen, collectionClass }) {
   if (!isOpen) return null;
 
   return (
-    <div className="picker-component">
+    <div className="picker-component" data-testid="picker-component">
       <div className="list-container" ref={topRef}>
         <ul className="picker-list">
-          {listCollection?.current == null
+          {!listCollection
             ? ""
-            : listCollection.current.map((model) => {
+            : listCollection.map((model) => {
                 const key = `mode-list-${model.get("id")}`;
                 return (
                   <li
                     className="picker-item"
+                    data-testid="picker-item"
                     key={key}
                     data-model-id={model.get("id")}
                     onClick={(evt) => {

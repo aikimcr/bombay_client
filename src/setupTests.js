@@ -2,6 +2,7 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
+import { expect, jest, test } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -11,21 +12,12 @@ global.TextDecoder = TextDecoder;
 
 import { useState } from "react";
 
-import * as Network from "./Network/Network";
-jest.mock("./Network/Network");
-
 import useIntersectionObserver, * as mockObserver from "./Hooks/useIntersectionObserver";
 jest.mock("./Hooks/useIntersectionObserver");
 
-globalThis.makeResolvablePromise = function () {
-  let resolver;
-  let rejecter;
-  let promise = new Promise((resolve, reject) => {
-    resolver = resolve;
-    rejecter = reject;
-  });
-
-  return [promise, resolver, rejecter];
+globalThis.PromiseWithResolvers = () => {
+  // @ts-expect-error Jest/Typescript stupidity with Promise.
+  return Promise.withResolvers();
 };
 
 globalThis.toggleLogin = function () {

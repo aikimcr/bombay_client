@@ -51,15 +51,21 @@ export function makeAModel(tableName = "table1", fieldsCallback) {
       def.key_signature = "C";
       def.tempo = 120;
       def.lyrics = "O Solo Mio! The troubles I have seen";
-      const [artist] = makeAModel("artist");
-      def.artist_id = artist.id;
-      def.artist = artist;
+
+      if (def.artist) {
+        def.artist_id = def.artist.id;
+      } else {
+        const [artist] = makeAModel("artist");
+        def.artist_id = artist.id;
+        def.artist = artist;
+      }
       break;
 
     default:
   }
 
   def.url = Network.buildURL({ path: `/${tableName}/${def.id}` });
+
   return [def, modelClass.from(def)];
 }
 

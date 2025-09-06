@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`LoginStatusDisplay when logged in should show the logout button 1`] = `[Function]`;
+
+exports[`LoginStatusDisplay when logged out should show the login button 1`] = `[Function]`;

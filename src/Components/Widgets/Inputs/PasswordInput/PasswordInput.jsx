@@ -27,14 +27,14 @@ export const PasswordInput = ({ id, className, ...rest }) => {
           className="password-input__eye password-input__open-eye"
           onClick={toggleShowPassword}
         >
-          <i class="fa-solid fa-eye"></i>
+          <i className="fa-solid fa-eye"></i>
         </button>
       ) : (
         <button
           className="password-input__eye password-input__closed-eye"
           onClick={toggleShowPassword}
         >
-          <i class="fa-solid fa-eye-slash"></i>
+          <i className="fa-solid fa-eye-slash"></i>
         </button>
       )}
     </>

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "lib": [
+      "dom",
+      "es2020",
+      "es2021",
+      "es2022",
+      "ESNext",
+      "ESNext.Promise"
+    ],
+    "target": "ESNext",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "typeRoots": [
+      "chrome",
+      "./types",
+      "./node_modules/@types"
+    ]
+  }
+}

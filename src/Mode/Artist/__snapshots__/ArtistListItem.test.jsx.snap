@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Component should match snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="card"
+    data-testid="artist-list-card"
+  >
+    <div
+      class="header"
+    >
+      Artist
+    </div>
+    <div
+      class="name"
+    >
+      Alessia Koelpin
+    </div>
+    <div
+      class="details"
+    />
+  </li>
+  <div
+    data-testid="edit-artist-modal"
+  >
+    Form Modal
+  </div>
+</DocumentFragment>
+`;

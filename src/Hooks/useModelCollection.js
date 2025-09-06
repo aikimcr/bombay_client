@@ -1,11 +1,14 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 
+import BombayLoginContext from "../Context/BombayLoginContext";
 import useIntersectionObserver from "./useIntersectionObserver";
 
-function useModelCollection({ CollectionClass, topRef, loginState }) {
-  const { loggedIn } = loginState;
+export const useModelCollection = ({ CollectionClass, topRef }) => {
+  const { loggedIn } = useContext(BombayLoginContext);
+  const [shouldPage, setShouldPage] = useState(false);
+  const [loading, setLoading] = useState(loggedIn);
 
-  const collection = useRef(null);
+  const [collection, setCollection] = useState(null);
   const observer = useIntersectionObserver(topRef, (entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -19,30 +22,29 @@ function useModelCollection({ CollectionClass, topRef, loginState }) {
     });
   });
 
-  const [shouldPage, setShouldPage] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const refreshCollection = useCallback(() => {
-    // console.count('refresh');
+  const refreshCollection = async () => {
+    // console.count(`refresh, ${loggedIn}`);
     if (!loggedIn) {
-      collection.current = null;
+      setCollection(null);
       return;
     }
 
     setLoading(true);
 
-    collection.current = new CollectionClass();
-    collection.current.ready().then(() => {
-      setLoading(false);
-    });
-  }, [loggedIn, CollectionClass]);
+    const newCollection = new CollectionClass();
+    await newCollection.ready();
+    // console.count(`newCollection ready: ${newCollection}`);
+
+    setLoading(false);
+    setCollection(newCollection);
+  };
 
   useEffect(() => {
-    // console.count('refresh changed');
-    if (collection.current == null) {
+    // console.count(`mount hook, ${collection}, ${loading}`);
+    if (collection == null) {
       refreshCollection();
     }
-  }, [refreshCollection]);
+  }, []);
 
   useEffect(() => {
     // console.count(`shouldPage: ${shouldPage}, loading: ${loading}`);
@@ -55,10 +57,10 @@ function useModelCollection({ CollectionClass, topRef, loginState }) {
 
     setShouldPage(false);
 
-    if (collection.current.hasNextPage()) {
+    if (collection.hasNextPage()) {
       setLoading(true);
 
-      collection.current.fetchNextPage().then(() => {
+      collection.fetchNextPage().then(() => {
         setLoading(false);
       });
     }
@@ -70,7 +72,7 @@ function useModelCollection({ CollectionClass, topRef, loginState }) {
       return;
     }
 
-    if (collection.current && collection.current.hasNextPage()) {
+    if (collection && collection.hasNextPage()) {
       const myElement = topRef.current?.querySelector("li:last-child");
 
       if (myElement) {
@@ -80,14 +82,23 @@ function useModelCollection({ CollectionClass, topRef, loginState }) {
   }, [loading, observer, topRef]);
 
   useEffect(() => {
-    // console.count(`loggedIn: ${loggedIn}`);
-    if (loggedIn && collection.current === null) {
-      refreshCollection();
+    // console.count(`loggedIn change, ${loggedIn}, ${collection} ${loading}`);
+    if (loading) {
+      return;
     }
-  }, [loggedIn, refreshCollection]);
+
+    if (loggedIn && collection == null) {
+      refreshCollection();
+      return;
+    }
+
+    if (!loggedIn) {
+      setCollection(null);
+    }
+  }, [loggedIn]);
 
   // console.log('return collection', collection);
   return [collection, refreshCollection];
-}
+};
 
 export default useModelCollection;

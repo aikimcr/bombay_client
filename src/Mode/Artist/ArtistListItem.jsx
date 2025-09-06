@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import "./ArtistList.scss";
 
-import Artist from "./Artist.jsx";
+import { Artist } from "./Artist.jsx";
 import FormModal from "../../Modal/FormModal.jsx";
 
 function ArtistListItem(props) {
@@ -16,7 +16,11 @@ function ArtistListItem(props) {
 
   return (
     <React.Fragment>
-      <li className="card" onClick={() => setShowEdit(true)}>
+      <li
+        className="card"
+        data-testid="artist-list-card"
+        onClick={() => setShowEdit(true)}
+      >
         <div className="header">Artist</div>
         <div className="name">{displayName}</div>
         <div className="details"></div>

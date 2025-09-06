@@ -104,7 +104,7 @@ export function buildURL(args = {}) {
   return result;
 }
 
-export function prepareURLFromArgs(path, query) {
+export const prepareURLFromArgs = (path, query) => {
   const requestUrl = new URL(buildURL());
   requestUrl.pathname = normalizeAndJoinPath(serverBasePath, path);
 
@@ -113,7 +113,7 @@ export function prepareURLFromArgs(path, query) {
   }
 
   return requestUrl;
-}
+};
 
 async function decodeResponse(response) {
   if (response.ok) {

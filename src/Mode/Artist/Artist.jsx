@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 import OldLabeledInput from "../../Components/Widgets/OldLabeledInput.jsx";
 
-function Artist(props) {
+export const Artist = (props) => {
   return (
     <OldLabeledInput
       modelName="artist"
@@ -11,7 +11,7 @@ function Artist(props) {
       model={props.artist}
     />
   );
-}
+};
 
 Artist.propTypes = {
   artist: PropTypes.object,
