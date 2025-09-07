@@ -5,11 +5,7 @@
 // - Allow changing of field values.
 import {
   mockGetFromURLString,
-  mockLogin,
-  mockLoginStatus,
-  mockLogout,
   mockPutToURLString,
-  mockRefreshToken,
   mockPrepareURLFromArgs,
   mockPostToURLString,
   mockServerProtocol,
@@ -17,19 +13,6 @@ import {
   mockServerBasePath,
   mockServerPort,
 } from '../Network/testing';
-
-jest.mock('../Network/Login', () => {
-  const originalModule = jest.requireActual('../Network/Login');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginStatus: mockLoginStatus,
-    refreshToken: mockRefreshToken,
-    login: mockLogin,
-    logout: mockLogout,
-  };
-});
 
 jest.mock('../Network/Network', () => {
   const originalModule = jest.requireActual('../Network/Network');
@@ -50,122 +33,226 @@ jest.mock('../Network/Network', () => {
 
 import * as Network from '../Network/Network';
 
-import { makeAModel } from '../testHelpers/modelTools';
-
-import ModelBase from './ModelBase';
-
-function setupLogin(loggedIn = true) {
-  mockLoginStatus.mockResolvedValue(loggedIn);
-}
+import {
+  setupTestModelOneFetch,
+  TestCollectionOneURL,
+  TestModelOne,
+  TestModelOneData,
+  TestUrlWithId,
+} from './testing';
 
 describe('ModelBase', () => {
-  it('should instantiate a model', async () => {
-    setupLogin();
-    const model = new ModelBase(null, {
-      id: 119,
-      name: 'xyzzy',
+  describe('Basic creation', () => {
+    it('should instantiate a model', async () => {
+      const def: TestModelOneData = {
+        id: 119,
+        name: 'xyzzy',
+        description:
+          'Est dolore commodo ut aliquip nostrud dolor nulla reprehenderit laboris.',
+      };
+
+      const model = new TestModelOne({
+        data: def,
+      });
+
+      expect(TestModelOne.isModel(model)).toBeTruthy();
+      expect(model.url).toBeUndefined;
+      expect(model.id).toBeUndefined;
+      expect(model.name).toBe('xyzzy');
+      expect(model.description).toBe(
+        'Est dolore commodo ut aliquip nostrud dolor nulla reprehenderit laboris.',
+      );
     });
 
-    expect(ModelBase.isModel(model)).toBeTruthy();
-    expect(model.get('id')).toBe(119);
-    expect(model.get('name')).toBe('xyzzy');
+    it('should instantiate a model keeping the id', async () => {
+      const model = new TestModelOne({
+        data: {
+          id: 119,
+          name: 'xyzzy',
+          description:
+            'Laboris nulla ut ut eu et magna velit Lorem cupidatat incididunt Lorem et.',
+        },
+        keepId: true,
+      });
 
-    // Method under test must be wrapped in a function or the throw is not caught.
-    expect(() => model.get('shoesize')).toThrow('No field "shoesize" is set');
-    model.set('shoesize', 36);
-    expect(model.get('shoesize')).toBe(36);
-  });
-
-  it('should create a model from a definition', async () => {
-    setupLogin();
-    // const { resolve } = Network._setupMocks();
-    const model = ModelBase.from({
-      id: 63,
-      name: 'Plover',
+      expect(TestModelOne.isModel(model)).toBeTruthy();
+      expect(model.url).toBe(TestUrlWithId(TestCollectionOneURL, 119));
+      expect(model.id).toBe(119);
+      expect(model.name).toBe('xyzzy');
+      expect(model.description).toBe(
+        'Laboris nulla ut ut eu et magna velit Lorem cupidatat incididunt Lorem et.',
+      );
     });
 
-    expect(ModelBase.isModel(model)).toBeTruthy();
-    expect(model.get('id')).toBe(63);
-    expect(model.get('name')).toBe('Plover');
-  });
+    it('should create an empty model', async () => {
+      const model = new TestModelOne({});
 
-  it('should fetch a model', async () => {
-    setupLogin();
-
-    const getPromise = PromiseWithResolvers();
-    mockGetFromURLString.mockReturnValueOnce(getPromise.promise);
-
-    const [fetchBody, fetchModel] = makeAModel();
-
-    const model = new ModelBase(fetchBody.url);
-
-    const fetchPromise = model.ready();
-    getPromise.resolve(fetchBody);
-    const fetchDef = await fetchPromise;
-
-    expect(model.toJSON()).toEqual(fetchBody);
-    expect(model.toJSON()).toEqual(fetchModel.toJSON());
-    expect(fetchDef).toEqual(fetchBody);
-
-    expect(Network.getFromURLString).toHaveBeenCalledTimes(1);
-    expect(Network.getFromURLString).toHaveBeenCalledWith(fetchBody.url);
-  });
-
-  it('should save changes to the model', async () => {
-    setupLogin();
-
-    const putPromise = PromiseWithResolvers();
-    mockPutToURLString.mockReturnValue(putPromise.promise);
-
-    const [oldBody] = makeAModel();
-    const model = ModelBase.from(oldBody);
-    expect(model.toJSON()).toEqual(oldBody);
-
-    const newName = 'Updated Name';
-    model.set('name', newName);
-    expect(model.toJSON()).not.toEqual(oldBody);
-    expect(model.get('name')).toEqual(newName);
-
-    const savePromise = model.save();
-    putPromise.resolve({
-      ...oldBody,
-      name: newName,
+      expect(TestModelOne.isModel(model)).toBeTruthy();
+      expect(model.url).toBeUndefined;
+      expect(model.id).toBeUndefined();
+      expect(model.name).toBeUndefined();
+      expect(model.description).toBeUndefined();
     });
-    const newBody = await savePromise;
-    expect(newBody).not.toEqual(oldBody);
-    expect(newBody.name).toEqual(newName);
 
-    expect(mockPutToURLString).toHaveBeenCalledTimes(1);
-    expect(mockPutToURLString).toHaveBeenCalledWith(oldBody.url, {
-      ...oldBody,
-      name: newName,
+    it('should create a model from a definition', async () => {
+      const model = TestModelOne.from<TestModelOneData, TestModelOne>({
+        id: 63,
+        name: 'Plover',
+        description:
+          'Voluptate proident ad tempor fugiat pariatur sunt exercitation id non.',
+      });
+
+      expect(TestModelOne.isModel(model)).toBeTruthy();
+      expect(model.url).toBeUndefined;
+      expect(model.id).toBeUndefined;
+      expect(model.name).toBe('Plover');
+      expect(model.description).toBe(
+        'Voluptate proident ad tempor fugiat pariatur sunt exercitation id non.',
+      );
+    });
+
+    it('should create a model from a definition keeping the id', async () => {
+      const model = TestModelOne.from<TestModelOneData, TestModelOne>(
+        {
+          id: 63,
+          name: 'Plover',
+          description: 'Dolor occaecat exercitation ipsum occaecat.',
+        },
+        { keepId: true },
+      );
+
+      expect(TestModelOne.isModel(model)).toBeTruthy();
+      expect(model.url).toBe(TestUrlWithId(TestCollectionOneURL, 63));
+      expect(model.id).toBe(63);
+      expect(model.name).toBe('Plover');
+      expect(model.description).toBe(
+        'Dolor occaecat exercitation ipsum occaecat.',
+      );
+    });
+
+    it('should fetch a model', async () => {
+      const [getPromise, fetchBody] = setupTestModelOneFetch();
+      const model = new TestModelOne({ id: fetchBody.id });
+
+      const fetchPromise = model.ready;
+      getPromise.resolve(fetchBody);
+      const fetchDef = await fetchPromise;
+
+      expect(model.id).toBe(1);
+      expect(model.url).toBe(TestUrlWithId(TestCollectionOneURL, 1));
+      expect(model.name).toBe(fetchBody.name);
+      expect(model.description).toBe(fetchBody.description);
+
+      expect(model.toJSON()).toEqual(fetchBody);
+      expect(fetchDef).toEqual(fetchBody);
+
+      expect(Network.getFromURLString).toHaveBeenCalledTimes(1);
+      expect(Network.getFromURLString).toHaveBeenCalledWith(model.url);
+    });
+
+    it('should clone a model', async () => {
+      const [getPromise, fetchBody] = setupTestModelOneFetch();
+      const model = new TestModelOne({ id: fetchBody.id });
+
+      const fetchPromise = model.ready;
+      getPromise.resolve(fetchBody);
+      await fetchPromise;
+
+      expect(model.id).toBeDefined();
+      expect(model.id).toBeGreaterThan(0);
+
+      const newModel = TestModelOne.from<TestModelOneData, TestModelOne>(model);
+
+      expect(TestModelOne.isModel(newModel)).toBeTruthy();
+      expect(newModel.url).toBeUndefined();
+      expect(newModel.id).toBeUndefined();
+      expect(newModel.name).toEqual(model.name);
+      expect(newModel.description).toBe(fetchBody.description);
     });
   });
 
-  // Test this, but this is really the wrong way to do this.
-  it('should add a reference model', async () => {
-    setupLogin();
+  describe('Saving data', () => {
+    it('Create and save a model', async () => {
+      const model = new TestModelOne({});
 
-    const [mainBody] = makeAModel('foobar');
-    const [refBody] = makeAModel('xyzzy');
+      const postPromise = PromiseWithResolvers();
+      mockPostToURLString.mockReturnValue(postPromise.promise);
 
-    const mainModel = ModelBase.from(mainBody);
-    // Url calculations should be idempotent
-    expect(mainModel.idUrl()).toEqual('http://localhost:2001/foobar/1');
+      model.name = 'xyzzy';
+      model.description = 'Officia dolor Lorem ex minim duis.';
 
-    const refModel = ModelBase.from(refBody);
-    expect(refModel.idUrl()).toEqual('http://localhost:2001/xyzzy/1');
+      expect(mockPostToURLString).not.toHaveBeenCalled();
+      expect(model.id).toBeUndefined();
+      expect(model.url).toBeUndefined();
+      expect(model.name).toBe('xyzzy');
+      expect(model.description).toBe('Officia dolor Lorem ex minim duis.');
 
-    expect(mainModel.idUrl()).not.toEqual(refModel.idUrl());
+      const newBodyPromise = model.save();
 
-    expect(() => {
-      mainModel.addRef('xyzzy', refModel);
-    }).not.toThrow();
+      postPromise.resolve({
+        id: 10,
+        name: 'xyzzy',
+        description: 'Officia dolor Lorem ex minim duis.',
+      });
 
-    expect(mainModel.getRef('http://localhost:2001/xyzzy/1').toJSON()).toEqual(
-      refModel.toJSON(),
-    );
-    expect(mainModel.xyzzy()).toBeDefined();
-    expect(mainModel.xyzzy().toJSON()).toEqual(refModel.toJSON());
+      await newBodyPromise;
+
+      expect(mockPostToURLString).toHaveBeenCalledTimes(1);
+      expect(model.id).toBe(10);
+      expect(model.url).toBe(TestUrlWithId(TestCollectionOneURL, 10));
+      expect(model.name).toBe('xyzzy');
+      expect(model.description).toBe('Officia dolor Lorem ex minim duis.');
+    });
+
+    it('should save changes to the model', async () => {
+      const [getPromise, fetchBody] = setupTestModelOneFetch();
+
+      const model = new TestModelOne({ id: fetchBody.id });
+
+      getPromise.resolve(fetchBody);
+
+      const fetchPromise = model.ready;
+      getPromise.resolve(fetchBody);
+      await fetchPromise;
+
+      const modelUrl = model.url;
+
+      expect(model.id).toEqual(fetchBody.id);
+      expect(model.name).toEqual(fetchBody.name);
+      expect(model.description).toEqual(fetchBody.description);
+
+      const putPromise = PromiseWithResolvers();
+      mockPutToURLString.mockReturnValue(putPromise.promise);
+
+      const newName = 'Updated Name';
+      model.name = newName;
+      expect(model.id).toEqual(fetchBody.id);
+      expect(model.name).toEqual(newName);
+      expect(model.description).toEqual(fetchBody.description);
+
+      const newBodyPromise = model.save();
+
+      putPromise.resolve({
+        ...fetchBody,
+        name: newName,
+      });
+
+      await newBodyPromise;
+
+      expect(model.id).toEqual(fetchBody.id);
+      expect(model.name).toEqual(newName);
+      expect(model.description).toEqual(fetchBody.description);
+
+      expect(mockPutToURLString).toHaveBeenCalledTimes(1);
+      expect(mockPutToURLString).toHaveBeenCalledWith(modelUrl, {
+        id: model.id,
+        name: newName,
+        description: model.description,
+      });
+    });
   });
+
+  // I need collections done before I can do this.
+  // describe('References', () => {
+  //   it('should set up a refe
 });

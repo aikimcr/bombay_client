@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should match snapshot 1`] = `
 <DocumentFragment>
@@ -26,9 +26,7 @@ exports[`Component should match snapshot 1`] = `
       </div>
       <div
         class="text"
-      >
-        Billy Joel
-      </div>
+      />
       <div
         class="label"
       >
@@ -36,9 +34,7 @@ exports[`Component should match snapshot 1`] = `
       </div>
       <div
         class="text"
-      >
-        C
-      </div>
+      />
       <div
         class="label"
       >
@@ -46,9 +42,7 @@ exports[`Component should match snapshot 1`] = `
       </div>
       <div
         class="text"
-      >
-        120
-      </div>
+      />
       <div
         class="label"
       >
@@ -57,9 +51,7 @@ exports[`Component should match snapshot 1`] = `
       <div
         class="long-text"
       >
-        <pre>
-          O Solo Mio! The troubles I have seen
-        </pre>
+        <pre />
       </div>
     </div>
   </li>

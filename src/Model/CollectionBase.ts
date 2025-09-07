@@ -1,21 +1,15 @@
-import {
-  getFromURLString,
-  postToURLString,
-  prepareURLFromArgs,
-} from '../Network/Network';
-import { loginStatus } from '../Network/Login';
+import { buildURL, getFromURLString } from '../Network/Network';
 
-import ModelBase, { ModelData } from './ModelBase';
-import { forceLoginState } from '../Hooks/useLoginTracking';
+import { ModelBase, ModelDataBase } from './ModelBase';
 
 export interface CollectionOptions {
-  modelClass?: typeof ModelBase;
+  ModelBase?: typeof ModelBase;
   models?: ModelBase[];
   prevPage?: string | null;
   nextPage?: string | null;
 }
 
-export interface CollectionData {
+interface CollectionData<ModelData> {
   data: ModelData[];
   prevPage: string | null;
   nextPage: string | null;
@@ -28,91 +22,102 @@ export interface MergeOptions {
 
 export type QueryOptions = Record<string, string | number | symbol>;
 
-// Use a TypeScript class rather than just a module. This allows simpler derivation.
-export class CollectionBase {
+export interface CollectionBaseConstructorArgs<ModelData, ModelType> {
+  models?: ModelType[];
+  defs?: ModelData[];
+  tableName?: string;
+  fetch?: boolean;
+}
+export class CollectionBase<
+  ModelData extends ModelDataBase = ModelDataBase,
+  ModelType extends ModelBase = ModelBase,
+> {
   static isCollection(collection: unknown): collection is CollectionBase {
     return collection instanceof this;
   }
 
-  static buildUrl(
-    urlOrPath: string,
-    query: Record<string, QueryOptions> = {},
-  ): string {
-    try {
-      const url = new URL(urlOrPath);
-      for (const key in query) {
-        url.searchParams.set(key, query[key]);
-      }
-      return url.toString();
-    } catch (err) {
-      return prepareURLFromArgs(urlOrPath, query).toString();
-    }
-  }
+  readonly tableName: string = 'generic';
+  readonly maxModels = 1000; // Trim the model list if it gets longer than this.
 
-  #idUrl: string;
-  #modelClass: typeof ModelBase;
-  #models: ModelBase[] = [];
-  #prevPage?: string | null;
-  #nextPage?: string | null;
-  #readyPromise: Promise<ModelBase[]>;
-  #maxModels = 1000; // Trim the model list if it gets longer than this.
-  // #pages = [];
+  private _url: string;
+  private _readyPromise: Promise<ModelType[]>;
 
-  constructor(url: string, options: CollectionOptions = {}) {
-    this.#idUrl = this.constructor.buildUrl(url);
+  protected _models: ModelType[] = [];
+  protected _prevPage: string;
+  protected _nextPage: string;
 
-    this.#modelClass = options.modelClass ?? ModelBase;
+  constructor({
+    models = [],
+    defs = [],
+    tableName = 'generic',
+    fetch = false,
+  }: CollectionBaseConstructorArgs<ModelData, ModelType>) {
+    this.tableName = tableName;
 
-    if (options.models != null) {
-      this.#models = [...options.models];
-      this.#prevPage = options.prevPage;
-      this.#nextPage = options.nextPage;
-      this.#readyPromise = Promise.resolve(this.#models);
+    this._url = buildURL({ path: `/${this.tableName}` });
+
+    if (fetch) {
+      this._readyPromise = this.fetch(this._url);
+    } else if (models && models.length > 0) {
+      this._models = [...models];
+    } else if (defs && defs.length > 0) {
+      this._models = defs.map((def) => this.createAModelFromDef(def));
     } else {
-      this.#readyPromise = this.#fetch(this.#idUrl);
+      this._models = [];
     }
   }
 
-  idUrl(): string {
-    return this.#idUrl;
+  get url(): string {
+    return this._url;
   }
 
-  modelClass(): typeof ModelBase {
-    return this.#modelClass;
+  get models(): ModelType[] {
+    return [...this._models];
   }
 
-  models(): ModelBase[] {
-    return [...this.#models];
+  get length(): number {
+    return this._models.length;
   }
 
-  length(): number {
-    return this.#models.length;
+  get ready(): Promise<ModelType[]> {
+    return this._readyPromise;
   }
 
-  ready(): Promise<ModelBase[]> {
-    return this.#readyPromise;
+  get prevPage(): string {
+    return this._prevPage;
   }
 
-  add(model: ModelBase): ModelBase {
-    // const newModel = this.#modelClass.from(model);
-    // this.#models.push(newModel);
-    this.#models.push(model);
-    return model;
-    // return newModel;
+  get nextPage(): string {
+    return this._nextPage;
+  }
+
+  add(model: ModelType): ModelType {
+    const newModel = ModelBase.from<ModelData, ModelType>(model, {
+      keepId: true,
+    });
+    this._models.push(newModel);
+    this._models.push(model);
+    return newModel;
+  }
+
+  clear() {
+    this._models = [];
+    this._nextPage = undefined;
+    this._prevPage = undefined;
   }
 
   forEach(
-    callback: (model: ModelBase, index: number, list: ModelBase[]) => void,
+    callback: (model: ModelType, index: number, list: ModelType[]) => void,
   ): void {
-    return this.#models.forEach((model, index, list) => {
+    return this._models.forEach((model, index, list) => {
       return callback(model, index, list);
     });
   }
 
   map<T>(
-    callback: (model: ModelBase, index: number, list: ModelBase[]) => T,
+    callback: (model: ModelType, index: number, list: ModelType[]) => T,
   ): T[] {
-    return this.#models.map((model, index, list) => {
+    return this._models.map((model, index, list) => {
       return callback(model, index, list);
     });
   }
@@ -120,133 +125,98 @@ export class CollectionBase {
   reduce<T>(
     callback: (
       memo: T,
-      model: ModelBase,
+      model: ModelType,
       index: number,
-      list: ModelBase[],
+      list: ModelType[],
     ) => T,
     start: T,
   ): T {
-    return this.#models.reduce((memo, model, index, list) => {
+    return this._models.reduce((memo, model, index, list) => {
       return callback(memo, model, index, list);
     }, start);
   }
 
-  #mergeModels(
-    data: ModelData[],
-    { reset, append }: MergeOptions = {
-      reset: true,
-      append: true,
-    },
-  ): void {
-    if (reset) {
-      this.#models = [];
-    }
-
-    if (data && data.length > 0) {
-      const currentIds = this.#models.map((model) => model.get('id'));
-      const newModels = data
-        .filter((def) => !currentIds.includes(def.id))
-        .map((def) => this.#modelClass.from(def));
-
-      if (append) {
-        this.#models = [...this.#models, ...newModels].slice(-this.#maxModels);
-      } else {
-        this.#models = [...newModels, ...this.#models].slice(
-          0,
-          this.#maxModels,
-        );
-      }
-    }
+  protected createAModelFromDef(def: ModelData): ModelType {
+    return ModelBase.from<ModelData, ModelType>(def, { keepId: true });
   }
 
-  async #fetch(url: string, options?: MergeOptions): Promise<ModelBase[]> {
-    const loggedIn = await loginStatus();
-
-    if (!loggedIn) {
-      this.#models = [];
-      this.#prevPage = null;
-      this.#nextPage = null;
-      forceLoginState(false);
-      return this.#models;
-    }
+  protected async fetch(url: string): Promise<ModelType[]> {
+    const workUrl = new URL(url);
+    const offsetString = workUrl.searchParams.get('offset');
+    const limitString = workUrl.searchParams.get('limit');
 
     try {
       const body = await getFromURLString(url);
 
-      this.#mergeModels(body.data, options);
-      this.#prevPage = body.prevPage;
-      this.#nextPage = body.nextPage;
-      return this.#models;
-    } catch (err: Error) {
+      const newModels = body.data.map((def: ModelData) => {
+        return this.createAModelFromDef(def);
+      });
+
+      const offset = offsetString ? parseInt(offsetString) : 0;
+      const limit = limitString ? parseInt(limitString) : newModels.length;
+      const minimumLength = offset + limit;
+
+      if (this._models.length < minimumLength) {
+        this._models.length = minimumLength;
+      }
+
+      this._models.splice(offset, limit, ...newModels);
+      this._prevPage = body.prevPage;
+      this._nextPage = body.nextPage;
+      return this._models;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       // Logged out
       if (err.status === 401) {
-        this.#models = [];
-        this.#prevPage = null;
-        this.#nextPage = null;
-        forceLoginState(false);
-        return this.#models;
+        this._models = [];
+        this._prevPage = null;
+        this._nextPage = null;
+        return this._models;
       }
 
       // You just don't have permission to look at this.
       if (err.status === 403) {
-        this.#models = [];
+        this._models = [];
       } else if (err.status !== 404) {
         console.error(err.status, err.message);
       }
 
-      this.#prevPage = undefined;
-      this.#nextPage = undefined;
+      this._prevPage = undefined;
+      this._nextPage = undefined;
 
-      return Promise.resolve({
-        data: [],
-        prevPage: null,
-        nextPage: null,
-      });
+      return Promise.reject(err);
     }
   }
 
-  async save(modelDef: ModelData): Promise<ModelBase> {
-    const newDef = await postToURLString(this.#idUrl, modelDef);
-    const newModel = this.#modelClass.from(newDef);
-    return this.add(newModel);
-  }
-
-  hasNextPage(): boolean {
-    return !!this.#nextPage;
+  get hasNextPage(): boolean {
+    return !!this._nextPage;
   }
 
   async fetchNextPage(): Promise<ModelBase[]> {
-    if (this.#nextPage) {
-      await this.#fetch(this.#nextPage, {
-        reset: false,
-        append: true,
-      });
-    }
-
-    return this.#models;
+    const fetchUrl = this._nextPage || this._url;
+    this._readyPromise = this.fetch(fetchUrl);
+    await this._readyPromise;
+    return this._models;
   }
 
-  hasPrevPage(): boolean {
-    return !!this.#prevPage;
+  get hasPrevPage(): boolean {
+    return !!this._prevPage;
   }
 
   async fetchPrevPage(): Promise<ModelBase[]> {
-    if (this.#prevPage) {
-      await this.#fetch(this.#prevPage, {
-        reset: false,
-        append: false,
-      });
-    }
-
-    return this.#models;
+    const fetchUrl = this._prevPage || this._url;
+    this._readyPromise = this.fetch(fetchUrl);
+    await this._readyPromise;
+    return this._models;
   }
 
-  // Handy to have and also helps with testing
-  toJSON(): CollectionData {
+  // // Handy to have and also helps with testing
+  toJSON(): CollectionData<ModelData> {
     return {
-      data: this.#models.map((model) => model.toJSON()),
-      prevPage: this.#prevPage,
-      nextPage: this.#nextPage,
+      // @ts-expect-error Classes and types have issues
+      data: this._models.map((model) => model.toJSON()),
+      prevPage: this._prevPage,
+      nextPage: this._nextPage,
     };
   }
 
@@ -254,5 +224,3 @@ export class CollectionBase {
     return JSON.stringify(this.toJSON());
   }
 }
-
-export default CollectionBase;

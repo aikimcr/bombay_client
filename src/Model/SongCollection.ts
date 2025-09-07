@@ -1,13 +1,18 @@
-import CollectionBase, { CollectionOptions } from './CollectionBase';
-import SongModel from './SongModel';
+import {
+  CollectionBase,
+  CollectionBaseConstructorArgs,
+} from './CollectionBase';
+import { SongData, SongModel } from './SongModel';
 
-class SongCollection extends CollectionBase {
-  constructor(options: CollectionOptions = {}) {
-    super('/song', {
-      ...options,
-      modelClass: SongModel,
+export class SongCollection extends CollectionBase<SongData> {
+  constructor(args: CollectionBaseConstructorArgs<SongData, SongModel>) {
+    super({
+      ...args,
+      tableName: SongModel.TableName,
     });
   }
-}
 
-export default SongCollection;
+  protected createAModelFromDef(def: SongData): SongModel {
+    return  SongModel.from<SongData, SongModel>(def, { keepId: true });
+  }
+}

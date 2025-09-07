@@ -1,14 +1,16 @@
 {
-  "typescript.validate.enable": false,
+  "typescript.validate.enable": true,
   "javascript.validate.enable": true,
-  "typescript.preferences.includePackageJsonAutoImports": "off",
-  "typescript.suggest.autoImports": false,
-  "typescript.updateImportsOnFileMove.enabled": "never",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "prompt",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "files.associations": {
     "*.js": "javascript",
-    "*.jsx": "javascriptreact"
+    "*.jsx": "javascriptreact",
+    "*.ts": "typescript",
+    "*.tsx": "typescriptreact"
   },
-  "typescript.preferences.includePackageJsonAutoImports": "off",
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   }

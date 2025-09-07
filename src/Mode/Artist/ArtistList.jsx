@@ -4,7 +4,7 @@ import './ArtistList.scss';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
 
-import ArtistCollection from '../../Model/ArtistCollection';
+import { ArtistCollection } from '../../Model/ArtistCollection';
 
 import ArtistListItem from './ArtistListItem.jsx';
 import Artist from './Artist.jsx';
@@ -17,10 +17,10 @@ export const ArtistList = (props) => {
 
   const loginState = useContext(BombayLoginContext);
 
-  const [artistCollection, refreshCollection] = useModelCollection({
-    CollectionClass: ArtistCollection,
+  const [artistCollection] = useState(new ArtistCollection({}));
+  const { refreshCollection } = useModelCollection({
+    initialCollection: artistCollection,
     topRef,
-    loginState,
   });
 
   const [showAdd, setShowAdd] = useState(false);
@@ -55,7 +55,7 @@ export const ArtistList = (props) => {
             {artistCollection == null
               ? ''
               : artistCollection.map((artist) => {
-                  const key = `artist-list-${artist.get('id')}`;
+                  const key = `artist-list-${artist.id}`;
                   return <ArtistListItem className key={key} artist={artist} />;
                 })}
           </ul>

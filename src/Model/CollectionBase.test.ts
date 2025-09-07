@@ -12,31 +12,14 @@
 // - Be agnostic to the model type.
 import {
   mockGetFromURLString,
-  mockLogin,
-  mockLoginStatus,
-  mockLogout,
   mockPostToURLString,
   mockPrepareURLFromArgs,
   mockPutToURLString,
-  mockRefreshToken,
   mockServerBasePath,
   mockServerHost,
   mockServerPort,
   mockServerProtocol,
 } from '../Network/testing';
-
-jest.mock('../Network/Login', () => {
-  const originalModule = jest.requireActual('../Network/Login');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginStatus: mockLoginStatus,
-    refreshToken: mockRefreshToken,
-    login: mockLogin,
-    logout: mockLogout,
-  };
-});
 
 jest.mock('../Network/Network', () => {
   const originalModule = jest.requireActual('../Network/Network');
@@ -55,256 +38,391 @@ jest.mock('../Network/Network', () => {
   };
 });
 
-import { makeModels } from '../testHelpers/modelTools';
-
-import ModelBase from './ModelBase';
-import CollectionBase from './CollectionBase';
-
-const testToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
+import {
+  TestCollectionOne,
+  TestModelOne,
+  TestModelOneData,
+  setupTestCollectionOneFetch,
+  setupTestCollectionOneModels,
+  TestCollectionOneURL,
+  TestUrlWithOffsets,
+} from './testing';
 
 describe('CollectionBase', () => {
-  beforeEach(() => {
-    localStorage.setItem('jwttoken', testToken);
-  });
+  describe('Basic creation', () => {
+    it('Create and empty collection', async () => {
+      const collection = new TestCollectionOne({});
 
-  afterEach(() => {
-    localStorage.removeItem('jwttoken');
-  });
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(0);
+      expect(collection.models).toEqual([]);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toBeUndefined();
+    });
 
-  it('should fetch the first page', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
+    it('Create a collection from a list of models', async () => {
+      const [models] = setupTestCollectionOneModels();
 
-    const getPromise = PromiseWithResolvers();
-    mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
+      const collection = new TestCollectionOne({
+        models: models,
+      });
 
-    const collection = new CollectionBase('/table');
-    const [fetchBody, models] = makeModels(10);
-    getPromise.resolve(fetchBody);
-    await collection.ready();
-    expect(CollectionBase.isCollection(collection)).toBeTruthy();
-    expect(collection.models()).toEqual(models);
-  });
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.models).toEqual(models);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toBeUndefined();
+    });
 
-  // This logic is currently broken because of URL issues
-  it.skip('should instantiate with a set of models', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
+    it('should clear the collection', async () => {
+      const [models] = setupTestCollectionOneModels();
 
-    // In this case, paging may not be possible.
-    const collection = new CollectionBase('/table1', {
-      models: [
+      const collection = new TestCollectionOne({
+        models: models,
+      });
+
+      expect(collection.length).toEqual(models.length);
+      expect(collection.models).toEqual(models);
+
+      collection.clear();
+      expect(collection.length).toEqual(0);
+      expect(collection.models).toEqual([]);
+    });
+
+    it('should instantiate with a set of models', async () => {
+      // In this case, paging may not be possible.
+      const defs: TestModelOneData[] = [
         {
           id: 1,
           name: 'Herkimer P Jones',
+          description:
+            'Commodo sit reprehenderit est Lorem nulla magna irure minim irure tempor sit dolor est quis.',
         },
         {
           id: 2,
           name: 'Agathea S Reese',
+          description:
+            'Culpa aute sunt tempor proident sint sunt sit esse fugiat proident occaecat proident eu.',
         },
-      ],
+      ];
+      const collection = new TestCollectionOne({
+        defs,
+      });
+
+      const models = defs.map(
+        (def) =>
+          new TestModelOne({
+            data: def,
+            keepId: true,
+          }),
+      );
+
+      // The promise should already be resolved
+      await collection.ready;
+      expect(collection.length).toBe(2);
+      expect(collection.models).toEqual(models);
     });
 
-    // The promise should already be resolved
-    await collection.ready();
-    expect(collection.length()).toBe(2);
-    expect(collection.models()).toEqual([
-      new ModelBase(null, {
-        id: 1,
-        name: 'Herkimer P Jones',
-      }),
-      new ModelBase(null, {
-        id: 2,
-        name: 'Agathea S Reese',
-      }),
-    ]);
+    it('Should fetch a lonely page', async () => {
+      const [getPromise, _fetchBody, models, fetchDef] =
+        setupTestCollectionOneFetch();
+
+      const collection = new TestCollectionOne({
+        fetch: true,
+        tableName: 'table1',
+      });
+
+      getPromise.resolve(fetchDef);
+      await collection.ready;
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.models).toEqual(models);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toBeUndefined();
+    });
   });
 
-  it('should fetch another page', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
+  describe('Page Fetching', () => {
+    it('should fetch the first page', async () => {
+      const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
 
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise);
+      const collection = new TestCollectionOne({
+        fetch: true,
+      });
 
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
+      getPromise.resolve(fetchBody);
+      await collection.ready;
 
-    const collection = new CollectionBase('/table1');
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.models).toEqual(models);
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
 
-    const [fetchBody1, models1] = makeModels(10, {});
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
+      collection.clear();
 
-    const fetchPromise2 = collection.fetchNextPage();
-    const [fetchBody2, models2] = makeModels(10, {
-      offset: 10,
-      limit: 10,
+      expect(collection.length).toEqual(0);
+      expect(collection.models).toEqual([]);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.hasNextPage).toBeFalsy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
     });
-    getPromise2.resolve(fetchBody2);
 
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual(fetchModels2);
+    it('should fetch the first page if no next or prev page', async () => {
+      const [models1] = setupTestCollectionOneModels();
+
+      const collection = new TestCollectionOne({
+        models: models1,
+      });
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toBeUndefined();
+      expect(mockGetFromURLString).not.toHaveBeenCalled();
+
+      collection.clear();
+
+      expect(collection.length).toEqual(0);
+      expect(collection.models).toEqual([]);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toBeUndefined();
+
+      const [getPromiseNext, fetchBodyNext] = setupTestCollectionOneFetch();
+      const [getPromisePrev, fetchBodyPrev] = setupTestCollectionOneFetch();
+
+      const fetchPromiseNext = collection.fetchNextPage();
+      getPromiseNext.resolve(fetchBodyNext);
+      await fetchPromiseNext;
+
+      expect(collection.length).toEqual(10);
+      expect(collection.nextPage).toEqual(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
+      expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
+      expect(mockGetFromURLString).toHaveBeenCalledWith(TestCollectionOneURL);
+
+      collection.clear();
+
+      expect(collection.length).toEqual(0);
+      expect(collection.models).toEqual([]);
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.hasNextPage).toBeFalsy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
+
+      const fetchPromisePrev = collection.fetchPrevPage();
+      getPromisePrev.resolve(fetchBodyPrev);
+      await fetchPromisePrev;
+
+      expect(collection.length).toEqual(10);
+      expect(collection.nextPage).toEqual(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
+      expect(mockGetFromURLString).toHaveBeenCalledTimes(2);
+      expect(mockGetFromURLString).toHaveBeenCalledWith(TestCollectionOneURL);
+    });
+
+    it('should fetch next and previous page', async () => {
+      const [getPromise1, fetchBody1, models1] = setupTestCollectionOneFetch();
+      const [getPromise2, fetchBody2, models2] = setupTestCollectionOneFetch({
+        offset: 10,
+        limit: 10,
+      });
+      const [getPromise3, fetchBody3, models3] = setupTestCollectionOneFetch({
+        offset: 0,
+        limit: 10,
+      });
+
+      const collection = new TestCollectionOne({
+        fetch: true,
+        tableName: 'table1',
+      });
+
+      getPromise1.resolve(fetchBody1);
+      await collection.ready;
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.models).toEqual(models1);
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
+
+      const fetchPromise2 = collection.fetchNextPage();
+      getPromise2.resolve(fetchBody2);
+
+      const fetchModels2 = await fetchPromise2;
+
+      expect(fetchModels2).toEqual([...models1, ...models2]);
+      expect(collection.models).toEqual(fetchModels2);
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(20);
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 20, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.prevPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 0, 10),
+      );
+      expect(collection.hasPrevPage).toBeTruthy();
+
+      const fetchPromise3 = collection.fetchPrevPage();
+      getPromise3.resolve(fetchBody3);
+
+      const fetchModels3 = await fetchPromise3;
+
+      expect(fetchModels3).toEqual([...models3, ...models2]);
+      expect(collection.models).toEqual(fetchModels3);
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(20);
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasPrevPage).toBeFalsy();
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasPrevPage).toBeFalsy();
+    });
+
+    it('should fetch the first page if no pages have been fetched', async () => {
+      const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
+
+      const collection = new TestCollectionOne({});
+
+      expect(collection.nextPage).toBeUndefined();
+
+      const fetchPromise = collection.fetchNextPage();
+      getPromise.resolve(fetchBody);
+      await fetchPromise;
+
+      expect(collection.url).toEqual(TestCollectionOneURL);
+      expect(collection.length).toEqual(10);
+      expect(collection.models).toEqual(models);
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.prevPage).toBeUndefined();
+    });
+
+    it('should handle a 404 at the end of the last page gracefully', async () => {
+      const [getPromise1, fetchBody1, models1] = setupTestCollectionOneFetch();
+      const [getPromise2, fetchBody2, models2] = setupTestCollectionOneFetch({
+        offset: 10,
+        limit: 10,
+      });
+      const getPromise3 = PromiseWithResolvers();
+      mockGetFromURLString.mockReturnValueOnce(getPromise3.promise);
+
+      const collection = new TestCollectionOne({
+        fetch: true,
+      });
+
+      getPromise1.resolve(fetchBody1);
+      await collection.ready;
+
+      const fetchPromise2 = collection.fetchNextPage();
+
+      getPromise2.resolve(fetchBody2);
+
+      const fetchModels2 = await fetchPromise2;
+      expect(fetchModels2).toEqual([...models1, ...models2]);
+      expect(collection.models).toEqual(fetchModels2);
+
+      let fetchError = null;
+
+      try {
+        const fetchPromise3 = collection.fetchNextPage();
+        getPromise3.reject({
+          status: 404,
+          message: 'Not Found',
+        });
+        await fetchPromise3;
+      } catch (err) {
+        fetchError = err;
+      }
+      expect(fetchError).not.toBeNull();
+      expect(collection.models).toEqual(fetchModels2);
+    });
   });
 
-  it('should fetch the next page and not add duplicates', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
+  describe('utilities', () => {
+    it('should say it has a next page', async () => {
+      const [getPromise1, fetchBody1, models1] = setupTestCollectionOneFetch();
+      const [getPromise2, fetchBody2, models2] = setupTestCollectionOneFetch({
+        offset: 10,
+        limit: 10,
+      });
+      const [getPromise3, fetchBody3, models3] = setupTestCollectionOneFetch(
+        {
+          offset: 20,
+          limit: 10,
+        },
+        5,
+      );
 
-    // The situation this is testing is actually slightly pathological and
-    // not easy to handle. This strategy really only works if the data
-    // doesn't change often.
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise);
+      const collection = new TestCollectionOne({
+        fetch: true,
+      });
 
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
+      getPromise1.resolve(fetchBody1);
+      await collection.ready;
 
-    const collection = new CollectionBase('/table1');
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.prevPage).toBeUndefined();
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.hasPrevPage).toBeFalsy();
 
-    const [fetchBody1, models1] = makeModels(10, {});
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
+      const fetchPromise2 = collection.fetchNextPage();
+      getPromise2.resolve(fetchBody2);
 
-    const fetchPromise2 = collection.fetchNextPage();
-    const [fetchBody2, models2] = makeModels(8, {
-      offset: 10,
-      limit: 10,
+      const fetchModels2 = await fetchPromise2;
+
+      expect(fetchModels2).toEqual([...models1, ...models2]);
+      expect(collection.models).toEqual(fetchModels2);
+
+      expect(collection.nextPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 20, 10),
+      );
+      expect(collection.prevPage).toBe(
+        TestUrlWithOffsets(TestCollectionOneURL, 0, 10),
+      );
+      expect(collection.hasNextPage).toBeTruthy();
+      expect(collection.hasPrevPage).toBeTruthy();
+
+      const fetchPromise3 = collection.fetchNextPage();
+      getPromise3.resolve(fetchBody3);
+
+      const fetchModels3 = await fetchPromise3;
+
+      expect(fetchModels3).toEqual([...models1, ...models2, ...models3]);
+      expect(collection.models).toEqual(fetchModels3);
+
+      expect(collection.nextPage).toBeUndefined();
+      expect(collection.prevPage).toEqual(
+        TestUrlWithOffsets(TestCollectionOneURL, 10, 10),
+      );
+      expect(collection.hasNextPage).toBeFalsy();
+      expect(collection.hasPrevPage).toBeTruthy();
     });
-    fetchBody2.data.unshift(...fetchBody1.data.slice(-2));
-    models2.unshift(...models1.slice(-2));
-    getPromise2.resolve(fetchBody2);
-
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models1, ...models2.slice(2)]);
-    expect(collection.models()).toEqual(fetchModels2);
-  });
-
-  it('should handle a 404 at the end of the last page gracefully', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
-
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    const getPromise3 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise)
-      .mockReturnValueOnce(getPromise3.promise);
-
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
-
-    const collection = new CollectionBase('/table1');
-
-    const [fetchBody1, models1] = makeModels(10, {});
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
-
-    const fetchPromise2 = collection.fetchNextPage();
-
-    const [fetchBody2, models2] = makeModels(10, {
-      offset: 10,
-      limit: 10,
-    });
-    getPromise2.resolve(fetchBody2);
-
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual(fetchModels2);
-
-    const fetchPromise3 = collection.fetchNextPage();
-    getPromise3.reject({
-      status: 404,
-      message: 'Not Found',
-    });
-    const fetchModels3 = await fetchPromise3;
-    expect(fetchModels3).toEqual(fetchModels2);
-    expect(collection.models()).toEqual(fetchModels2);
-  });
-
-  it('should fetch the previous page', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
-
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise);
-
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
-
-    const collection = new CollectionBase('/table1');
-
-    const [fetchBody1, models1] = makeModels(10, {
-      offset: 30,
-      limit: 10,
-    });
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
-
-    const fetchPromise2 = collection.fetchPrevPage();
-
-    const [fetchBody2, models2] = makeModels(10, {
-      offset: 20,
-      limit: 10,
-    });
-    getPromise2.resolve(fetchBody2);
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models2, ...models1]);
-    expect(collection.models()).toEqual(fetchModels2);
-  });
-
-  it.skip('should fetch the previous page and not add duplicates', async () => {
-    const loginPromise = PromiseWithResolvers();
-    mockLoginStatus.mockReturnValue(loginPromise.promise);
-    loginPromise.resolve(true);
-
-    // The situation this is testing is actually slightly pathological and
-    // not easy to handle. This strategy really only works if the data
-    // doesn't change often.
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise);
-
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
-
-    const collection = new CollectionBase('/table1');
-
-    const [fetchBody1, models1] = makeModels(10, {
-      offset: 20,
-      limit: 10,
-    });
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
-
-    const fetchPromise2 = collection.fetchPrevPage();
-
-    const [fetchBody2, models2] = makeModels(8, {
-      offset: 10,
-      limit: 10,
-    });
-    fetchBody2.data.push(...fetchBody1.data.slice(-2));
-    models2.push(...models1.slice(-2));
-    getPromise2.resolve(fetchBody2);
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models2.slice(2), ...models1]);
-    expect(collection.models()).toEqual(fetchModels2);
   });
 
   // // Other test cases I should write once I consider how I should handle them:

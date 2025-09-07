@@ -1,6 +1,19 @@
-import ModelBase from './ModelBase';
+import {
+  ModelBase,
+  ModelBaseConstructorArgs,
+  ModelDataBase,
+} from './ModelBase';
+
+export type ArtistData = ModelDataBase;
 
 // At this point, there isn't anything to add.
-class ArtistModel extends ModelBase {}
+export class ArtistModel extends ModelBase<ArtistData> {
+  static readonly TableName = 'artist';
 
-export default ArtistModel;
+  constructor(args: ModelBaseConstructorArgs<ArtistData>) {
+    super({
+      ...args,
+      tableName: ArtistModel.TableName,
+    });
+  }
+}
