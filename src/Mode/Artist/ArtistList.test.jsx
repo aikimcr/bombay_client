@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router';
 
 import { act, render, screen } from '@testing-library/react';
@@ -320,8 +320,8 @@ it.skip('should add an artist', async () => {
 
   resolve(saveDef);
 
-  expect(Network.postToURLString).toBeCalledTimes(1);
-  expect(Network.postToURLString).toBeCalledWith(collectionUrl, {
+  expect(Network.postToURLString).toHaveBeenCalledTimes(1);
+  expect(Network.postToURLString).toHaveBeenCalledWith(collectionUrl, {
     name: 'Herkimer',
   });
 });

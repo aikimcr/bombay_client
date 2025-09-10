@@ -1,3 +1,4 @@
+import React from 'react';
 import ContentRoutes from './ContentRoutes.jsx';
 
 function Content(props) {

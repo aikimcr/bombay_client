@@ -1,5 +1,4 @@
-// Do I need speciall css?
-
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Modal from './Modal.jsx';

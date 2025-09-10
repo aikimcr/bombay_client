@@ -1,3 +1,4 @@
+import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 
 import Button from './Button.jsx';
@@ -23,7 +24,7 @@ it('should respond to click', async () => {
   const actualButton = screen.getByText(/xyzzy/);
   actualButton.click();
 
-  expect(clickHandler).toBeCalled();
+  expect(clickHandler).toHaveBeenCalled();
 });
 
 it('should ignore the click', async () => {
@@ -34,7 +35,7 @@ it('should ignore the click', async () => {
   const actualButton = screen.getByText(/xyzzy/);
   actualButton.click();
 
-  expect(clickHandler).not.toBeCalled();
+  expect(clickHandler).not.toHaveBeenCalled();
 });
 
 it('should respect classnames', async () => {

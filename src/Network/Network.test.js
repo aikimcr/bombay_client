@@ -107,8 +107,8 @@ describe('include the auth header', function () {
     });
     const data = await Network.getFromURLString(requestUrl.toString());
     expect(data).toEqual(mockJSON);
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl.toString(), {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl.toString(), {
       mode: 'cors',
       credentials: 'include',
       headers: {
@@ -146,8 +146,8 @@ describe('include the auth header', function () {
       name: 'xyzzy',
     });
 
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl, {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -179,8 +179,8 @@ describe('include the auth header', function () {
       url: requestUrl,
     });
 
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl, {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json',
@@ -206,8 +206,8 @@ describe('do not include the auth header', function () {
     });
     const data = await Network.getFromURLString(requestUrl.toString());
     expect(data).toEqual(mockJSON);
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl.toString(), {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl.toString(), {
       mode: 'cors',
       credentials: 'include',
       headers: {},
@@ -243,8 +243,8 @@ describe('do not include the auth header', function () {
       name: 'xyzzy',
     });
 
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl, {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -275,8 +275,8 @@ describe('do not include the auth header', function () {
       url: requestUrl,
     });
 
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith(requestUrl, {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(requestUrl, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json',

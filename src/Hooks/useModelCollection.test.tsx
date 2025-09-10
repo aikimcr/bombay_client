@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import { mockIntersectionObserver } from './testing';
@@ -79,10 +79,19 @@ import { ContextChanger } from '../testHelpers';
 
 interface TestAppProps {
   initialCollection: TestCollectionOne;
+  mockMountPromise: Promise<void>;
 }
 
-function TestApp({ initialCollection }: TestAppProps) {
+function TestApp({ initialCollection, mockMountPromise }: TestAppProps) {
   const { loggedIn } = useContext(BombayLoginContext);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await mockMountPromise;
+      setIsMounted(true);
+    })();
+  }, []);
 
   mockLoginStatus.mockImplementation(() => {
     return loggedIn;
@@ -92,6 +101,7 @@ function TestApp({ initialCollection }: TestAppProps) {
   useModelCollection({
     initialCollection,
     topRef,
+    isMounted,
   });
 
   return (
@@ -126,14 +136,62 @@ it('should start loading the collection', async () => {
   const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
   const collection = new TestCollectionOne({});
 
+  const mountPromise = PromiseWithResolvers();
+
   render(
     <ContextChanger initialLoggedIn={true}>
-      <TestApp initialCollection={collection} />
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
     </ContextChanger>,
   );
 
+  expect(mockIntersectionObserver.observers.length).toBe(0);
+
+  await act(async () => {
+    mountPromise.resolve();
+  });
+
+  expect(mockIntersectionObserver.observers.length).toBe(0);
+
   await act(async () => {
     getPromise.resolve(fetchBody);
+  });
+
+  expect(mockIntersectionObserver.observers.length).toBe(1);
+  expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
+  expect(mockGetFromURLString).toHaveReturnedWith(getPromise.promise);
+  expect(getPromise.promise).resolves.toEqual(fetchBody);
+
+  expect(screen.getAllByTestId('test-list-item')).toHaveLength(models.length);
+});
+
+it('should wait until the component is mounted to create observer', async () => {
+  const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
+  const collection = new TestCollectionOne({});
+
+  const mountPromise = PromiseWithResolvers();
+
+  render(
+    <ContextChanger initialLoggedIn={true}>
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
+    </ContextChanger>,
+  );
+
+  expect(mockIntersectionObserver.observers.length).toBe(0);
+
+  await act(async () => {
+    getPromise.resolve(fetchBody);
+  });
+
+  expect(mockIntersectionObserver.observers.length).toBe(0);
+
+  await act(async () => {
+    mountPromise.resolve();
   });
 
   expect(mockIntersectionObserver.observers.length).toBe(1);
@@ -152,11 +210,20 @@ it('should get the next page', async () => {
   });
   const collection = new TestCollectionOne({});
 
+  const mountPromise = PromiseWithResolvers();
+
   render(
     <ContextChanger initialLoggedIn={true}>
-      <TestApp initialCollection={collection} />
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
     </ContextChanger>,
   );
+
+  await act(async () => {
+    mountPromise.resolve();
+  });
 
   await act(async () => {
     getPromise1.resolve(fetchBody1);
@@ -216,11 +283,20 @@ it('should stop when it runs out of data', async () => {
     .mockReturnValueOnce(getPromise1.promise)
     .mockReturnValueOnce(getPromise2.promise);
 
+  const mountPromise = PromiseWithResolvers();
+
   render(
     <ContextChanger initialLoggedIn={true}>
-      <TestApp initialCollection={collection} />
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
     </ContextChanger>,
   );
+
+  await act(async () => {
+    mountPromise.resolve();
+  });
 
   await act(async () => {
     getPromise1.resolve(fetchBody1);
@@ -271,11 +347,20 @@ it('should stop when it runs out of data', async () => {
 it('should return a null collection when not logged in', async () => {
   const collection = new TestCollectionOne({});
 
+  const mountPromise = PromiseWithResolvers();
+
   render(
     <ContextChanger initialLoggedIn={false}>
-      <TestApp initialCollection={collection} />
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
     </ContextChanger>,
   );
+
+  await act(async () => {
+    mountPromise.resolve();
+  });
 
   expect(mockIntersectionObserver.observers.length).toBe(1);
   expect(mockGetFromURLString).toHaveBeenCalledTimes(0);
@@ -286,11 +371,20 @@ it('should load the collection on login', async () => {
   const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
   const collection = new TestCollectionOne({});
 
+  const mountPromise = PromiseWithResolvers();
+
   render(
     <ContextChanger initialLoggedIn={false}>
-      <TestApp initialCollection={collection} />
+      <TestApp
+        initialCollection={collection}
+        mockMountPromise={mountPromise.promise}
+      />
     </ContextChanger>,
   );
+
+  await act(async () => {
+    mountPromise.resolve();
+  });
 
   expect(mockIntersectionObserver.observers.length).toBe(1);
   expect(mockGetFromURLString).toHaveBeenCalledTimes(0);

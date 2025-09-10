@@ -1,4 +1,4 @@
-import { createRef, useContext, useState } from 'react';
+import React, { createRef, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
@@ -9,11 +9,17 @@ export function PickerList({ pickModel, isOpen, initialCollection }) {
 
   const loginState = useContext(BombayLoginContext);
 
+  const [isMounted, setIsMounted] = useState(false);
   const [listCollection] = useState(initialCollection);
   const { refreshCollection } = useModelCollection({
     initialCollection: listCollection,
     topRef,
+    isMounted,
   });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   function clickHandler(evt, model) {
     evt.preventDefault();

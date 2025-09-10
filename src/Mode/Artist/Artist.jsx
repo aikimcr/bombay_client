@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';

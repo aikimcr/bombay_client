@@ -3,6 +3,7 @@ module.exports = {
   resetMocks: true,
   resetModules: true,
   restoreMocks: false,
+  reporters: ['default'],
   collectCoverage: false,
   transform: {
     '^.+\\.[jt]sx?$': 'babel-jest',
@@ -18,4 +19,10 @@ module.exports = {
   testTimeout: 30000,
   moduleDirectories: ['node_modules'],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
+  testPathIgnorePatterns: [
+    '<rootDir>/dist/',
+    '<rootDir>/build/',
+    '<rootDir>/scripts/',
+    '<rootDir>/config/',
+  ],
 };

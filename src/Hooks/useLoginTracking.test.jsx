@@ -1,3 +1,4 @@
+import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import {
@@ -65,15 +66,15 @@ async function renderAndCheck(checkResolve = true) {
 
   const result = render(<TestApp />);
 
-  expect(mockLoginStatus).toBeCalledTimes(1);
-  expect(mockRefreshToken).not.toBeCalled();
+  expect(mockLoginStatus).toHaveBeenCalledTimes(1);
+  expect(mockRefreshToken).not.toHaveBeenCalled();
 
   await act(async () => {
     mockCheckLoginPromise.resolve(checkResolve);
   });
 
-  expect(mockLoginStatus).toBeCalledTimes(1);
-  expect(mockRefreshToken).not.toBeCalled();
+  expect(mockLoginStatus).toHaveBeenCalledTimes(1);
+  expect(mockRefreshToken).not.toHaveBeenCalled();
 
   return result;
 }
@@ -113,8 +114,8 @@ async function nextCheck(
     jest.advanceTimersByTime(loginAdvanceSeconds * 1000);
   });
 
-  expect(mockLoginStatus).toBeCalledTimes(loginStatusCalls);
-  expect(mockRefreshToken).toBeCalledTimes(refreshTokenCalls);
+  expect(mockLoginStatus).toHaveBeenCalledTimes(loginStatusCalls);
+  expect(mockRefreshToken).toHaveBeenCalledTimes(refreshTokenCalls);
 
   if (loginFirst) {
     await act(async () => {
@@ -127,8 +128,8 @@ async function nextCheck(
     mockRefreshTokenPromise.resolve(resolveToken);
   });
 
-  expect(mockLoginStatus).toBeCalledTimes(loginStatusCalls);
-  expect(mockRefreshToken).toBeCalledTimes(refreshTokenCalls);
+  expect(mockLoginStatus).toHaveBeenCalledTimes(loginStatusCalls);
+  expect(mockRefreshToken).toHaveBeenCalledTimes(refreshTokenCalls);
 
   if (!loginFirst) {
     await act(async () => {
