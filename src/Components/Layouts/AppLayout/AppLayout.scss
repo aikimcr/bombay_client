@@ -1,4 +1,4 @@
-@import '../../../global.scss';
+@use '../../../global.scss';
 
 .app-layout {
   height: 100%;
@@ -22,12 +22,12 @@
     align-items: center;
     flex: 0;
 
-    @include standard-container;
+    @include global.standard-container;
   }
 
   &__content {
     display: block;
 
-    @include standard-container;
+    @include global.standard-container;
   }
 }

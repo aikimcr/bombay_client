@@ -1,4 +1,4 @@
-@import '../global.scss';
+@use '../global.scss';
 
 .error-404 {
     height: 100%;
@@ -10,7 +10,7 @@
     align-items: center;
     gap: 10px;
 
-    @include utiliity-component-background;
+    @include global.utiliity-component-background;
 
     > div {
         font-size: 2rem;
