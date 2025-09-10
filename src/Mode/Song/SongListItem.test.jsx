@@ -238,6 +238,9 @@ it.skip('should update the artist name', async () => {
   });
 
   expect(Network.putToURLString).toHaveBeenCalledTimes(1);
-  expect(Network.putToURLString).toHaveBeenCalledWith(modelDef.url, songModelDef);
+  expect(Network.putToURLString).toHaveBeenCalledWith(
+    modelDef.url,
+    songModelDef,
+  );
   expect(songModel.artist().toJSON()).toEqual(newArtistDef);
 });

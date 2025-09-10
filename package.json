@@ -65,10 +65,6 @@
     "workbox-webpack-plugin": "^7.3.0"
   },
   "scripts": {
-    "old:start": "node scripts/start.js .env .env.local",
-    "old:build": "node scripts/build.js .env .env.local",
-    "old:test:watch": "node scripts/test.js",
-    "old:test:debug": "react-scripts --inspect-brk=127.0.0.1:3001 test --runInBand --no-cache",
     "start:docker": "webpack server --config webpack.dev.js --port 3000 --host 0.0.0.0",
     "start": "webpack server --config webpack.dev.js --port 3000",
     "build": "webpack --config webpack.dev.js",
