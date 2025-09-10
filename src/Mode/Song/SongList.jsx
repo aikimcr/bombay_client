@@ -1,4 +1,4 @@
-import { useState, useContext, createRef } from 'react';
+import React, { useState, useContext, createRef, useEffect } from 'react';
 
 import './SongList.scss';
 
@@ -17,13 +17,18 @@ export const SongList = (props) => {
 
   const loginState = useContext(BombayLoginContext);
 
+  const [showAdd, setShowAdd] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [songCollection] = useState(new SongCollection({}));
   const { refreshCollection } = useModelCollection({
     initialCollection: songCollection,
     topRef,
+    isMounted,
   });
 
-  const [showAdd, setShowAdd] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   async function submitNewSong(songDef) {
     await songCollection.save(songDef);

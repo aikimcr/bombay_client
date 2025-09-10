@@ -7,6 +7,7 @@ export interface UseModelCollectionOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialCollection: CollectionBase<any, any>;
   topRef: React.RefObject<Element>;
+  isMounted: boolean;
 }
 
 export interface UseModelCollectionReturn {
@@ -18,6 +19,7 @@ export interface UseModelCollectionReturn {
 export function useModelCollection({
   initialCollection,
   topRef,
+  isMounted,
 }: UseModelCollectionOptions): UseModelCollectionReturn {
   const { loggedIn } = useContext(BombayLoginContext);
   const [shouldPage, setShouldPage] = useState(false);
@@ -103,6 +105,10 @@ export function useModelCollection({
   };
 
   useEffect(() => {
+    if (!isMounted) {
+      return;
+    }
+
     if (loading) {
       return;
     }
@@ -120,7 +126,7 @@ export function useModelCollection({
         observer.current?.observe(myElement);
       }
     }
-  }, [loading, collection]);
+  }, [loading, isMounted, collection]);
 
   useEffect(() => {
     // console.count(`loggedIn change, ${loggedIn}, ${collection} ${loading}`);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 jest.mock('./Song');
@@ -167,8 +167,8 @@ it.skip('should save changes to the model', async () => {
     mockPutResolve({ ...modelDef, name: 'Herkimer' });
   });
 
-  expect(Network.putToURLString).toBeCalledTimes(1);
-  expect(Network.putToURLString).toBeCalledWith(modelDef.url, {
+  expect(Network.putToURLString).toHaveBeenCalledTimes(1);
+  expect(Network.putToURLString).toHaveBeenCalledWith(modelDef.url, {
     ...songModelDef,
     name: 'Herkimer',
   });
@@ -237,7 +237,7 @@ it.skip('should update the artist name', async () => {
     mockPutResolve({ ...songModelDef, artist: newArtistDef });
   });
 
-  expect(Network.putToURLString).toBeCalledTimes(1);
-  expect(Network.putToURLString).toBeCalledWith(modelDef.url, songModelDef);
+  expect(Network.putToURLString).toHaveBeenCalledTimes(1);
+  expect(Network.putToURLString).toHaveBeenCalledWith(modelDef.url, songModelDef);
   expect(songModel.artist().toJSON()).toEqual(newArtistDef);
 });

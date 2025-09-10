@@ -98,8 +98,8 @@ it.skip('should save changes to the model', async () => {
     mockResolve({ ...modelDef, name: 'Herkimer' });
   });
 
-  expect(Network.putToURLString).toBeCalledTimes(1);
-  expect(Network.putToURLString).toBeCalledWith(modelDef.url, {
+  expect(Network.putToURLString).toHaveBeenCalledTimes(1);
+  expect(Network.putToURLString).toHaveBeenCalledWith(modelDef.url, {
     ...modelDef,
     name: 'Herkimer',
   });

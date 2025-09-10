@@ -1,8 +1,6 @@
-import { useState, useContext, createRef } from 'react';
+import React, { useState, useContext, createRef, useEffect } from 'react';
 
 import './ArtistList.scss';
-
-import BombayLoginContext from '../../Context/BombayLoginContext';
 
 import { ArtistCollection } from '../../Model/ArtistCollection';
 
@@ -15,15 +13,18 @@ import { ProtectedRoute } from '../../Components';
 export const ArtistList = (props) => {
   const topRef = createRef();
 
-  const loginState = useContext(BombayLoginContext);
-
+  const [showAdd, setShowAdd] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [artistCollection] = useState(new ArtistCollection({}));
   const { refreshCollection } = useModelCollection({
     initialCollection: artistCollection,
     topRef,
+    isMounted,
   });
 
-  const [showAdd, setShowAdd] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   async function submitNewArtist(artistDef) {
     await artistCollection.save(artistDef);

@@ -62,7 +62,7 @@ it('should get login status as true without network call', async () => {
   const loginPromise = loginStatus();
 
   // To Do: This code should only execute if the token has expired.  I think.
-  expect(mockGetFromURLString).not.toBeCalled();
+  expect(mockGetFromURLString).not.toHaveBeenCalled();
 
   const result = await loginPromise;
   expect(result).toBeTruthy();
@@ -87,8 +87,8 @@ it('should get login status as true with network call', async () => {
 
   const loginPromise = loginStatus();
 
-  expect(mockGetFromURLString).toBeCalledTimes(1);
-  expect(mockGetFromURLString).toBeCalledWith(
+  expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
+  expect(mockGetFromURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/login',
   );
 
@@ -109,7 +109,7 @@ it('should get login status as false (no token)', async () => {
 
   const loginPromise = loginStatus();
 
-  expect(mockGetFromURLString).not.toBeCalled();
+  expect(mockGetFromURLString).not.toHaveBeenCalled();
 
   const result = await loginPromise;
   expect(result).toBeFalsy();
@@ -129,8 +129,8 @@ it('should get login status as false (expired token)', async () => {
 
   const loginPromise = loginStatus();
 
-  expect(mockGetFromURLString).toBeCalledTimes(1);
-  expect(mockGetFromURLString).toBeCalledWith(
+  expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
+  expect(mockGetFromURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/login',
   );
 
@@ -160,8 +160,8 @@ it('should get login status as false (expired token, error on fetch)', async () 
 
   const loginPromise = loginStatus();
 
-  expect(mockGetFromURLString).toBeCalledTimes(1);
-  expect(mockGetFromURLString).toBeCalledWith(
+  expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
+  expect(mockGetFromURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/login',
   );
 
@@ -192,8 +192,8 @@ it('should put to login and save token', async () => {
 
   const loginPromise = refreshToken();
 
-  expect(mockPutToURLString).toBeCalledTimes(1);
-  expect(mockPutToURLString).toBeCalledWith(
+  expect(mockPutToURLString).toHaveBeenCalledTimes(1);
+  expect(mockPutToURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/login',
     {},
   );
@@ -218,8 +218,8 @@ it('should post credentials to login and save token', async () => {
 
   const loginPromise = login('fred', 'friendly');
 
-  expect(mockPostToURLString).toBeCalledTimes(1);
-  expect(mockPostToURLString).toBeCalledWith(
+  expect(mockPostToURLString).toHaveBeenCalledTimes(1);
+  expect(mockPostToURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/login',
     { username: 'fred', password: 'friendly' },
   );
@@ -243,8 +243,8 @@ it('should post to logout', async () => {
 
   const logoutPromise = logout();
 
-  expect(mockPostToURLString).toBeCalledTimes(1);
-  expect(mockPostToURLString).toBeCalledWith(
+  expect(mockPostToURLString).toHaveBeenCalledTimes(1);
+  expect(mockPostToURLString).toHaveBeenCalledWith(
     'http://localhost:2001/xyzzy/logout',
   );
 

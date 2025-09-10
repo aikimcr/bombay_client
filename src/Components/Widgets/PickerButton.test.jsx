@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import {
@@ -228,7 +228,7 @@ it('should call the callback and close the list when an item is clicked', async 
     fireEvent.click(showButton);
   });
 
-  expect(onModelPicked).not.toBeCalled();
+  expect(onModelPicked).not.toHaveBeenCalled();
 
   const el = screen.getByText('Pick Model');
 
@@ -236,8 +236,8 @@ it('should call the callback and close the list when an item is clicked', async 
     fireEvent.click(el);
   });
 
-  expect(onModelPicked).toBeCalled();
-  expect(onModelPicked).toBeCalledWith(mockModels[2]);
+  expect(onModelPicked).toHaveBeenCalled();
+  expect(onModelPicked).toHaveBeenCalledWith(mockModels[2]);
 
   const listComponent = screen.queryByTestId('mock-picker-list');
   expect(listComponent).toBeNull;
@@ -272,12 +272,12 @@ it('should close the list without calling if the button is pushed again', async 
     fireEvent.click(showButton);
   });
 
-  expect(onModelPicked).not.toBeCalled();
+  expect(onModelPicked).not.toHaveBeenCalled();
 
   let listComponent = screen.getByTestId('mock-picker-list');
   expect(listComponent).toBeInTheDocument();
 
-  expect(onModelPicked).not.toBeCalled();
+  expect(onModelPicked).not.toHaveBeenCalled();
 
   await act(async () => {
     showButton.click();

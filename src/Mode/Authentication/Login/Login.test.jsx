@@ -105,8 +105,8 @@ it('should login successfully', async () => {
     resolve(testToken);
   });
 
-  expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
+  expect(mockLogin).toHaveBeenCalledTimes(1);
+  expect(mockLogin).toHaveBeenCalledWith('herkimer', 'jones');
 });
 
 it('should show error on failed login', async () => {
@@ -143,8 +143,8 @@ it('should show error on failed login', async () => {
     resolve(null);
   });
 
-  expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
+  expect(mockLogin).toHaveBeenCalledTimes(1);
+  expect(mockLogin).toHaveBeenCalledWith('herkimer', 'jones');
 });
 
 it('should show error on call error', async () => {
@@ -181,8 +181,8 @@ it('should show error on call error', async () => {
     reject({ status: 500, messsage: 'Mock fail' });
   });
 
-  expect(mockLogin).toBeCalledTimes(1);
-  expect(mockLogin).toBeCalledWith('herkimer', 'jones');
+  expect(mockLogin).toHaveBeenCalledTimes(1);
+  expect(mockLogin).toHaveBeenCalledWith('herkimer', 'jones');
 });
 
 it('should clear the inputs and error on clear all fields', async () => {

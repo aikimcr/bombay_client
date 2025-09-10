@@ -1,3 +1,4 @@
+import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 
 import CloseOrClear from './CloseOrClear.jsx';
@@ -17,10 +18,10 @@ it('should call the click handler', async () => {
 
   render(<CloseOrClear onClick={clickHandler} />);
 
-  expect(clickHandler).not.toBeCalled();
+  expect(clickHandler).not.toHaveBeenCalled();
 
   const button = screen.getByText('\u2715');
   button.click();
 
-  expect(clickHandler).toBeCalledTimes(1);
+  expect(clickHandler).toHaveBeenCalledTimes(1);
 });

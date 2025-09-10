@@ -1,3 +1,4 @@
+import React from 'react';
 import './HeaderBar.scss';
 
 import LoginStatus from '../Components/Widgets/LoginStatus.jsx';
