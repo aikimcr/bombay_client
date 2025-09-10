@@ -34,7 +34,10 @@ jest.mock('../../Network/Login', () => {
 
 import * as Network from '../../Network/Network';
 
-import { makeFetchBodyAndModels, makeAModel } from '../../testHelpers/modelTools';
+import {
+  makeFetchBodyAndModels,
+  makeAModel,
+} from '../../testHelpers/modelTools';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
 import BombayUtilityContext from '../../Context/BombayUtilityContext';

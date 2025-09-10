@@ -13,6 +13,6 @@ export class SongCollection extends CollectionBase<SongData> {
   }
 
   protected createAModelFromDef(def: SongData): SongModel {
-    return  SongModel.from<SongData, SongModel>(def, { keepId: true });
+    return SongModel.from<SongData, SongModel>(def, { keepId: true });
   }
 }

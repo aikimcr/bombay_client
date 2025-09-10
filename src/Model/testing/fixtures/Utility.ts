@@ -13,7 +13,9 @@ export const TestUrlWithId = (url: string, id: number): string => {
   return `${url}/${id}`;
 };
 
-export function makeTestIterator<ResultType> (sourceArray: ResultType[]): () => ResultType {
+export function makeTestIterator<ResultType>(
+  sourceArray: ResultType[],
+): () => ResultType {
   const workSource: ResultType[] = [...sourceArray];
 
   return (): ResultType => {

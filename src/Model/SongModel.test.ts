@@ -34,9 +34,7 @@ import { ModelBase } from './ModelBase';
 import { SongData, SongModel } from './SongModel';
 import {
   makeASongModelDef,
-  setupArtistModelFetch,
   setupSongModelFetch,
-  TestArtistCollectionURL,
   TestSongCollectionURL,
   TestUrlWithId,
 } from './testing';

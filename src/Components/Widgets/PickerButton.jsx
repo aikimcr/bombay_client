@@ -4,7 +4,7 @@ import { PickerList } from '.';
 import { Button } from './Buttons';
 
 import './OldLabeledInput.scss';
-function PickerButton(props) {
+export const PickerButton = (props) => {
   const topRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -61,7 +61,7 @@ function PickerButton(props) {
       />
     </div>
   );
-}
+};
 
 PickerButton.propTypes = {
   collectionClass: PropTypes.func.isRequired, // To get the list of models
