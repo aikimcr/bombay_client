@@ -2,24 +2,25 @@ import { useState, useContext, createRef } from 'react';
 
 import './SongList.scss';
 
-import SongCollection from '../../Model/SongCollection';
+import BombayLoginContext from '../../Context/BombayLoginContext';
+
+import { SongCollection } from '../../Model/SongCollection';
 
 import SongListItem from './SongListItem';
 import { Song } from './Song';
 import FormModal from '../../Modal/FormModal';
 import { useModelCollection } from '../../Hooks/useModelCollection';
 import { ProtectedRoute } from '../../Components';
-import BombayLoginContext from '../../Context/BombayLoginContext';
 
 export const SongList = (props) => {
   const topRef = createRef();
 
   const loginState = useContext(BombayLoginContext);
 
-  const [songCollection, refreshCollection] = useModelCollection({
-    CollectionClass: SongCollection,
+  const [songCollection] = useState(new SongCollection({}));
+  const { refreshCollection } = useModelCollection({
+    initialCollection: songCollection,
     topRef,
-    loginState,
   });
 
   const [showAdd, setShowAdd] = useState(false);
@@ -54,7 +55,7 @@ export const SongList = (props) => {
             {songCollection == null
               ? ''
               : songCollection.map((song) => {
-                  const key = `song-list-${song.get('id')}`;
+                  const key = `song-list-${song.id}`;
                   return <SongListItem className key={key} song={song} />;
                 })}
           </ul>

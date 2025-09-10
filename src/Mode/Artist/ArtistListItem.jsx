@@ -7,7 +7,7 @@ import FormModal from '../../Modal/FormModal.jsx';
 
 function ArtistListItem(props) {
   const [showEdit, setShowEdit] = useState(false);
-  const [displayName, setDisplayName] = useState(props.artist.get('name'));
+  const [displayName, setDisplayName] = useState(props.artist.name);
 
   async function updateArtist(modelDef) {
     await props.artist.set(modelDef).save();

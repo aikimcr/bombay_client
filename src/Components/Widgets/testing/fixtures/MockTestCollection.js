@@ -9,7 +9,7 @@ export class MockTestCollection extends CollectionBase {
   }
 }
 
-import { makeModels } from '../../../../testHelpers/modelTools';
+import { makeFetchBodyAndModels } from '../../../../testHelpers/modelTools';
 
 export const mockFetchBody = {
   data: [

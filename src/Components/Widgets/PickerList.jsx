@@ -1,18 +1,18 @@
-import { createRef, useContext } from 'react';
+import { createRef, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
 import { useModelCollection } from '../../Hooks/useModelCollection';
 
-export function PickerList({ pickModel, isOpen, collectionClass }) {
+export function PickerList({ pickModel, isOpen, initialCollection }) {
   const topRef = createRef();
 
   const loginState = useContext(BombayLoginContext);
 
-  const [listCollection] = useModelCollection({
-    CollectionClass: collectionClass,
+  const [listCollection] = useState(initialCollection);
+  const { refreshCollection } = useModelCollection({
+    initialCollection: listCollection,
     topRef,
-    loginState,
   });
 
   function clickHandler(evt, model) {
@@ -29,18 +29,18 @@ export function PickerList({ pickModel, isOpen, collectionClass }) {
           {!listCollection
             ? ''
             : listCollection.map((model) => {
-                const key = `mode-list-${model.get('id')}`;
+                const key = `mode-list-${model.id}`;
                 return (
                   <li
                     className="picker-item"
                     data-testid="picker-item"
                     key={key}
-                    data-model-id={model.get('id')}
+                    data-model-id={model.id}
                     onClick={(evt) => {
                       clickHandler(evt, model);
                     }}
                   >
-                    {model.get('name')}
+                    {model.name}
                   </li>
                 );
               })}

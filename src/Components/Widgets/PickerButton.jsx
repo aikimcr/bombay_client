@@ -8,7 +8,7 @@ function PickerButton(props) {
   const topRef = useRef(null);
   const inputRef = useRef(null);
 
-  const modelId = props.model ? props.model.get('id') : 'isNew';
+  const modelId = props.model ? props.model.id : 'isNew';
   const buttonId = `${props.modelName}-name-${modelId}`;
 
   const [showPickerList, setShowPickerList] = useState(false);
@@ -16,15 +16,13 @@ function PickerButton(props) {
     props.model ? props.model : null,
   );
 
-  const buttonLabel = currentModel
-    ? currentModel.get('name')
-    : '<Please Choose>';
+  const buttonLabel = currentModel ? currentModel.name : '<Please Choose>';
 
-  const initialValue = currentModel ? currentModel.get('id') : 0;
+  const initialValue = currentModel ? currentModel.id : 0;
 
   function modelPicked(newModel) {
     setCurrentModel(newModel);
-    inputRef.current.value = newModel.get(props.fieldName);
+    inputRef.current.value = newModel[props.fieldName];
     props.onModelPicked(newModel);
     setShowPickerList(false);
   }

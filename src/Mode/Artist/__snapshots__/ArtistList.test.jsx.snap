@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should match snapshot 1`] = `
 <DocumentFragment>
@@ -43,7 +43,43 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="name"
           >
-            Same & Dave
+            4 Non Blondes
+          </div>
+          <div
+            class="details"
+          />
+        </li>
+        <li
+          class="card"
+          data-testid="artist-list-card"
+        >
+          <div
+            class="header"
+          >
+            Artist
+          </div>
+          <div
+            class="name"
+          >
+            AC/DC
+          </div>
+          <div
+            class="details"
+          />
+        </li>
+        <li
+          class="card"
+          data-testid="artist-list-card"
+        >
+          <div
+            class="header"
+          >
+            Artist
+          </div>
+          <div
+            class="name"
+          >
+            Aretha Franklin
           </div>
           <div
             class="details"
@@ -79,7 +115,7 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="name"
           >
-            Prince
+            Al Green
           </div>
           <div
             class="details"
@@ -97,7 +133,7 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="name"
           >
-            DNCE
+            Alanis Morisette
           </div>
           <div
             class="details"
@@ -115,7 +151,7 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="name"
           >
-            Sabrina Carpenter
+            B.B. King
           </div>
           <div
             class="details"
@@ -133,7 +169,25 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="name"
           >
-            Metallica
+            Beatles
+          </div>
+          <div
+            class="details"
+          />
+        </li>
+        <li
+          class="card"
+          data-testid="artist-list-card"
+        >
+          <div
+            class="header"
+          >
+            Artist
+          </div>
+          <div
+            class="name"
+          >
+            Bee Gees
           </div>
           <div
             class="details"
@@ -152,60 +206,6 @@ exports[`Component should match snapshot 1`] = `
             class="name"
           >
             Ben E. King
-          </div>
-          <div
-            class="details"
-          />
-        </li>
-        <li
-          class="card"
-          data-testid="artist-list-card"
-        >
-          <div
-            class="header"
-          >
-            Artist
-          </div>
-          <div
-            class="name"
-          >
-            Van Halen
-          </div>
-          <div
-            class="details"
-          />
-        </li>
-        <li
-          class="card"
-          data-testid="artist-list-card"
-        >
-          <div
-            class="header"
-          >
-            Artist
-          </div>
-          <div
-            class="name"
-          >
-            Led Zeppelin
-          </div>
-          <div
-            class="details"
-          />
-        </li>
-        <li
-          class="card"
-          data-testid="artist-list-card"
-        >
-          <div
-            class="header"
-          >
-            Artist
-          </div>
-          <div
-            class="name"
-          >
-            Black Sabbath
           </div>
           <div
             class="details"

@@ -4,9 +4,9 @@ import casual from 'casual';
 
 import * as Network from '../Network/Network';
 
-import ModelBase from '../Model/ModelBase';
-import ArtistModel from '../Model/ArtistModel';
-import SongModel from '../Model/SongModel';
+import { ModelBase } from '../Model/ModelBase';
+import { ArtistModel } from '../Model/ArtistModel';
+import { SongModel } from '../Model/SongModel';
 
 const allNames = {};
 casual.define('uniqueName', function (nameType, clear) {
@@ -30,7 +30,30 @@ casual.define('nextId', function (sequenceName) {
   return nextOne;
 });
 
-export function makeAModel(tableName = 'table1', fieldsCallback) {
+const genericSequences = {};
+casual.define('nextGenericSequence', function (sequenceName, sequenceMaster) {
+  if (!genericSequences[sequenceName]) {
+    genericSequences[sequenceName] = [...sequenceMaster];
+  }
+
+  const nextOne = genericSequences[sequenceName].shift();
+  genericSequences[sequenceName].push(nextOne);
+  return nextOne;
+});
+
+export const getIdIterator = (sequenceName) => {
+  return () => {
+    return casual.nextId(sequenceName);
+  };
+};
+
+export const getGenericTestIterator = (sequenceName, sequenceMaster) => {
+  return () => {
+    return casual.nextGenericSequence(sequenceName, sequenceMaster);
+  };
+};
+
+export const makeADef = (tableName = 'table1', fieldsCallback) => {
   const def = {};
   def.id = casual.nextId(tableName);
   def.name = casual.uniqueName(tableName);
@@ -39,42 +62,80 @@ export function makeAModel(tableName = 'table1', fieldsCallback) {
     fieldsCallback(def);
   }
 
-  let modelClass = ModelBase;
+  return def;
+};
+
+export function makeAModel(tableName = 'table1', fieldsCallback) {
+  const def = makeADef(tableName, fieldsCallback);
 
   switch (tableName) {
     case 'artist':
-      modelClass = ArtistModel;
-      break;
+      return [def, ArtistModel.from(def)];
 
     case 'song':
-      modelClass = SongModel;
-      def.key_signature = 'C';
-      def.tempo = 120;
-      def.lyrics = 'O Solo Mio! The troubles I have seen';
-
-      if (def.artist) {
-        def.artist_id = def.artist.id;
-      } else {
-        const [artist] = makeAModel('artist');
-        def.artist_id = artist.id;
-        def.artist = artist;
-      }
-      break;
-
-    default:
+      return [def, SongModel.from(def)];
   }
 
-  def.url = Network.buildURL({ path: `/${tableName}/${def.id}` });
-
-  return [def, modelClass.from(def)];
+  return [def, ModelBase.from(def)];
 }
 
-export function makeModels(
-  length = 10,
-  query = {},
-  tableName = 'table1',
-  fieldsCallback,
-) {
+export const makeAModelFromDef = (def, tableName = 'table1') => {
+  switch (tableName) {
+    case 'artist':
+      return ArtistModel.from(def);
+
+    case 'song':
+      return SongModel.from(def);
+  }
+
+  return ModelBase.from(def);
+};
+
+export const makeAFetchDef = (length, tableName, fieldsCallback) => {
+  const result = {
+    data: [],
+  };
+
+  while (result.data.length < length) {
+    const def = makeADef(tableName, fieldsCallback);
+    result.data.push(def);
+  }
+
+  return result;
+};
+
+export const makeModelsFromFetchDef = (fetchDef, createCallback) => {
+  return fetchDef.data.map((def) => {
+    return createCallback(def);
+  });
+};
+
+export const makeFetchBodyFromFetchDef = (fetchDef, tableName, query = {}) => {
+  const result = { ...fetchDef };
+  const length = result.data.length;
+
+  let limit = query.limit || length;
+  let offset = (query.offset || 0) - limit; // offset for previous page.
+
+  if (offset >= 0) {
+    const url = Network.prepareURLFromArgs(tableName);
+    url.searchParams.set('offset', offset);
+    url.searchParams.set('limit', limit);
+    result.prevPage = url.toString();
+  }
+
+  if (limit <= length) {
+    offset = (query.offset || 0) + limit; // offset for next page.
+    const url = Network.prepareURLFromArgs(tableName);
+    url.searchParams.set('offset', offset);
+    url.searchParams.set('limit', limit);
+    result.nextPage = url.toString();
+  }
+
+  return result;
+};
+
+export const makeModels = (length, tableName, fieldsCallback) => {
   const result = {
     data: [],
   };
@@ -87,23 +148,20 @@ export function makeModels(
     models.push(model);
   }
 
-  let offset = (query.offset || 0) - length;
-  let limit = query.limit || length;
-
-  if (offset >= 0) {
-    result.prevPage = Network.prepareURLFromArgs(tableName, {
-      offset,
-      limit,
-    }).toString();
-  }
-
-  if (limit <= length) {
-    offset = (query.offset || 0) + length;
-    result.nextPage = Network.prepareURLFromArgs(tableName, {
-      offset,
-      limit,
-    }).toString();
-  }
-
   return [result, models];
-}
+};
+
+export const makeFetchBodyAndModels = (
+  length = 10,
+  query = {},
+  tableName = 'table1',
+  fieldsCallback,
+) => {
+  const fetchDef = makeAFetchDef(length, tableName, fieldsCallback);
+  const models = makeModelsFromFetchDef(fetchDef, (def) => {
+    makeAModelFromDef(def, tableName);
+  });
+
+  const fetchBody = makeFetchBodyFromFetchDef(fetchDef, tableName, query);
+  return [fetchBody, models];
+};

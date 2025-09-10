@@ -34,7 +34,7 @@ jest.mock('../../Network/Login', () => {
 
 import * as Network from '../../Network/Network';
 
-import { makeModels, makeAModel } from '../../testHelpers/modelTools';
+import { makeFetchBodyAndModels, makeAModel } from '../../testHelpers/modelTools';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
 import BombayUtilityContext from '../../Context/BombayUtilityContext';
@@ -124,7 +124,7 @@ it.skip('should save changes to the model', async () => {
     return mockPutPromise;
   });
 
-  const [fetchBody, models] = makeModels(10, {});
+  const [fetchBody, models] = makeFetchBodyAndModels(10, {});
 
   await act(async () => {
     mockGetResolve(fetchBody);

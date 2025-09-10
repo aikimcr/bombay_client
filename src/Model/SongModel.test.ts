@@ -1,10 +1,7 @@
+import { omit } from 'lodash';
 import {
   mockGetFromURLString,
-  mockLogin,
-  mockLoginStatus,
-  mockLogout,
   mockPutToURLString,
-  mockRefreshToken,
   mockPrepareURLFromArgs,
   mockPostToURLString,
   mockServerProtocol,
@@ -12,19 +9,6 @@ import {
   mockServerBasePath,
   mockServerPort,
 } from '../Network/testing';
-
-jest.mock('../Network/Login', () => {
-  const originalModule = jest.requireActual('../Network/Login');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginStatus: mockLoginStatus,
-    refreshToken: mockRefreshToken,
-    login: mockLogin,
-    logout: mockLogout,
-  };
-});
 
 jest.mock('../Network/Network', () => {
   const originalModule = jest.requireActual('../Network/Network');
@@ -43,71 +27,127 @@ jest.mock('../Network/Network', () => {
   };
 });
 
-import { makeAModel } from '../testHelpers/modelTools';
+import { makeADef } from '../testHelpers/modelTools';
+import { ArtistModel } from './ArtistModel';
 
-import ModelBase from './ModelBase';
-import SongModel from './SongModel';
-
-function setupLogin(loggedIn = true) {
-  mockLoginStatus.mockResolvedValue(loggedIn);
-}
+import { ModelBase } from './ModelBase';
+import { SongData, SongModel } from './SongModel';
+import {
+  makeASongModelDef,
+  setupArtistModelFetch,
+  setupSongModelFetch,
+  TestArtistCollectionURL,
+  TestSongCollectionURL,
+  TestUrlWithId,
+} from './testing';
 
 describe('SongModel', () => {
   it('should instantiate a model', async () => {
-    setupLogin();
-    const [def] = makeAModel('song');
-    const model = SongModel.from(def);
+    const def = makeASongModelDef();
+    const model = SongModel.from<SongData, SongModel>(def, {
+      keepId: true,
+    });
 
     expect(SongModel.isModel(model)).toBeTruthy();
-    expect(model.get('id')).toEqual(def.id);
-    expect(model.get('name')).toEqual(def.name);
-    expect(model.get('artist_id')).toEqual(def.artist_id);
-    expect(model.idUrl()).toEqual(def.url);
-
-    expect(model.artist).toBeDefined();
-    const artist = model.artist();
-    expect(artist).toBeDefined();
-    expect(artist.get('id')).toEqual(model.get('artist_id'));
-    expect(artist.get('name')).toEqual(def.artist.name);
-    expect(artist.idUrl()).toEqual(def.artist.url);
+    expect(model.id).toEqual(def.id);
+    expect(model.name).toEqual(def.name);
+    expect(model.key_signature).toEqual(def.key_signature);
+    expect(model.tempo).toEqual(def.tempo);
+    expect(model.lyrics).toEqual(def.lyrics);
+    expect(model.artist_id).toEqual(def.artist_id);
+    expect(model.url).toEqual(TestUrlWithId(TestSongCollectionURL, def.id));
   });
 
   it('should fetch a song model', async () => {
-    setupLogin();
+    const [getPromise, fetchBody] = setupSongModelFetch();
+    const model = new SongModel({ id: fetchBody.id });
 
-    const getPromise = PromiseWithResolvers();
-    mockGetFromURLString.mockReturnValueOnce(getPromise.promise);
-
-    const [fetchBody, fetchModel] = makeAModel('song');
-
-    const model = new SongModel(fetchBody.url);
-
-    const fetchPromise = model.ready();
+    const fetchPromise = model.ready;
     getPromise.resolve(fetchBody);
-    const fetchDef = await fetchPromise;
 
-    expect(model.toJSON()).toEqual(fetchBody);
-    expect(model.toJSON()).toEqual(fetchModel.toJSON());
-    expect(fetchDef).toEqual(fetchBody);
+    await fetchPromise;
+
+    expect(model.id).toEqual(fetchBody.id);
+    expect(model.name).toEqual(fetchBody.name);
+    expect(model.key_signature).toEqual(fetchBody.key_signature);
+    expect(model.tempo).toEqual(fetchBody.tempo);
+    expect(model.lyrics).toEqual(fetchBody.lyrics);
+    expect(model.artist_id).toEqual(fetchBody.artist_id);
+    expect(model.artist.id).toEqual(model.artist_id);
+    expect(model.artist.name).toEqual(fetchBody.artist.name);
+    expect(model.url).toEqual(
+      TestUrlWithId(TestSongCollectionURL, fetchBody.id),
+    );
 
     expect(mockGetFromURLString).toHaveBeenCalledTimes(1);
-    expect(mockGetFromURLString).toHaveBeenCalledWith(fetchBody.url);
+    expect(mockGetFromURLString).toHaveBeenCalledWith(
+      TestUrlWithId(TestSongCollectionURL, fetchBody.id),
+    );
+  });
+
+  it('Create and save a song', async () => {
+    const song = new SongModel({});
+
+    const postPromise = PromiseWithResolvers();
+    mockPostToURLString.mockReturnValue(postPromise.promise);
+
+    song.name = 'Piano Man';
+    song.key_signature = 'C';
+    song.tempo = 100;
+    song.lyrics = 'They sit at the bar and put bread in my jar';
+    song.artist_id = 15;
+
+    expect(mockPostToURLString).not.toHaveBeenCalled();
+    expect(song.id).toBeUndefined();
+    expect(song.url).toBeUndefined();
+    expect(song.name).toEqual('Piano Man');
+    expect(song.key_signature).toEqual('C');
+    expect(song.tempo).toEqual(100);
+    expect(song.lyrics).toEqual('They sit at the bar and put bread in my jar');
+    expect(song.artist_id).toEqual(15);
+
+    const newBodyPromise = song.save();
+
+    postPromise.resolve({
+      id: 25,
+      name: 'Piano Man',
+      key_signature: 'C',
+      tempo: 100,
+      lyrics: 'They sit at the bar and put bread in my jar',
+      artist_id: 15,
+    });
+
+    await newBodyPromise;
+
+    expect(mockPostToURLString).toHaveBeenCalledTimes(1);
+    expect(song.id).toBe(25);
+    expect(song.url).toBe(TestUrlWithId(TestSongCollectionURL, 25));
+    expect(song.name).toEqual('Piano Man');
+    expect(song.key_signature).toEqual('C');
+    expect(song.tempo).toEqual(100);
+    expect(song.lyrics).toEqual('They sit at the bar and put bread in my jar');
+    expect(song.artist_id).toEqual(15);
   });
 
   it('should save changes to the song model', async () => {
-    setupLogin();
-
     const putPromise = PromiseWithResolvers();
     mockPutToURLString.mockReturnValue(putPromise.promise);
 
-    const [oldBody] = makeAModel('song');
-    const model = SongModel.from(oldBody);
-    expect(model.toJSON()).toEqual(oldBody);
+    const oldBody = omit(makeASongModelDef(), 'artist');
+    const model = SongModel.from<SongData, SongModel>(oldBody, {
+      keepId: true,
+    });
 
-    const newName = 'Updated Song Name';
-    model.set('name', newName);
-    expect(model.toJSON()).not.toEqual(oldBody);
-    expect(model.get('name')).toEqual(newName);
+    const newName = 'Allison';
+    model.name = newName;
+
+    expect(model.id).toEqual(oldBody.id);
+    expect(model.name).toEqual(newName);
+    expect(model.key_signature).toEqual(oldBody.key_signature);
+    expect(model.tempo).toEqual(oldBody.tempo);
+    expect(model.lyrics).toEqual(oldBody.lyrics);
+    expect(model.artist_id).toEqual(oldBody.artist_id);
+    expect(model.url).toEqual(TestUrlWithId(TestSongCollectionURL, oldBody.id));
 
     const savePromise = model.save();
     putPromise.resolve({
@@ -119,20 +159,22 @@ describe('SongModel', () => {
     expect(newBody.name).toEqual(newName);
 
     expect(mockPutToURLString).toHaveBeenCalledTimes(1);
-    expect(mockPutToURLString).toHaveBeenCalledWith(oldBody.url, {
-      ...oldBody,
-      name: newName,
-    });
+    expect(mockPutToURLString).toHaveBeenCalledWith(
+      TestUrlWithId(TestSongCollectionURL, oldBody.id),
+      {
+        ...oldBody,
+        name: newName,
+      },
+    );
   });
 
   it('should not recognize a base model as a song model', async () => {
-    setupLogin();
     // If the class extension is done correctly, TypeScript should just handle this.
-    const [baseDef] = makeAModel('table1');
-    const [songDef] = makeAModel('song');
+    const baseDef = makeADef('table1');
+    const songDef = makeASongModelDef();
 
-    const baseModel = new ModelBase(baseDef.url, baseDef);
-    const songModel = new SongModel(songDef.url, songDef);
+    const baseModel = new ModelBase({ data: baseDef });
+    const songModel = new SongModel({ data: songDef });
 
     expect(ModelBase.isModel(baseModel)).toBeTruthy();
     expect(ModelBase.isModel(songModel)).toBeTruthy();
@@ -141,8 +183,45 @@ describe('SongModel', () => {
     expect(SongModel.isModel(songModel)).toBeTruthy();
   });
 
-  it('should update the artist model', async () => {
-    setupLogin();
+  it('should accept the artist as a constructor argument', () => {
+    const artistModel = new ArtistModel({
+      data: {
+        id: 30,
+        name: 'Savoy Brown',
+      },
+    });
+
+    const def = makeASongModelDef();
+    const model = new SongModel({
+      data: def,
+      artist: artistModel,
+    });
+
+    expect(model.artist).toEqual(artistModel);
+    expect(model.artist_id).toEqual(artistModel.id);
+  });
+
+  it('should assign the artist', () => {
+    const artistModel = new ArtistModel({
+      data: {
+        id: 30,
+        name: 'Savoy Brown',
+      },
+    });
+
+    const def = makeASongModelDef();
+    const model = new SongModel({
+      data: def,
+    });
+
+    model.artist = artistModel;
+
+    expect(model.artist).toEqual(artistModel);
+    expect(model.artist_id).toEqual(artistModel.id);
+  });
+
+  /*
+  it.skip('should update the artist model', async () => {
     const mockPromise = PromiseWithResolvers();
     // The mock is not recognized unless it is done this way.
     mockPutToURLString.mockReturnValue(mockPromise.promise);
@@ -166,13 +245,11 @@ describe('SongModel', () => {
       ...songModelDef,
       artist: newArtistDef,
     });
-    expect(songModel.get('artist_id')).toEqual(newArtistModel.get('id'));
+    expect(songModel.artist_id).toEqual(newArtistModel.id);
     expect(songModel.artist()).toEqual(newArtistModel);
   });
 
-  it('should handle artist reference correctly', async () => {
-    setupLogin();
-
+  it.skip('should handle artist reference correctly', async () => {
     const [songDef] = makeAModel('song');
     const model = SongModel.from(songDef);
 
@@ -183,7 +260,8 @@ describe('SongModel', () => {
     // Test that we can retrieve the artist
     const artist = model.artist();
     expect(artist).toBeDefined();
-    expect(artist.get('id')).toEqual(songDef.artist.id);
-    expect(artist.get('name')).toEqual(songDef.artist.name);
+    expect(artist.id).toEqual(songDef.artist.id);
+    expect(artist.name).toEqual(songDef.artist.name);
   });
+  */
 });

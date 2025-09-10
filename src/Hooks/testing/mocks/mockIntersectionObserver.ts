@@ -1,6 +1,3 @@
-import { useEffect, useRef, RefObject } from 'react';
-
-import { IntersectionObserverOptions } from '../useIntersectionObserver';
 export class mockEntry {
   boundingClientRect: DOMRectReadOnly;
   intersectionRatio: number;
@@ -18,24 +15,29 @@ export class mockEntry {
   }
 }
 
-export class mockObserver {
+export class mockIntersectionObserver {
   root: Element;
   rootMargin: string;
   thresholds: readonly number[];
   callback: IntersectionObserverCallback;
-  options: IntersectionObserverOptions;
+  options: IntersectionObserverInit;
   entries: mockEntry[];
 
-  static observers: mockObserver[] = [];
+  static observers: mockIntersectionObserver[] = [];
 
+  static _clear() {
+    while (this.observers.length > 0) {
+      this.observers.pop();
+    }
+  }
   constructor(
     callback: IntersectionObserverCallback,
-    options: IntersectionObserverOptions,
+    options: IntersectionObserverInit,
   ) {
     this.callback = callback;
     this.options = options;
     this.entries = [];
-    mockObserver.observers.push(this);
+    mockIntersectionObserver.observers.push(this);
   }
 
   observe(_target: Element) {}
@@ -52,33 +54,5 @@ export class mockObserver {
     const entry = new mockEntry(target, isIntersecting);
     this.callback([entry], this);
   }
+
 }
-
-export function useIntersectionObserver(
-  topRef: RefObject<Element>,
-  callback: IntersectionObserverCallback,
-  options: IntersectionObserverOptions = {},
-) {
-  const observer = useRef(null);
-
-  useEffect(() => {
-    if (topRef.current == null) {
-      return;
-    }
-
-    if (observer.current == null) {
-      observer.current = new mockObserver(callback, {
-        ...options,
-        root: topRef.current.parentElement,
-      });
-    }
-
-    return () => {
-      observer.current.disconnect();
-    };
-  }, [observer.current, topRef]);
-
-  return observer;
-}
-
-export default useIntersectionObserver;

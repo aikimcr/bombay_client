@@ -9,13 +9,13 @@ import FormModal from '../../Modal/FormModal';
 
 export const SongListItem = ({ song }) => {
   const [showEdit, setShowEdit] = useState(false);
-  const [displayName, setDisplayName] = useState(song.get('name'));
-  const [artistName, setArtistName] = useState(song.artist().get('name'));
+  const [displayName, setDisplayName] = useState(song.name);
+  const [artistName, setArtistName] = useState(song.artist.name);
 
   async function updateSong(modelDef) {
     await song.set(modelDef).save();
-    setDisplayName(song.get('name'));
-    setArtistName(song.artist().get('name'));
+    setDisplayName(song.name);
+    setArtistName(song.artist().name);
   }
 
   return (
@@ -34,16 +34,16 @@ export const SongListItem = ({ song }) => {
           </>
           <>
             <div className="label">Key</div>
-            <div className="text">{song.get('key_signature')}</div>
+            <div className="text">{song.key_signature}</div>
           </>
           <>
             <div className="label">Tempo</div>
-            <div className="text">{song.get('tempo')}</div>
+            <div className="text">{song.tempo}</div>
           </>
           <>
             <div className="label">Lyrics</div>
             <div className="long-text">
-              <pre>{song.get('lyrics')}</pre>
+              <pre>{song.lyrics}</pre>
             </div>
           </>
         </div>

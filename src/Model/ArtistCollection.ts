@@ -1,13 +1,18 @@
-import CollectionBase, { CollectionOptions } from './CollectionBase';
-import ArtistModel from './ArtistModel';
+import {
+  CollectionBase,
+  CollectionBaseConstructorArgs,
+} from './CollectionBase';
+import { ArtistData, ArtistModel } from './ArtistModel';
 
-class ArtistCollection extends CollectionBase {
-  constructor(options: CollectionOptions = {}) {
-    super('/artist', {
-      ...options,
-      modelClass: ArtistModel,
+export class ArtistCollection extends CollectionBase<ArtistData, ArtistModel> {
+  constructor(args: CollectionBaseConstructorArgs<ArtistData, ArtistModel>) {
+    super({
+      ...args,
+      tableName: ArtistModel.TableName,
     });
   }
-}
 
-export default ArtistCollection;
+  protected createAModelFromDef(def: ArtistData): ArtistModel {
+    return ArtistModel.from<ArtistData, ArtistModel>(def, { keepId: true });
+  }
+}

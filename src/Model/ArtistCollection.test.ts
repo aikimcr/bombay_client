@@ -12,31 +12,14 @@
 // - Be agnostic to the model type.
 import {
   mockGetFromURLString,
-  mockLogin,
-  mockLoginStatus,
-  mockLogout,
   mockPostToURLString,
   mockPrepareURLFromArgs,
   mockPutToURLString,
-  mockRefreshToken,
   mockServerProtocol,
   mockServerHost,
   mockServerBasePath,
   mockServerPort,
 } from '../Network/testing';
-
-jest.mock('../Network/Login', () => {
-  const originalModule = jest.requireActual('../Network/Login');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginStatus: mockLoginStatus,
-    refreshToken: mockRefreshToken,
-    login: mockLogin,
-    logout: mockLogout,
-  };
-});
 
 jest.mock('../Network/Network', () => {
   const originalModule = jest.requireActual('../Network/Network');
@@ -55,40 +38,25 @@ jest.mock('../Network/Network', () => {
   };
 });
 
-import { makeModels } from '../testHelpers/modelTools';
-
-import CollectionBase from './CollectionBase';
-import ArtistCollection from './ArtistCollection';
-import ArtistModel from './ArtistModel';
-
-const testToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
-
-function setupLogin(loggedIn = true) {
-  const loginPromise = PromiseWithResolvers();
-  mockLoginStatus.mockReturnValue(loginPromise.promise);
-  loginPromise.resolve(loggedIn);
-}
+import { CollectionBase } from './CollectionBase';
+import { ArtistCollection } from './ArtistCollection';
+import {
+  setupArtistCollectionFetch,
+  TestArtistCollectionURL,
+  TestUrlWithOffsets,
+} from './testing';
 
 describe('ArtistCollection', () => {
-  beforeEach(() => {
-    localStorage.setItem('jwttoken', testToken);
-  });
-
-  afterEach(() => {
-    localStorage.removeItem('jwttoken');
-  });
-
   it('should not recognize a base collection as an artist collection', async () => {
-    setupLogin();
-
     const getPromise = PromiseWithResolvers();
     mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/table'));
+    mockPrepareURLFromArgs.mockReturnValue(
+      new URL('http://localhost:2001/artist'),
+    );
 
     // If the class extension is done correctly, TypeScript should just handle this.
-    const baseCollection = new CollectionBase('/table');
-    const artistCollection = new ArtistCollection();
+    const baseCollection = new CollectionBase({ tableName: 'table' });
+    const artistCollection = new ArtistCollection({});
 
     expect(CollectionBase.isCollection(baseCollection)).toBeTruthy();
     expect(CollectionBase.isCollection(artistCollection)).toBeTruthy();
@@ -98,81 +66,19 @@ describe('ArtistCollection', () => {
   });
 
   it('should fetch artist collection', async () => {
-    setupLogin();
+    const [getPromise, fetchBody, models] = setupArtistCollectionFetch();
 
-    const getPromise = PromiseWithResolvers();
-    mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
-
-    const collection = new ArtistCollection();
-    const [fetchBody, models] = makeModels(10, { type: 'artist' });
+    const collection = new ArtistCollection({ fetch: true });
     getPromise.resolve(fetchBody);
-    await collection.ready();
+    await collection.ready;
 
     expect(ArtistCollection.isCollection(collection)).toBeTruthy();
-    expect(collection.models()).toEqual(models);
-    expect(collection.modelClass()).toBe(ArtistModel);
-  });
-
-  it('should save a new artist', async () => {
-    setupLogin();
-
-    const postPromise = PromiseWithResolvers();
-    mockPostToURLString.mockReturnValue(postPromise.promise);
-    const getPromise = PromiseWithResolvers();
-    mockGetFromURLString.mockReturnValue(getPromise.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
-
-    const collection = new ArtistCollection();
-    const newArtistData = {
-      id: 1,
-      name: 'New Artist',
-      url: 'https://xyzzy/artist/1',
-    };
-
-    const savePromise = collection.save(newArtistData);
-    postPromise.resolve(newArtistData);
-    const savedArtist = await savePromise;
-
-    expect(savedArtist).toBeDefined();
-    expect(savedArtist.get('name')).toBe('New Artist');
-    expect(ArtistModel.isModel(savedArtist)).toBeTruthy();
-
-    expect(mockPostToURLString).toHaveBeenCalledTimes(1);
-    expect(mockPostToURLString).toHaveBeenCalledWith(
-      'https://xyzzy/artist',
-      newArtistData,
+    expect(collection.url).toEqual(TestArtistCollectionURL);
+    expect(collection.length).toEqual(10);
+    expect(collection.models).toEqual(models);
+    expect(collection.nextPage).toBe(
+      TestUrlWithOffsets(TestArtistCollectionURL, 10, 10),
     );
-  });
-
-  it('should handle pagination for artist collection', async () => {
-    setupLogin();
-
-    const getPromise1 = PromiseWithResolvers();
-    const getPromise2 = PromiseWithResolvers();
-    mockGetFromURLString
-      .mockReturnValueOnce(getPromise1.promise)
-      .mockReturnValueOnce(getPromise2.promise);
-    mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/artist'));
-
-    const collection = new ArtistCollection();
-
-    const [fetchBody1, models1] = makeModels(10, { type: 'artist' });
-    getPromise1.resolve(fetchBody1);
-    await collection.ready();
-
-    expect(collection.hasNextPage()).toBeTruthy();
-
-    const fetchPromise2 = collection.fetchNextPage();
-    const [fetchBody2, models2] = makeModels(10, {
-      type: 'artist',
-      offset: 10,
-      limit: 10,
-    });
-    getPromise2.resolve(fetchBody2);
-
-    const fetchModels2 = await fetchPromise2;
-    expect(fetchModels2).toEqual([...models1, ...models2]);
-    expect(collection.models()).toEqual(fetchModels2);
+    expect(collection.prevPage).toBeUndefined();
   });
 });

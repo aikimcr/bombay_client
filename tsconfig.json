@@ -11,6 +11,7 @@
       "ESNext",
       "ESNext.Promise"
     ],
+    "skipLibCheck": true,
     "target": "ESNext",
     "jsx": "react",
     "allowJs": true,
@@ -25,5 +26,9 @@
       "./types",
       "./node_modules/@types"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/**",
+  ]
 }

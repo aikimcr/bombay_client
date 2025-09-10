@@ -12,9 +12,6 @@ global.TextDecoder = TextDecoder;
 
 import { useState } from 'react';
 
-import useIntersectionObserver, * as mockObserver from './Hooks/useIntersectionObserver';
-jest.mock('./Hooks/useIntersectionObserver');
-
 globalThis.PromiseWithResolvers = () => {
   // @ts-expect-error Jest/Typescript stupidity with Promise.
   return Promise.withResolvers();

@@ -7,6 +7,14 @@ import {
   mockRefreshToken,
   mockLogin,
   mockLogout,
+  mockServerProtocol,
+  mockServerHost,
+  mockServerBasePath,
+  mockServerPort,
+  mockPrepareURLFromArgs,
+  mockGetFromURLString,
+  mockPostToURLString,
+  mockPutToURLString,
 } from '../../Network/testing';
 
 jest.mock('../../Network/Login', () => {
@@ -22,25 +30,34 @@ jest.mock('../../Network/Login', () => {
   };
 });
 
-import { mockModelFetcher, mockUseModelCollection } from '../../Hooks/testing';
-jest.mock('../../Hooks/useModelCollection', () => {
-  const originalModule = jest.requireActual('../../Hooks/useModelCollection');
+jest.mock('../../Network/Network', () => {
+  const originalModule = jest.requireActual('../../Network/Network');
 
   return {
     __esModule: true,
     ...originalModule,
-    useModelCollection: mockUseModelCollection,
+    serverProtocol: mockServerProtocol,
+    serverHost: mockServerHost,
+    serverBasePath: mockServerBasePath,
+    serverPort: mockServerPort,
+    prepareURLFromArgs: mockPrepareURLFromArgs,
+    getFromURLString: mockGetFromURLString,
+    postToURLString: mockPostToURLString,
+    putToURLString: mockPutToURLString,
   };
 });
 
-import * as mockObserver from '../../Hooks/useIntersectionObserver';
+import { mockIntersectionObserver } from '../../Hooks/testing';
 
 import BombayLoginContext from '../../Context/BombayLoginContext';
 
 import { MockTestCollection, mockFetchBody, mockModels } from './testing';
 
 import PickerList from './PickerList.jsx';
-import { useModelCollection } from '../../Hooks';
+import {
+  setupTestCollectionOneFetch,
+  TestCollectionOne,
+} from '../../Model/testing';
 
 function TestWrapper({ loggedIn, children }) {
   const [loginState, setLoginState] = useState({ loggedIn });
@@ -64,14 +81,13 @@ function setupLogin(loggedIn = true, token = testToken) {
 }
 
 beforeEach(() => {
+  window.IntersectionObserver = mockIntersectionObserver;
   localStorage.setItem('jwttoken', testToken);
 });
 
 afterEach(() => {
-  while (mockObserver.mockObserver.observers.length > 0) {
-    mockObserver.mockObserver.observers.pop();
-  }
-
+  delete window.IntersectionObserver;
+  mockIntersectionObserver._clear();
   localStorage.removeItem('jwttoken');
 });
 
@@ -79,21 +95,21 @@ it('Component should match snapshot', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
-  const refreshPromise = PromiseWithResolvers();
-  mockModelFetcher.mockReturnValue(refreshPromise.promise);
+  const [getPromise, fetchBody] = setupTestCollectionOneFetch();
+  const testCollection = new TestCollectionOne({});
 
   const { asFragment } = render(
     <TestWrapper loggedIn={true}>
       <PickerList
         pickModel={pickModel}
         isOpen={true}
-        collectionClass={MockTestCollection}
+        initialCollection={testCollection}
       />
     </TestWrapper>,
   );
 
   await act(async () => {
-    refreshPromise.resolve(mockModels);
+    getPromise.resolve(fetchBody);
   });
 
   expect(asFragment()).toMatchSnapshot();
@@ -103,15 +119,15 @@ it('Should show the list', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
-  const refreshPromise = PromiseWithResolvers();
-  mockModelFetcher.mockReturnValue(refreshPromise.promise);
+  const [getPromise, fetchBody, models] = setupTestCollectionOneFetch();
+  const testCollection = new TestCollectionOne({});
 
   render(
     <TestWrapper loggedIn={true}>
       <PickerList
         pickModel={pickModel}
         isOpen={true}
-        collectionClass={MockTestCollection}
+        initialCollection={testCollection}
       />
     </TestWrapper>,
   );
@@ -120,27 +136,25 @@ it('Should show the list', async () => {
   expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);
 
   await act(async () => {
-    refreshPromise.resolve(mockModels);
+    getPromise.resolve(fetchBody);
   });
 
-  expect(screen.queryAllByTestId('picker-item')).toHaveLength(
-    mockModels.length,
-  );
+  expect(screen.queryAllByTestId('picker-item')).toHaveLength(models.length);
 });
 
 it('should show an empty list', async () => {
   setupLogin();
   const pickModel = jest.fn();
 
-  const refreshPromise = PromiseWithResolvers();
-  mockModelFetcher.mockReturnValue(refreshPromise.promise);
+  const [getPromise] = setupTestCollectionOneFetch();
+  const testCollection = new TestCollectionOne({});
 
   render(
     <TestWrapper loggedIn={true}>
       <PickerList
         pickModel={pickModel}
         isOpen={true}
-        collectionClass={MockTestCollection}
+        initialCollection={testCollection}
       />
     </TestWrapper>,
   );
@@ -149,7 +163,7 @@ it('should show an empty list', async () => {
   expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);
 
   await act(async () => {
-    refreshPromise.reject({ status: 404, message: 'Not Found' });
+    getPromise.reject({ status: 404, message: 'Not Found' });
   });
 
   expect(screen.queryAllByTestId('picker-item')).toHaveLength(0);

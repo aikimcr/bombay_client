@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component should match snapshot 1`] = `
 <DocumentFragment>
@@ -17,70 +17,70 @@ exports[`Component should match snapshot 1`] = `
           data-model-id="1"
           data-testid="picker-item"
         >
-          Kaylin Kihn
+          fellow
         </li>
         <li
           class="picker-item"
           data-model-id="2"
           data-testid="picker-item"
         >
-          Lance Morar
+          property
         </li>
         <li
           class="picker-item"
           data-model-id="3"
           data-testid="picker-item"
         >
-          Felix Senger
+          yet
         </li>
         <li
           class="picker-item"
           data-model-id="4"
           data-testid="picker-item"
         >
-          Alyson Harvey
+          article
         </li>
         <li
           class="picker-item"
           data-model-id="5"
           data-testid="picker-item"
         >
-          Lenore Kuvalis
+          held
         </li>
         <li
           class="picker-item"
           data-model-id="6"
           data-testid="picker-item"
         >
-          Gertrude Kilback
+          transportation
         </li>
         <li
           class="picker-item"
           data-model-id="7"
           data-testid="picker-item"
         >
-          Kobe Brown
+          scene
         </li>
         <li
           class="picker-item"
           data-model-id="8"
           data-testid="picker-item"
         >
-          Arnulfo Bartoletti
+          current
         </li>
         <li
           class="picker-item"
           data-model-id="9"
           data-testid="picker-item"
         >
-          Ariane Beer
+          life
         </li>
         <li
           class="picker-item"
           data-model-id="10"
           data-testid="picker-item"
         >
-          Norwood Pollich
+          printed
         </li>
       </ul>
     </div>
