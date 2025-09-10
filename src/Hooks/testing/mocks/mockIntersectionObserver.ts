@@ -54,5 +54,4 @@ export class mockIntersectionObserver {
     const entry = new mockEntry(target, isIntersecting);
     this.callback([entry], this);
   }
-
 }
