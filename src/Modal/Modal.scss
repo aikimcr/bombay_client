@@ -1,4 +1,4 @@
-@import '../global.scss';
+@use '../global.scss';
 
 .modal {
     --modal-header-height: calc(var(--standard-font-size + 1rem));

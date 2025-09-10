@@ -1,11 +1,11 @@
-@import '../global.scss';
+@use '../global.scss';
 
 .app-home {
     border-top: 1px solid rgba(0, 0, 0, 0); // Prevent margin collapsing.
     height: 100%;
     width: 100%;
 
-    @include utiliity-component-background;
+    @include global.utiliity-component-background;
 
     >ul {
         padding: 0 3em;
