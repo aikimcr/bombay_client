@@ -4,13 +4,15 @@ import { Link, Outlet } from 'react-router';
 import BombayLoginContext from '../Context/BombayLoginContext';
 import Button from '../Components/Widgets/Button';
 
-import './Top.scss';
+import './TopMode.scss';
 
-export const Top = () => {
+export const TopMode = () => {
   return (
-    <div className="top">
-      <h1 className="top__title">Welcome to the Bombay Band Manager System</h1>
-      <div className="top__content">
+    <div className="top-mode">
+      <h3 className="top-mode__title">
+        Welcome to the Bombay Band Manager System
+      </h3>
+      <div className="top-mode__content">
         <Outlet />
       </div>
     </div>

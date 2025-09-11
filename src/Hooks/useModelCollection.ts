@@ -105,6 +105,11 @@ export function useModelCollection({
   };
 
   useEffect(() => {
+    // console.log('changes', loading, isMounted, collection?.length, topRef);
+    if (!collection) {
+      return;
+    }
+
     if (!isMounted) {
       return;
     }

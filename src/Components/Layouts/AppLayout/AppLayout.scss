@@ -12,6 +12,7 @@
 
   background-color: var(--container-background-color);
   color: var(--container-color);
+  padding: 1rem;
 
   &__header {
     --container-background-color: var(--color-peach-255);
@@ -27,7 +28,10 @@
 
   &__content {
     display: block;
+    height: 100%;
+    overflow: hidden;
 
     @include global.standard-container;
+
   }
 }

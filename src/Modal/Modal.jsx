@@ -1,4 +1,5 @@
-import React, { createPortal } from 'react-dom';
+import React from 'react';
+import { createPortal } from 'react-dom';
 
 import PropTypes from 'prop-types';
 
