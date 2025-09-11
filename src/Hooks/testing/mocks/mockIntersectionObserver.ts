@@ -48,7 +48,13 @@ export class mockIntersectionObserver {
     return this.entries;
   }
 
-  disconnect() {}
+  disconnect() {
+    const idx = mockIntersectionObserver.observers.findIndex((candidate) => {
+      return candidate === this;
+    });
+
+    mockIntersectionObserver.observers.splice(idx, 1);
+  }
 
   _fireIntersect(target: Element, isIntersecting = true) {
     const entry = new mockEntry(target, isIntersecting);

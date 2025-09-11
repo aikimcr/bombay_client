@@ -20,6 +20,7 @@ exports[`Component should match snapshot 1`] = `
     <button
       class="button button__primary"
       id="table1-name-isNew"
+      type="button"
     >
       &lt;Please Choose&gt;
     </button>

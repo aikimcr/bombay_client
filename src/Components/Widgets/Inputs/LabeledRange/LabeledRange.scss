@@ -1,0 +1,14 @@
+.labeled-range {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  & > .labeled-range__label {
+    min-width: max-content;
+    max-width: 12ch;
+    width: 100%;
+  }
+}

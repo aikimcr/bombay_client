@@ -362,7 +362,7 @@ it('should return a null collection when not logged in', async () => {
     mountPromise.resolve();
   });
 
-  expect(mockIntersectionObserver.observers.length).toBe(1);
+  expect(mockIntersectionObserver.observers.length).toBe(0);
   expect(mockGetFromURLString).toHaveBeenCalledTimes(0);
   expect(screen.queryAllByTestId('test-list-item')).toHaveLength(0);
 });
@@ -386,7 +386,7 @@ it('should load the collection on login', async () => {
     mountPromise.resolve();
   });
 
-  expect(mockIntersectionObserver.observers.length).toBe(1);
+  expect(mockIntersectionObserver.observers.length).toBe(0);
   expect(mockGetFromURLString).toHaveBeenCalledTimes(0);
   expect(screen.queryAllByTestId('test-list-item')).toHaveLength(0);
 

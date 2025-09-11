@@ -1,0 +1,18 @@
+.range-input {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  justify-content: start;
+  gap: .5rem;
+
+  &__inputs {
+    display: grid;
+    grid-auto-flow: row;
+  }
+
+  &__input {
+    padding: .25rem 1rem;
+    border-radius: 1rem;
+  }
+}

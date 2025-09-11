@@ -9,13 +9,15 @@ import { ArtistCollection } from '../../Model/ArtistCollection';
 import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
 import { PickerButton } from '../../Components/Widgets/PickerButton.jsx';
 import LabeledSelect from '../../Components/Widgets/LabeledSelect.jsx';
-import LabeledRange from '../../Components/Widgets/LabeledRange.jsx';
+import LabeledRange from '../../Components/Widgets/Inputs/LabeledRange/LabeledRange.jsx';
 import LabeledTextArea from '../../Components/Widgets/LabeledTextArea.jsx';
+
+import './Song.scss';
 
 export const Song = ({ song }) => {
   const { getBootstrap } = useContext(BombayUtilityContext);
 
-  const [artistModel, setArtistModel] = useState(song ? song.artist() : null);
+  const [artistModel, setArtistModel] = useState(song ? song.artist : null);
 
   const { keySignatures } = getBootstrap();
   const keyOptions = keySignatures.map((key) => {
@@ -23,7 +25,7 @@ export const Song = ({ song }) => {
   });
 
   return (
-    <>
+    <div className="song-fields">
       <OldLabeledInput
         modelName="song"
         fieldName="name"
@@ -48,12 +50,14 @@ export const Song = ({ song }) => {
         model={song}
       />
       <LabeledRange
-        modelName="song"
+        inputId="tempo"
         fieldName="tempo"
         labelText="Tempo"
-        min={20}
-        max={220}
-        model={song}
+        inputProps={{
+          min: 20,
+          max: 220,
+          defaultValue: song?.tempo,
+        }}
       />
       <LabeledTextArea
         modelName="song"
@@ -61,7 +65,7 @@ export const Song = ({ song }) => {
         labelText="Lyrics"
         model={song}
       />
-    </>
+    </div>
   );
 };
 

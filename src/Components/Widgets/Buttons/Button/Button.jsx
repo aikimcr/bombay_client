@@ -8,6 +8,7 @@ export const Button = ({
   text,
   role = 'primary',
   onClick,
+  type = 'button',
   ...rest
 }) => {
   const classNames = classnames([className, 'button'], {
@@ -15,7 +16,7 @@ export const Button = ({
     button__secondary: role === 'secondary',
   });
   return (
-    <button {...rest} className={classNames} onClick={onClick}>
+    <button {...rest} type={type} className={classNames} onClick={onClick}>
       {text}
     </button>
   );

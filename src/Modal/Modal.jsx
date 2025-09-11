@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom';
 
 import PropTypes from 'prop-types';
 
-import './Modal.scss';
-import CloseButton from '../Components/Widgets/Buttons/CloseButton/CloseButton';
+import { CloseButton } from '../Components';
 
+import './Modal.scss';
 function Modal(props) {
   if (!props.open) return null;
 
