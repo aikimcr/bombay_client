@@ -1,0 +1,10 @@
+.select-input {
+  font-size: var(--standard-font-size);
+
+  &__select {
+    width: 100%;
+    font-size: var(--standard-font-size);
+    padding: 1px .75em;
+    cursor: pointer;
+  }
+}
