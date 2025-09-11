@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 import './Modal.scss';
-import CloseOrClear from '../Components/Widgets/CloseOrClear';
+import CloseButton from '../Components/Widgets/Buttons/CloseButton/CloseButton';
 
 function Modal(props) {
   if (!props.open) return null;
@@ -15,7 +15,7 @@ function Modal(props) {
     <div className="modal">
       <div className="header">
         <div className="title">{props.title}</div>
-        <CloseOrClear className="close" onClick={props.onClose} />
+        <CloseButton className="close" onClick={props.onClose} />
       </div>
       <div className="modal-content">{props.children}</div>
     </div>,

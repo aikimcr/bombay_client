@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import CloseOrClear from './CloseOrClear.jsx';
+import CloseButton from './Buttons/CloseButton/CloseButton.jsx';
 
 import './OldLabeledInput.scss';
 
@@ -56,7 +56,7 @@ function LabeledRange(props) {
           max={props.max}
           onChange={changeHandler}
         ></input>
-        <CloseOrClear onClick={clearValue} />
+        <CloseButton onClick={clearValue} />
       </div>
     </div>
   );

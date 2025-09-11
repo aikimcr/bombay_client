@@ -1,14 +1,14 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
-import CloseOrClear from './CloseOrClear.jsx';
+import CloseButton from './CloseButton.jsx';
 
 jest.useFakeTimers();
 
 it('should show a simple labeled input', async () => {
   const clickHandler = jest.fn();
 
-  const { asFragment } = render(<CloseOrClear onClick={clickHandler} />);
+  const { asFragment } = render(<CloseButton onClick={clickHandler} />);
 
   expect(asFragment).toMatchSnapshot();
 });
@@ -16,11 +16,11 @@ it('should show a simple labeled input', async () => {
 it('should call the click handler', async () => {
   const clickHandler = jest.fn();
 
-  render(<CloseOrClear onClick={clickHandler} />);
+  render(<CloseButton onClick={clickHandler} />);
 
   expect(clickHandler).not.toHaveBeenCalled();
 
-  const button = screen.getByText('\u2715');
+  const button = screen.getByTestId('close-button');
   button.click();
 
   expect(clickHandler).toHaveBeenCalledTimes(1);
