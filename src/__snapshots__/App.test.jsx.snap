@@ -38,15 +38,15 @@ exports[`Test App Compoment matches snapshopt 1`] = `
         class="app-layout__content"
       >
         <div
-          class="top"
+          class="top-mode"
         >
-          <h1
-            class="top__title"
+          <h3
+            class="top-mode__title"
           >
             Welcome to the Bombay Band Manager System
-          </h1>
+          </h3>
           <div
-            class="top__content"
+            class="top-mode__content"
           />
         </div>
       </div>

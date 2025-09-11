@@ -1,14 +1,13 @@
 @use 'global.scss';
 
 .App {
-  width: 100%;
-  height: 100%;
-  min-width: 800px;
-  min-height: 500px;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 
-  background: white;
-  color: black;
+  background: var(--color-peach-255);
+  color: var(--color-black-50);
   padding: 0;
-  border: .5rem black inset;
+  border: .5rem var(--color-black) inset;
+  border-radius: 1rem;
 }

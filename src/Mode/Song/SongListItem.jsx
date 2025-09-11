@@ -21,7 +21,7 @@ export const SongListItem = ({ song }) => {
   return (
     <>
       <li
-        className="card wide"
+        className="card"
         data-testid="song-list-card"
         onClick={() => setShowEdit(true)}
       >

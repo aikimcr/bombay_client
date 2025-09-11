@@ -32,7 +32,7 @@ exports[`Component should match snapshot 1`] = `
         class="song-list card-list"
       >
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -93,7 +93,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -154,7 +154,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -215,7 +215,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -276,7 +276,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -337,7 +337,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -398,7 +398,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -459,7 +459,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -520,7 +520,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div
@@ -581,7 +581,7 @@ exports[`Component should match snapshot 1`] = `
           </div>
         </li>
         <li
-          class="card wide"
+          class="card"
           data-testid="song-list-card"
         >
           <div

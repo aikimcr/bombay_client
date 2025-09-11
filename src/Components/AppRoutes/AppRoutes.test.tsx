@@ -8,7 +8,7 @@ const { MemoryRouter } = ReactRouter;
 // The jsx suffix is not needed here.  Ever.
 jest.mock('../../Mode/Artist/ArtistList');
 jest.mock('../../Mode/Song/SongList');
-jest.mock('../../Mode/Top');
+jest.mock('../../Mode/TopMode');
 jest.mock('../../Mode/PageNotFound');
 
 describe('Test AppRoutes', () => {

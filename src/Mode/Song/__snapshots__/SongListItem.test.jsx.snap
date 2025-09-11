@@ -3,7 +3,7 @@
 exports[`Component should match snapshot 1`] = `
 <DocumentFragment>
   <li
-    class="card wide"
+    class="card"
     data-testid="song-list-card"
   >
     <div

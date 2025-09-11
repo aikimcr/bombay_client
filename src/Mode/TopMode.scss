@@ -1,0 +1,28 @@
+@use '../global.scss';
+
+.top-mode {
+    border-top: 1px solid rgba(0, 0, 0, 0); // Prevent margin collapsing.
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+    gap: .25rem;
+
+    @include global.utiliity-component-background;
+
+    &__title {
+        text-align: center;
+        line-height: 1;
+        padding: 1rem .5rem;
+    }
+
+    &__content {
+        display: block;
+        height: 100%;
+        overflow: hidden;
+        padding: 2rem;
+    }
+}

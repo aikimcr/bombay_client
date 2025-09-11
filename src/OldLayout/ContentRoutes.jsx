@@ -5,7 +5,7 @@ import BombayLoginContext from '../Context/BombayLoginContext';
 
 import Login from '../Login/Login.jsx';
 
-import Top from '../Mode/Top.jsx';
+import Top from '../Mode/TopMode.jsx';
 // import ArtistList from "../Mode/Artist/ArtistList.jsx";
 // import SongList from "../Mode/Song/SongList.jsx";
 import PageNotFound from '../Mode/PageNotFound.jsx';
