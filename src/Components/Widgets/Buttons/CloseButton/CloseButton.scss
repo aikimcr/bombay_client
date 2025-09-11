@@ -1,0 +1,25 @@
+.close-button {
+  background: transparent;
+  font-size: var(--standard-font-size);
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  width: fit-content;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+
+  &:hover:not(:disabled) {
+    border-style: outset;
+  }
+
+  &:active:not(:disabled) {
+    border-style: inset;
+  }
+
+  &:disabled {
+    cursor: default;
+    color: rgb(50%, 50%, 50%);
+    opacity: .5;
+  }
+}
