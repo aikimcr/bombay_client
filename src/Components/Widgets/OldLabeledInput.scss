@@ -23,7 +23,6 @@
 .picker-button,
 .old-labeled-input,
 .labeled-select,
-.labeled-range,
 .labeled-textarea {
     position: relative;
     top: 0;
@@ -93,20 +92,6 @@
         font-size: var(--standard-font-size);
         padding: 1px .75em;
         cursor: pointer;
-    }
-}
-
-.labeled-range {
-    > .range-input {
-        flex-grow: 2; // This might not make a difference, but it was needed for input and button.
-        width: 100%;
-        display: grid;
-        grid-template-columns: auto 5ch calc(var(--standard-font-size) * 1.5);
-        gap: 0.5em;
-
-        > input[type="range"] {
-            cursor: pointer;
-        }
     }
 }
 

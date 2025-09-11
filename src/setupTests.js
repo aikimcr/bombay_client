@@ -21,21 +21,3 @@ globalThis.toggleLogin = function () {
   const changeButton = document.querySelector('.change-test-login');
   userEvent.click(changeButton);
 };
-
-globalThis.changeInput = async function (
-  root,
-  selector,
-  newValue,
-  timerAdvance = -1,
-) {
-  const inputField = selector ? root.querySelector(selector) : root;
-  fireEvent.change(inputField, { target: { value: newValue } });
-
-  if (timerAdvance >= 0) {
-    await act(async function () {
-      jest.advanceTimersByTime(timerAdvance);
-    });
-  }
-
-  return inputField;
-};

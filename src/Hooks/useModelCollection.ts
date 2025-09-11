@@ -105,7 +105,17 @@ export function useModelCollection({
   };
 
   useEffect(() => {
-    // console.log('changes', loading, isMounted, collection?.length, topRef);
+    // console.log('changes', loggedIn, loading, isMounted, collection?.length, topRef);
+    if (!loggedIn) {
+      collection?.clear();
+
+      if (observer.current) {
+        observer.current.disconnect();
+        observer.current = null;
+      }
+      return;
+    }
+
     if (!collection) {
       return;
     }
@@ -115,6 +125,10 @@ export function useModelCollection({
     }
 
     if (loading) {
+      return;
+    }
+
+    if (error) {
       return;
     }
 
@@ -131,29 +145,13 @@ export function useModelCollection({
         observer.current?.observe(myElement);
       }
     }
-  }, [loading, isMounted, collection]);
-
-  useEffect(() => {
-    // console.count(`loggedIn change, ${loggedIn}, ${collection} ${loading}`);
-    if (loading) {
-      return;
-    }
-
-    if (error) {
-      return;
-    }
 
     if (loggedIn && collection.length === 0) {
       refreshCollection();
       return;
     }
+  }, [loggedIn, loading, isMounted, collection]);
 
-    if (!loggedIn) {
-      collection.clear();
-    }
-  }, [loggedIn, loading, collection]);
-
-  // console.log('return collection', collection);
   return {
     loading,
     shouldPage,

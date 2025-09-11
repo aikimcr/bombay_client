@@ -1,7 +1,5 @@
 export * from './Buttons';
-export * from './Buttons/CloseButton/CloseButton';
 export * from './Inputs';
-export * from './LabeledRange';
 export * from './LabeledSelect';
 export * from './LabeledTextArea';
 export * from './PickerButton';
