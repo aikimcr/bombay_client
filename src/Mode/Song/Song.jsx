@@ -7,9 +7,13 @@ import BombayUtilityContext from '../../Context/BombayUtilityContext';
 import { ArtistCollection } from '../../Model/ArtistCollection';
 
 import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
-import { PickerButton } from '../../Components/Widgets/PickerButton.jsx';
-import LabeledSelect from '../../Components/Widgets/LabeledSelect.jsx';
-import LabeledRange from '../../Components/Widgets/Inputs/LabeledRange/LabeledRange.jsx';
+import {
+  LabeledRange,
+  PickerButton,
+  SelectInput,
+  LabeledInput,
+} from '../../Components';
+
 import LabeledTextArea from '../../Components/Widgets/LabeledTextArea.jsx';
 
 import './Song.scss';
@@ -41,13 +45,15 @@ export const Song = ({ song }) => {
         model={artistModel}
         onModelPicked={setArtistModel}
       />
-      <LabeledSelect
-        modelName="song"
-        fieldName="key_signature"
+      <LabeledInput
         labelText="Key"
-        options={keyOptions}
-        unsetLabel="<unset>"
-        model={song}
+        inputId="song-key"
+        InputField={SelectInput}
+        inputProps={{
+          options: keyOptions,
+          unsetLabel: '<unset>',
+          defaultValue: song?.key,
+        }}
       />
       <LabeledRange
         inputId="tempo"

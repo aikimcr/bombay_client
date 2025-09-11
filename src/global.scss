@@ -36,7 +36,7 @@
     --sidebar-background-color: $navigation-background-color;
     --sidebar-color: $navigation-color;
 
-    --standard-font-size: 2rem;
+    --standard-font-size: 1.5rem;
 
     --title-font-size: 4rem;
     --subtitle-font-size: 3rem;
@@ -44,6 +44,7 @@
     --card-background: var(--color-peach-175);
 
     --standard-button-size: calc(var(var(--standard-font-size)) + 1rem);
+    --standard-button-font-size: 2rem;
     --primary-button-background-color: rgb(76, 76, 243);
     --primary-button-color: rgb(25, 25, 25);
     --secondary-button-background-color: var(--color-black-50);

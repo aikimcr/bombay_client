@@ -1,28 +1,7 @@
 @use '../../global.scss';
 
-.close-or-clear,
-.close {
-    color: black;
-    background-color: white;
-    border-color: black;
-    border-style: solid;
-    border-radius: 50%;
-    font-size: var(--standard-font-size);
-    line-height: var(--standard-font-size);
-    height: calc(var(--standard-font-size) * 1.5);
-    text-align: center;
-    padding: 0;
-    cursor: pointer;
-}
-
-.close-or-clear,
-.close {
-    width: calc(var(--standard-font-size) * 1.5);
-}
-
 .picker-button,
 .old-labeled-input,
-.labeled-select,
 .labeled-textarea {
     position: relative;
     top: 0;
@@ -84,14 +63,6 @@
 
     input {
         display: none;
-    }
-}
-
-.labeled-select {
-    > select {
-        font-size: var(--standard-font-size);
-        padding: 1px .75em;
-        cursor: pointer;
     }
 }
 
