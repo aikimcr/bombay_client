@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { LabeledInput, TextInput } from '../../Components';
 
-import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
-
-export const Artist = (props) => {
+export const Artist = ({ artist }) => {
   return (
-    <OldLabeledInput
-      modelName="artist"
+    <LabeledInput
+      inputId="name"
       fieldName="name"
       labelText="Artist Name"
-      model={props.artist}
+      InputField={TextInput}
+      inputProps={{
+        defaultValue: artist?.name,
+      }}
     />
   );
 };
