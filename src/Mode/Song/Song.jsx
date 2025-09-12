@@ -6,15 +6,14 @@ import BombayUtilityContext from '../../Context/BombayUtilityContext';
 
 import { ArtistCollection } from '../../Model/ArtistCollection';
 
-import OldLabeledInput from '../../Components/Widgets/OldLabeledInput.jsx';
 import {
+  LabeledInput,
   LabeledRange,
   PickerButton,
   SelectInput,
-  LabeledInput,
+  TextAreaInput,
+  TextInput,
 } from '../../Components';
-
-import LabeledTextArea from '../../Components/Widgets/LabeledTextArea.jsx';
 
 import './Song.scss';
 
@@ -30,11 +29,14 @@ export const Song = ({ song }) => {
 
   return (
     <div className="song-fields">
-      <OldLabeledInput
-        modelName="song"
+      <LabeledInput
+        inputId="name"
         fieldName="name"
         labelText="Song Name"
-        model={song}
+        InputField={TextInput}
+        inputProps={{
+          defaultValue: song?.name,
+        }}
       />
       <PickerButton
         modelName="artist"
@@ -65,11 +67,12 @@ export const Song = ({ song }) => {
           defaultValue: song?.tempo,
         }}
       />
-      <LabeledTextArea
-        modelName="song"
-        fieldName="lyrics"
+      <LabeledInput
         labelText="Lyrics"
-        model={song}
+        inputId="lyrics"
+        fieldName="lyrics"
+        InputField={TextAreaInput}
+        defaultValue={song?.lyrics}
       />
     </div>
   );
