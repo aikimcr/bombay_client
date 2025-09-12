@@ -1,0 +1,21 @@
+.navigation-dropdown {
+  background: transparent;
+
+  &__button {
+    font-size: var(--standard-button-font-size);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    anchor-name: --navigation-dropdown-button;
+  }
+
+  &__menu {
+    background: var(--navigation-background-color);
+    color: var(--navigation-color);
+    margin: 0;
+    position-anchor: --navigation-dropdown-button;
+    position-area: y-end span-right;
+    position-try: normal flip-start;
+    border-radius: .5em;
+  }
+}

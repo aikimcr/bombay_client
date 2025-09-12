@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { NavigationDropdown } from '../../Widgets';
 
 import './HeaderLayout.scss';
 
@@ -15,6 +16,9 @@ export const HeaderLayout: React.FC<HeaderLayoutProps> = ({
 }) => {
   return (
     <div className="header-layout">
+      <div className="header-layout__navigation">
+        <NavigationDropdown />
+      </div>
       <header className="header-layout__title">{title}</header>
       <div className="header-layout__content">{children}</div>
       <footer className="header-layout__footer">{footer}</footer>

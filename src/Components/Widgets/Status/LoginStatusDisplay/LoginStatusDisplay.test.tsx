@@ -38,8 +38,9 @@ jest.mock('../../../../Hooks/useRouteManager', () => {
   };
 });
 
-import { LoginStatusDisplay } from '.';
 import { ContextChanger } from '../../../../testHelpers/ContextChanger';
+
+import { LoginStatusDisplay } from '.';
 
 describe('LoginStatusDisplay', () => {
   describe('when logged out', () => {
