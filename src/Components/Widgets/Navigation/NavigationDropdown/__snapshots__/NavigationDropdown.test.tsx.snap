@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test NavigationDropdown Logged In should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="navigation-dropdown"
+  >
+    <button
+      aria-controls="navigation-dropdown__menu"
+      aria-expanded="false"
+      aria-haspopup="menu"
+      class="navigation-dropdown__button"
+      data-testid="navigation-dropdown-button"
+      id="navigation-dropdown__button"
+      popovertarget="navigation-dropdown__menu"
+      popovertargetaction="toggle"
+      type="button"
+    >
+      <i
+        class="fa-solid fa-bars"
+      />
+    </button>
+    <dialog
+      class="navigation-dropdown__menu"
+      data-testid="navigation-dropdown-menu"
+      id="navigation-dropdown__menu"
+      popover="auto"
+    >
+      <div
+        class="navigation-dropdown-content"
+      >
+        <button
+          class="navigation-button"
+          data-path="/artistList"
+          data-testid="navigation-button"
+          type="button"
+        >
+          Artists
+        </button>
+        <button
+          class="navigation-button"
+          data-path="/songList"
+          data-testid="navigation-button"
+          type="button"
+        >
+          Songs
+        </button>
+      </div>
+    </dialog>
+  </div>
+  <button
+    class="change-test-login"
+    data-testid="change-test-login"
+  >
+    Change Login
+  </button>
+</DocumentFragment>
+`;
