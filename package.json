@@ -5,6 +5,7 @@
     "node": ">=v22.18.0"
   },
   "private": true,
+  "homepage": "htps://mriehle.com/bombay_client/",
   "dependencies": {
     "@babel/core": "^7.28.4",
     "@babel/eslint-parser": "^7.28.4",

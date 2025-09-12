@@ -1,6 +1,4 @@
-import React, { MouseEventHandler, ToggleEventHandler, useRef } from 'react';
-import { useRouteManager } from '../../../../Hooks/useRouteManager';
-import { isHTMLElement } from '../../../../Utilities';
+import React, { MouseEventHandler } from 'react';
 import { NavigationButton } from '..';
 
 import './NavigationDropdownContent.scss';
