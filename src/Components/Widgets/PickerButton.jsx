@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { PickerList } from '.';
 import { Button } from './Buttons';
 
-import './OldLabeledInput.scss';
 export const PickerButton = (props) => {
   const topRef = useRef(null);
   const inputRef = useRef(null);
