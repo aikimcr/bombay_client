@@ -1,6 +1,32 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
+import {
+  mockGetFromURLString,
+  mockPutToURLString,
+  mockPostToURLString,
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
+  mockPrepareURLFromArgs,
+} from '../../Network/testing';
+
+jest.mock('../../Network/Network', () => {
+  const originalModule = jest.requireActual('../../Network/Network');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
+    prepareURLFromArgs: mockPrepareURLFromArgs,
+    getFromURLString: mockGetFromURLString,
+    putToURLString: mockPutToURLString,
+    postToURLString: mockPostToURLString,
+  };
+});
+
 jest.mock('./Artist');
 jest.mock('../../Modal/FormModal', () => {
   const originalModule = jest.requireActual('../../Modal/FormModal');
@@ -14,9 +40,10 @@ jest.mock('../../Modal/FormModal', () => {
 
 import * as Network from '../../Network/Network';
 
-import { makeAModel } from '../../testHelpers/modelTools';
+import { makeADef, makeAModelFromDef } from '../../testHelpers/modelTools';
 
 import ArtistListItem from './ArtistListItem.jsx';
+import { TestArtistCollectionURL, TestUrlWithId } from '../../Model/testing';
 
 jest.useFakeTimers();
 
@@ -32,9 +59,13 @@ afterEach(() => {
 });
 
 it('Component should match snapshot', async () => {
-  const [modelDef, model] = makeAModel('artist', (def) => {
+  const modelDef = makeADef('artist', (def) => {
     def.name = 'Alessia Koelpin';
   });
+  mockBuildURL.mockReturnValue(
+    TestUrlWithId(TestArtistCollectionURL, modelDef.id),
+  );
+  const model = makeAModelFromDef(modelDef, 'artist');
 
   const { asFragment } = render(<ArtistListItem artist={model} />);
 
@@ -42,13 +73,21 @@ it('Component should match snapshot', async () => {
 });
 
 it('should render a list item', async () => {
-  const [_modelDef, model] = makeAModel('artist');
+  const modelDef = makeADef('artist');
+  mockBuildURL.mockReturnValue(
+    TestUrlWithId(TestArtistCollectionURL, modelDef.id),
+  );
+  const model = makeAModelFromDef(modelDef, 'artist');
   render(<ArtistListItem artist={model} />);
   expect(screen.getByTestId('artist-list-card')).toBeInTheDocument();
 });
 
 it('should open the editor modal', async () => {
-  const [_modelDef, model] = makeAModel('artist');
+  const modelDef = makeADef('artist');
+  mockBuildURL.mockReturnValue(
+    TestUrlWithId(TestArtistCollectionURL, modelDef.id),
+  );
+  const model = makeAModelFromDef(modelDef, 'artist');
   render(<ArtistListItem artist={model} />);
 
   const card = screen.getByTestId('artist-list-card');
@@ -68,7 +107,7 @@ it.skip('should save changes to the model', async () => {
     return mockPromise;
   });
 
-  const [modelDef, model] = makeAModel('artist');
+  const modelDef = makeADef('artist');
 
   const result = render(<ArtistListItem artist={model} />);
 

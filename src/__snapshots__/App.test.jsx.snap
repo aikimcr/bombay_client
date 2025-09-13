@@ -15,6 +15,9 @@ exports[`Test App Compoment matches snapshopt 1`] = `
         <div
           class="header-layout"
         >
+          <div
+            class="header-layout__navigation"
+          />
           <header
             class="header-layout__title"
           >

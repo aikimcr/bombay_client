@@ -1,11 +1,11 @@
 import {
   mockGetFromURLString,
   mockPutToURLString,
-  mockServerProtocol,
-  mockServerHost,
-  mockServerBasePath,
-  mockServerPort,
   mockPostToURLString,
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
+  mockPrepareURLFromArgs,
 } from '../Network/testing';
 
 jest.mock('../Network/Network', () => {
@@ -14,10 +14,10 @@ jest.mock('../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
+    prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     putToURLString: mockPutToURLString,
     postToURLString: mockPostToURLString,
@@ -34,6 +34,7 @@ import {
 
 describe('ArtistModel', () => {
   it('should instantiate a model', async () => {
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 119));
     const model = new ArtistModel({
       data: {
         id: 119,
@@ -47,6 +48,7 @@ describe('ArtistModel', () => {
   });
 
   it('should create a model from a definition', async () => {
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 63));
     const model = ArtistModel.from<ArtistData, ArtistModel>({
       id: 63,
       name: 'Traffic',
@@ -58,6 +60,7 @@ describe('ArtistModel', () => {
   });
 
   it('should create a model from a definition with keepId', async () => {
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 63));
     const model = ArtistModel.from<ArtistData, ArtistModel>(
       {
         id: 63,
@@ -73,6 +76,9 @@ describe('ArtistModel', () => {
 
   it('should fetch an artist model', async () => {
     const [getPromise, fetchBody] = setupArtistModelFetch();
+    mockBuildURL.mockReturnValue(
+      TestUrlWithId(TestArtistCollectionURL, fetchBody.id),
+    );
     const model = new ArtistModel({ id: fetchBody.id });
 
     const fetchPromise = model.ready;
@@ -90,6 +96,7 @@ describe('ArtistModel', () => {
   });
 
   it('Create and save an artist', async () => {
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 25));
     const artist = new ArtistModel({});
 
     const postPromise = PromiseWithResolvers();
@@ -121,6 +128,7 @@ describe('ArtistModel', () => {
     const putPromise = PromiseWithResolvers();
     mockPutToURLString.mockReturnValue(putPromise.promise);
 
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 43));
     const artistDef: ArtistData = {
       id: 43,
       name: 'Ringo Starr',
@@ -151,6 +159,7 @@ describe('ArtistModel', () => {
 
   it('should not recognize a base model as an artist model', async () => {
     // If the class extension is done correctly, TypeScript should just handle this.
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestArtistCollectionURL, 10));
     const def = {
       data: {
         id: 10,

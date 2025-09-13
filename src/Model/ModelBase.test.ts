@@ -8,10 +8,9 @@ import {
   mockPutToURLString,
   mockPrepareURLFromArgs,
   mockPostToURLString,
-  mockServerProtocol,
-  mockServerHost,
-  mockServerBasePath,
-  mockServerPort,
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
 } from '../Network/testing';
 
 jest.mock('../Network/Network', () => {
@@ -20,10 +19,9 @@ jest.mock('../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
     prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     postToURLString: mockPostToURLString,
@@ -44,6 +42,7 @@ import {
 describe('ModelBase', () => {
   describe('Basic creation', () => {
     it('should instantiate a model', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
       const def: TestModelOneData = {
         id: 119,
         name: 'xyzzy',
@@ -65,6 +64,7 @@ describe('ModelBase', () => {
     });
 
     it('should instantiate a model keeping the id', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
       const model = new TestModelOne({
         data: {
           id: 119,
@@ -85,6 +85,7 @@ describe('ModelBase', () => {
     });
 
     it('should create an empty model', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
       const model = new TestModelOne({});
 
       expect(TestModelOne.isModel(model)).toBeTruthy();
@@ -95,6 +96,7 @@ describe('ModelBase', () => {
     });
 
     it('should create a model from a definition', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 63));
       const model = TestModelOne.from<TestModelOneData, TestModelOne>({
         id: 63,
         name: 'Plover',
@@ -112,6 +114,7 @@ describe('ModelBase', () => {
     });
 
     it('should create a model from a definition keeping the id', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 63));
       const model = TestModelOne.from<TestModelOneData, TestModelOne>(
         {
           id: 63,
@@ -132,6 +135,9 @@ describe('ModelBase', () => {
 
     it('should fetch a model', async () => {
       const [getPromise, fetchBody] = setupTestModelOneFetch();
+      mockBuildURL.mockReturnValue(
+        TestUrlWithId(TestCollectionOneURL, fetchBody.id),
+      );
       const model = new TestModelOne({ id: fetchBody.id });
 
       const fetchPromise = model.ready;
@@ -151,6 +157,7 @@ describe('ModelBase', () => {
     });
 
     it('should clone a model', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
       const [getPromise, fetchBody] = setupTestModelOneFetch();
       const model = new TestModelOne({ id: fetchBody.id });
 
@@ -174,6 +181,7 @@ describe('ModelBase', () => {
   describe('Saving data', () => {
     it('Create and save a model', async () => {
       const model = new TestModelOne({});
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 10));
 
       const postPromise = PromiseWithResolvers();
       mockPostToURLString.mockReturnValue(postPromise.promise);
@@ -205,6 +213,7 @@ describe('ModelBase', () => {
     });
 
     it('should save changes to the model', async () => {
+      mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
       const [getPromise, fetchBody] = setupTestModelOneFetch();
 
       const model = new TestModelOne({ id: fetchBody.id });
@@ -255,4 +264,5 @@ describe('ModelBase', () => {
   // I need collections done before I can do this.
   // describe('References', () => {
   //   it('should set up a refe
+  mockBuildURL.mockReturnValue(TestUrlWithId(TestCollectionOneURL, 119));
 });

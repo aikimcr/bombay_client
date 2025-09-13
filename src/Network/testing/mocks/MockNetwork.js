@@ -1,10 +1,9 @@
 const RealNetwork = jest.requireActual('../../Network');
 
-export const mockServerProtocol = 'https';
-export const mockServerHost = 'fake';
-export const mockServerBasePath = 'xyzzy';
-export const mockServerPort = null;
+export const mockDefaultAPIServer = 'https://fake';
+export const mockDefaultAPIBasePath = 'xyzzy';
 
+export const mockBuildURL = jest.fn();
 export const mockPrepareURLFromArgs = jest.fn();
 export const mockGetFromURLString = jest.fn();
 export const mockPostToURLString = jest.fn();

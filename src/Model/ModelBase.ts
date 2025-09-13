@@ -86,14 +86,18 @@ export class ModelBase<ModelData extends ModelDataBase = ModelDataBase> {
         omitKeys.shift();
 
         if (data.id) {
-          this._url = buildURL({ path: `/${this.tableName}/${data.id}` });
+          this._url = buildURL({
+            applicationPaths: [this.tableName, data.id.toString()],
+          }).toString();
         }
       }
 
       this.createRefmodels(omit(data, omitKeys));
       this._readyPromise = Promise.resolve(this._data);
     } else if (id) {
-      this._url = buildURL({ path: `/${this.tableName}/${id}` });
+      this._url = buildURL({
+        applicationPaths: [this.tableName, id.toString()],
+      }).toString();
       this._readyPromise = this.fetch();
     } else {
       // @ts-expect-error Typescript doesn't handle this sort of thing well.
@@ -129,6 +133,7 @@ export class ModelBase<ModelData extends ModelDataBase = ModelDataBase> {
   private async fetch(): Promise<ModelData | {}> {
     try {
       const fetchedData = await getFromURLString(this._url);
+      // @ts-expect-error This is annoying
       this.createRefmodels(omit(fetchedData, ['url']));
       return fetchedData;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -163,18 +168,24 @@ export class ModelBase<ModelData extends ModelDataBase = ModelDataBase> {
     }
 
     if (this._data.id) {
-      this._url = buildURL({ path: `/${this.tableName}/${this._data.id}` });
+      this._url = buildURL({
+        applicationPaths: [this.tableName, this._data.id.toString()],
+      }).toString();
 
       const newDef = await putToURLString(this._url, this._data);
+      // @ts-expect-error Derivations need to be smarter.
       this.createRefmodels(omit(newDef, ['url']));
       return this._data;
     }
 
-    const saveUrl = buildURL({ path: `/${this.tableName}` });
+    const saveUrl = buildURL({ applicationPaths: [this.tableName] }).toString();
     const newDef = await postToURLString(saveUrl, this._data);
 
+    // @ts-expect-error Derivations need to be smarter.
     this.createRefmodels(omit(newDef, ['url']));
-    this._url = buildURL({ path: `/${this.tableName}/${this._data.id}` });
+    this._url = buildURL({
+      applicationPaths: [this.tableName, this._data.id.toString()],
+    }).toString();
 
     return this._data;
   }

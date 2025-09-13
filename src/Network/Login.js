@@ -33,7 +33,7 @@ export async function loginStatus(expireMinutes = 30) {
       return true;
     } else {
       try {
-        const requestURL = prepareURLFromArgs('login');
+        const requestURL = prepareURLFromArgs(['login']);
         const resultPromise = getFromURLString(requestURL.toString());
         const result = await resultPromise;
 
@@ -56,9 +56,9 @@ export async function loginStatus(expireMinutes = 30) {
 
 export async function refreshToken() {
   try {
-    const requestUrl = prepareURLFromArgs('login');
+    const requestUrl = prepareURLFromArgs(['login']);
     const result = await putToURLString(requestUrl.toString(), {});
-    setToken(result);
+    setToken(result.body);
     return getToken();
   } catch (err) {
     deleteToken();
@@ -68,12 +68,12 @@ export async function refreshToken() {
 
 export async function login(username, password) {
   try {
-    const requestURL = prepareURLFromArgs('login');
+    const requestURL = prepareURLFromArgs(['login']);
     const result = await postToURLString(requestURL.toString(), {
       username,
       password,
     });
-    setToken(result);
+    setToken(result.body);
     return getToken();
   } catch (err) {
     deleteToken();
