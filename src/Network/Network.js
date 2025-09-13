@@ -49,6 +49,8 @@ export function normalizeAndJoinPath(...pathParts) {
 }
 
 export function buildURL(args = {}) {
+  // eslint-disable-next-line prettier/prettier, no-console
+  console.log('buildUrl', serverProtocol, serverHost, serverBasePath, serverPort);
   let { hostname, path, protocol, port } = {
     hostname: serverHost,
     path: '/',
