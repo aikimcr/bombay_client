@@ -1,39 +1,13 @@
 // Manage XHR request calls.  This is the low-level stuff.
 // import serverConfig from './serverConfig';
-const serverConfig = {};
-
-const serverConfigKeys = {
-  serverProtocol: 'REACT_APP_SERVER_PROTOCOL',
-  serverHost: 'REACT_APP_SERVER_HOST',
-  serverBasePath: 'REACT_APP_SERVER_BASE_PATH',
-  serverPort: 'REACT_APP_SERVER_PORT',
-};
-
-for (const key in serverConfigKeys) {
-  if (process.env.hasOwnProperty(serverConfigKeys[key])) {
-    const value = process.env[serverConfigKeys[key]];
-
-    switch (value) {
-      case 'null':
-      case 'none':
-      case 'empty':
-        serverConfig[key] = null;
-        break;
-
-      default:
-        serverConfig[key] = value;
-    }
-  }
-}
-
-function setConfigOption(key, defaultConfig) {
-  return serverConfig.hasOwnProperty(key) ? serverConfig[key] : defaultConfig;
-}
-
-export const serverProtocol = setConfigOption('serverProtocol', 'http');
-export const serverHost = setConfigOption('serverHost', 'localhost');
-export const serverBasePath = setConfigOption('serverBasePath', '');
-export const serverPort = setConfigOption('serverPort', 2001);
+export const serverProtocol = process.env.serverProtocol;
+export const serverHost = process.env.serverHost;
+export const serverBasePath = process.env.serverBasePath;
+export const serverPort = process.env.serverPort;
+// export const serverProtocol = process.env.serverProtocol || 'http';
+// export const serverHost = process.env.serverHost || 'localhost';
+// export const serverBasePath = process.env.serverBasePath || '';
+// export const serverPort = process.env.serverPort || 2001;
 
 // A diangnostic to turn on for deploy problems.
 // console.log(`Server Base URL: ${prepareURLFromArgs('')}`);
