@@ -55,7 +55,7 @@ export function buildURL(args = {}) {
     hostname: serverHost,
     path: '/',
     protocol: serverProtocol,
-    port: serverPort,
+    port: serverPort === 'default' ? null : serverPort,
     ...args,
   };
 
