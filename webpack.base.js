@@ -5,7 +5,6 @@ const buildPath = path.resolve(__dirname, 'dist');
 const Dotenv = require('dotenv-webpack');
 
 const pluginsData = [
-  new Dotenv(),
   new HtmlWebpackPlugin({
     template: './src/index.html',
     inject: true,

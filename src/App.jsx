@@ -69,7 +69,7 @@ export const App = () => {
   }
 
   return (
-    <div className="App" data-testid="app">
+    <div className="App" data-testid="app" data-appmode={process.env.APP_MODE}>
       <ConfigurationContext.Provider value={appConfig}>
         <BombayLoginContext.Provider value={loginContext}>
           <BombayUtilityContext.Provider value={utilities}>
