@@ -1,9 +1,9 @@
 // Manage XHR request calls.  This is the low-level stuff.
 // import serverConfig from './serverConfig';
-export const serverProtocol = process.env.serverProtocol;
-export const serverHost = process.env.serverHost;
-export const serverBasePath = process.env.serverBasePath;
-export const serverPort = process.env.serverPort;
+export const serverProtocol = process.env.REACT_APP_SERVER_PROTOCOL;
+export const serverHost = process.env.REACT_APP_SERVER_HOST;
+export const serverBasePath = process.env.REACT_APP_SERVER_BASE_PATH;
+export const serverPort = process.env.REACT_APP_SERVER_PORT;
 // export const serverProtocol = process.env.serverProtocol || 'http';
 // export const serverHost = process.env.serverHost || 'localhost';
 // export const serverBasePath = process.env.serverBasePath || '';
