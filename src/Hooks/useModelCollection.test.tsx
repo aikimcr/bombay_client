@@ -19,6 +19,9 @@ import { mockIntersectionObserver } from './testing';
 // });
 
 import {
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
   mockGetFromURLString,
   mockLogin,
   mockLoginStatus,
@@ -27,10 +30,6 @@ import {
   mockPrepareURLFromArgs,
   mockPutToURLString,
   mockRefreshToken,
-  mockServerBasePath,
-  mockServerHost,
-  mockServerPort,
-  mockServerProtocol,
 } from '../Network/testing';
 
 jest.mock('../Network/Login', () => {
@@ -52,10 +51,9 @@ jest.mock('../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
     prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     postToURLString: mockPostToURLString,
@@ -123,6 +121,7 @@ jest.useFakeTimers();
 beforeEach(() => {
   window.IntersectionObserver = mockIntersectionObserver;
   mockPrepareURLFromArgs.mockReturnValue(new URL('https://xyzzy/testTable'));
+  mockBuildURL.mockReturnValue(new URL(TestCollectionOneURL));
 });
 
 afterEach(() => {

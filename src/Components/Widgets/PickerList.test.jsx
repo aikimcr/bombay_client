@@ -7,14 +7,13 @@ import {
   mockRefreshToken,
   mockLogin,
   mockLogout,
-  mockServerProtocol,
-  mockServerHost,
-  mockServerBasePath,
-  mockServerPort,
   mockPrepareURLFromArgs,
   mockGetFromURLString,
   mockPostToURLString,
   mockPutToURLString,
+  mockDefaultAPIServer,
+  mockDefaultAPIBasePath,
+  mockBuildURL,
 } from '../../Network/testing';
 
 jest.mock('../../Network/Login', () => {
@@ -36,10 +35,9 @@ jest.mock('../../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
     prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     postToURLString: mockPostToURLString,

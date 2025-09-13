@@ -71,6 +71,7 @@
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
     "test": "jest --config ./jest.config.js --runInBand --no-cache",
+    "test:debug": "node node_modules/.bin/jest --config ./jest.config.js --runInBand --no-cache",
     "test:watch": "jest --config ./jest.config.js --runInBand --no-cache --watch",
     "test:quiet": "jest --config ./jest.config.js --runInBand --no-cache --reporters='jest-silent-reporter' --reporters='summary' ",
     "eslint": "eslint --fix ./src"

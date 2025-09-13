@@ -11,14 +11,13 @@
 // - Provide a mechanism to post or delete for models.
 // - Be agnostic to the model type.
 import {
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
   mockGetFromURLString,
   mockPostToURLString,
   mockPrepareURLFromArgs,
   mockPutToURLString,
-  mockServerProtocol,
-  mockServerHost,
-  mockServerBasePath,
-  mockServerPort,
 } from '../Network/testing';
 
 jest.mock('../Network/Network', () => {
@@ -27,10 +26,9 @@ jest.mock('../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
     prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     postToURLString: mockPostToURLString,
@@ -47,6 +45,10 @@ import {
   TestSongCollectionURL,
   TestUrlWithOffsets,
 } from './testing';
+
+beforeEach(() => {
+  mockBuildURL.mockReturnValue(new URL(TestSongCollectionURL));
+});
 
 describe('SongCollection', () => {
   it('should not recognize a base collection as a song collection', async () => {

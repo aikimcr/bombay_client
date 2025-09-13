@@ -1,4 +1,5 @@
 import {
+  mockBuildURL,
   mockGetFromURLString,
   mockPrepareURLFromArgs,
 } from '../../../Network/testing';
@@ -166,6 +167,7 @@ export const setupTestCollectionOneFetch = (query = {}, length = 10) => {
   const getPromise = PromiseWithResolvers();
   mockGetFromURLString.mockReturnValueOnce(getPromise.promise);
   mockPrepareURLFromArgs.mockReturnValue(new URL(TestCollectionOneURL));
+  mockBuildURL.mockReturnValue(new URL(TestCollectionOneURL));
 
   const [models, fetchDef] = setupTestCollectionOneModels(length);
   const fetchBody = makeFetchBodyFromFetchDef(

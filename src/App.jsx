@@ -58,7 +58,7 @@ export const App = () => {
     getBootstrap,
   };
 
-  const routerBase = process.env.REACT_APP_ROUTER_BASE || '/';
+  const routerBase = process.env.CLIENT_ROUTER_BASE || '/';
 
   const appConfig = {
     routerBase,

@@ -1,4 +1,4 @@
-const Network = jest.requireActual('./Network');
+const ORIGINAL_ENV = process.env;
 
 const testToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGREM4MTEzOCIsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJhZG1pbiIsImFkbWluIjpmYWxzZX0sImlhdCI6MTY2NTk2NTA5OX0.2vz14X7Tm-oFlyOa7dcAF-5y5ympi_UlWyJNxO4xyS4';
@@ -28,6 +28,7 @@ function mockFetch() {
     mockText = JSON.stringify(mockJSON);
   }
 
+  // @ts-expect-error Fetch is complicated to mock out completely.  Probably should look into using msw.
   global.fetch = jest.fn(() => {
     return Promise.resolve({
       ok: mockOk,
@@ -39,57 +40,138 @@ function mockFetch() {
   });
 }
 
-describe('utilities', function () {
-  it('Should normallize the paths correctly', () => {
-    let normalPath = Network.normalizeAndJoinPath();
-    expect(normalPath).toBe('/');
+const testEnvValues = [
+  {
+    CLIENT_ROUTER_BASE: '/bombay_client',
+    SERVER: 'https://www.mriehle.com',
+    SERVER_BASE_PATH: '/bombay_server',
+    NODE_ENV: 'production',
+  },
+  {
+    CLIENT_ROUTER_BASE: '/',
+    SERVER: 'http://localhost:2001',
+    SERVER_BASE_PATH: 'default',
+    NODE_ENV: 'development',
+  },
+];
 
-    normalPath = Network.normalizeAndJoinPath('foo', 'fum');
-    expect(normalPath).toBe('/foo/fum');
+describe.each(testEnvValues)(
+  'utilities [$SERVER/$SERVER_BASE_PATH, $CLIENT_ROUTER_BASE, $NODE_ENV]',
+  (testEnv: Record<string, string>) => {
+    let Network: typeof import('./Network');
 
-    normalPath = Network.normalizeAndJoinPath('/professor', 'rabbit');
-    expect(normalPath).toBe('/professor/rabbit');
+    beforeAll(async () => {
+      jest.resetModules();
+      process.env = {
+        ...ORIGINAL_ENV,
+        ...testEnv,
+      };
 
-    normalPath = Network.normalizeAndJoinPath('/', 'rabbi');
-    expect(normalPath).toBe('/rabbi');
+      Network = await import('./Network');
+    });
 
-    normalPath = Network.normalizeAndJoinPath('golem', '/');
-    expect(normalPath).toBe('/golem/');
+    afterAll(() => {
+      process.env = ORIGINAL_ENV;
+    });
 
-    normalPath = Network.normalizeAndJoinPath(
-      '/giraffe/',
-      '/armadillo',
-      'gorilla/',
-      'skunk',
-    );
-    expect(normalPath).toBe('/giraffe/armadillo/gorilla/skunk');
-  });
+    it('Should normalize the paths correctly', () => {
+      let normalPath = Network.normalizeAndJoinPath();
+      expect(normalPath).toEqual('/');
 
-  it('Should generate a valid url', () => {
-    let newUrl = Network.buildURL();
-    expect(newUrl).toBe(
-      `${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}/`,
-    );
+      normalPath = Network.normalizeAndJoinPath('foo', 'fum');
+      expect(normalPath).toEqual('/foo/fum');
 
-    newUrl = Network.buildURL({ protocol: 'http' });
-    expect(newUrl).toBe(`http://${Network.serverHost}:${Network.serverPort}/`);
+      normalPath = Network.normalizeAndJoinPath('/professor', 'rabbit');
+      expect(normalPath).toEqual('/professor/rabbit');
 
-    newUrl = Network.buildURL({ protocol: 'https' });
-    expect(newUrl).toBe(`https://${Network.serverHost}:${Network.serverPort}/`);
+      normalPath = Network.normalizeAndJoinPath('/', 'rabbi');
+      expect(normalPath).toEqual('/rabbi');
 
-    newUrl = Network.buildURL({ path: '/foobar' });
-    expect(newUrl).toBe(
-      `${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}/foobar`,
-    );
+      normalPath = Network.normalizeAndJoinPath('golem', '/');
+      expect(normalPath).toEqual('/golem/');
 
-    newUrl = Network.buildURL({ path: [Network.serverBasePath, 'login'] });
-    expect(newUrl).toBe(
-      `${Network.serverProtocol}://${Network.serverHost}:${Network.serverPort}${Network.serverBasePath}/login`,
-    );
-  });
-});
+      normalPath = Network.normalizeAndJoinPath(
+        '/giraffe/',
+        '/armadillo',
+        'gorilla/',
+        'skunk',
+      );
+      expect(normalPath).toEqual('/giraffe/armadillo/gorilla/skunk');
+    });
+
+    it('default values should be set', async () => {
+      const { defaultAPIServer, defaultAPIBasePath } = Network;
+      expect(defaultAPIServer).toEqual(testEnv.SERVER);
+      expect(defaultAPIBasePath).toEqual(testEnv.SERVER_BASE_PATH);
+    });
+
+    const getTestBasePath = (withSlash = true) => {
+      if (Network.defaultAPIBasePath === 'default') {
+        return withSlash ? '/' : '';
+      }
+
+      return Network.defaultAPIBasePath;
+    };
+
+    it('Should generate a valid url', () => {
+      expect(Network.buildURL().toString()).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath()}`,
+      );
+
+      expect(
+        Network.buildURL({ applicationPaths: ['/foobar'] }).toString(),
+      ).toEqual(`${Network.defaultAPIServer}${getTestBasePath(false)}/foobar`);
+
+      expect(
+        Network.buildURL({ applicationPaths: ['/foobar', 'glorp'] }).toString(),
+      ).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath(false)}/foobar/glorp`,
+      );
+
+      expect(
+        Network.buildURL({ applicationPaths: ['login'] }).toString(),
+      ).toEqual(`${Network.defaultAPIServer}${getTestBasePath(false)}/login`);
+    });
+
+    it('should generate a valid url with a query', () => {
+      expect(Network.prepareURLFromArgs().toString()).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath()}`,
+      );
+
+      expect(Network.prepareURLFromArgs([], { offset: 10 }).toString()).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath()}?offset=10`,
+      );
+
+      expect(Network.prepareURLFromArgs(['foobar']).toString()).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath(false)}/foobar`,
+      );
+
+      expect(
+        Network.prepareURLFromArgs(['foobar'], { offset: 10 }).toString(),
+      ).toEqual(
+        `${Network.defaultAPIServer}${getTestBasePath(false)}/foobar?offset=10`,
+      );
+    });
+  },
+);
 
 describe('include the auth header', function () {
+  let Network: typeof import('./Network');
+
+  beforeAll(async () => {
+    jest.resetModules();
+    process.env = {
+      ...ORIGINAL_ENV,
+      ...testEnvValues[1],
+    };
+
+    Network = await import('./Network');
+  });
+
+  afterAll(() => {
+    process.env = ORIGINAL_ENV;
+  });
+
   beforeEach(() => {
     localStorage.setItem('jwttoken', testToken);
   });
@@ -99,11 +181,15 @@ describe('include the auth header', function () {
   });
 
   it('should retrieve the url', async () => {
-    mockJSON = { id: 109, name: 'xyzzy', description: 'Plover' };
+    mockJSON = {
+      id: 109,
+      name: 'xyzzy',
+      description: 'Plover',
+    };
     mockFetch();
 
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table', '1'],
+      applicationPaths: [Network.defaultAPIBasePath, 'table', '1'],
     });
     const data = await Network.getFromURLString(requestUrl.toString());
     expect(data).toEqual(mockJSON);
@@ -132,8 +218,8 @@ describe('include the auth header', function () {
 
   it('Should post the body to the URL', async () => {
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table'],
-    });
+      applicationPaths: [Network.defaultAPIBasePath, 'table'],
+    }).toString();
     mockJSON = {
       id: 1,
       name: 'xyzzy',
@@ -163,8 +249,8 @@ describe('include the auth header', function () {
 
   it('Should put the body to the URL', async () => {
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table', '1'],
-    });
+      applicationPaths: [Network.defaultAPIBasePath, 'table', '1'],
+    }).toString();
     mockJSON = {
       id: 1,
       name: 'xyzzy',
@@ -196,13 +282,33 @@ describe('include the auth header', function () {
 });
 
 describe('do not include the auth header', function () {
+  let Network: typeof import('./Network');
+
+  beforeAll(async () => {
+    jest.resetModules();
+    process.env = {
+      ...ORIGINAL_ENV,
+      ...testEnvValues[1],
+    };
+
+    Network = await import('./Network');
+  });
+
+  afterAll(() => {
+    process.env = ORIGINAL_ENV;
+  });
+
   it('should retrieve the url', async () => {
-    mockJSON = { id: 109, name: 'xyzzy', description: 'Plover' };
+    mockJSON = {
+      id: 109,
+      name: 'xyzzy',
+      description: 'Plover',
+    };
 
     mockFetch();
 
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table', '1'],
+      applicationPaths: [Network.defaultAPIBasePath, 'table', '1'],
     });
     const data = await Network.getFromURLString(requestUrl.toString());
     expect(data).toEqual(mockJSON);
@@ -229,8 +335,8 @@ describe('do not include the auth header', function () {
 
   it('Should post the body to the URL', async () => {
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table'],
-    });
+      applicationPaths: [Network.defaultAPIBasePath, 'table'],
+    }).toString();
     mockJSON = {
       id: 1,
       name: 'xyzzy',
@@ -259,8 +365,8 @@ describe('do not include the auth header', function () {
 
   it('Should put the body to the URL', async () => {
     const requestUrl = Network.buildURL({
-      path: [Network.serverBasePath, 'table', '1'],
-    });
+      applicationPaths: [Network.defaultAPIBasePath, 'table', '1'],
+    }).toString();
     mockJSON = {
       id: 1,
       name: 'xyzzy',

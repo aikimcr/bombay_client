@@ -5,7 +5,6 @@ const buildPath = path.resolve(__dirname, 'dist');
 const Dotenv = require('dotenv-webpack');
 
 const pluginsData = [
-  new Dotenv(),
   new HtmlWebpackPlugin({
     template: './src/index.html',
     inject: true,
@@ -13,9 +12,7 @@ const pluginsData = [
     filename: 'index.html',
   }),
   new CopyPlugin({
-    patterns: [
-      { from: path.resolve(__dirname, 'static'), to: './static' }
-    ],
+    patterns: [{ from: path.resolve(__dirname, 'static'), to: './static' }],
   }),
 ];
 
@@ -61,7 +58,9 @@ module.exports = {
       {
         test: /\.(scss|css)$/,
         use: [
-          'style-loader', 'css-loader', {
+          'style-loader',
+          'css-loader',
+          {
             loader: 'sass-loader',
             options: {
               api: 'modern-compiler',

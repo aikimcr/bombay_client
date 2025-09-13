@@ -54,7 +54,7 @@ export class CollectionBase<
   }: CollectionBaseConstructorArgs<ModelData, ModelType>) {
     this.tableName = tableName;
 
-    this._url = buildURL({ path: `/${this.tableName}` });
+    this._url = buildURL({ applicationPaths: [this.tableName] }).toString();
 
     if (fetch) {
       this._readyPromise = this.fetch(this._url);

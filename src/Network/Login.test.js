@@ -198,7 +198,7 @@ it('should put to login and save token', async () => {
     {},
   );
 
-  loginUrlPromise.resolve('xyzzy');
+  loginUrlPromise.resolve({ body: 'xyzzy' });
 
   const result = await loginPromise;
   expect(result).toEqual(localDecoded);
@@ -224,7 +224,7 @@ it('should post credentials to login and save token', async () => {
     { username: 'fred', password: 'friendly' },
   );
 
-  loginUrlPromise.resolve(testToken);
+  loginUrlPromise.resolve({ body: testToken });
 
   const result = await loginPromise;
 

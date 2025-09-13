@@ -4,10 +4,9 @@ import {
   mockPutToURLString,
   mockPrepareURLFromArgs,
   mockPostToURLString,
-  mockServerProtocol,
-  mockServerHost,
-  mockServerBasePath,
-  mockServerPort,
+  mockBuildURL,
+  mockDefaultAPIBasePath,
+  mockDefaultAPIServer,
 } from '../Network/testing';
 
 jest.mock('../Network/Network', () => {
@@ -16,10 +15,9 @@ jest.mock('../Network/Network', () => {
   return {
     __esModule: true,
     ...originalModule,
-    serverProtocol: mockServerProtocol,
-    serverHost: mockServerHost,
-    serverBasePath: mockServerBasePath,
-    serverPort: mockServerPort,
+    defaultAPIServer: mockDefaultAPIServer,
+    defaultAPIBasePath: mockDefaultAPIBasePath,
+    buildURL: mockBuildURL,
     prepareURLFromArgs: mockPrepareURLFromArgs,
     getFromURLString: mockGetFromURLString,
     postToURLString: mockPostToURLString,
@@ -42,6 +40,7 @@ import {
 describe('SongModel', () => {
   it('should instantiate a model', async () => {
     const def = makeASongModelDef();
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestSongCollectionURL, def.id));
     const model = SongModel.from<SongData, SongModel>(def, {
       keepId: true,
     });
@@ -58,6 +57,9 @@ describe('SongModel', () => {
 
   it('should fetch a song model', async () => {
     const [getPromise, fetchBody] = setupSongModelFetch();
+    mockBuildURL.mockReturnValue(
+      TestUrlWithId(TestSongCollectionURL, fetchBody.id),
+    );
     const model = new SongModel({ id: fetchBody.id });
 
     const fetchPromise = model.ready;
@@ -84,6 +86,7 @@ describe('SongModel', () => {
   });
 
   it('Create and save a song', async () => {
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestSongCollectionURL, 25));
     const song = new SongModel({});
 
     const postPromise = PromiseWithResolvers();
@@ -132,6 +135,9 @@ describe('SongModel', () => {
     mockPutToURLString.mockReturnValue(putPromise.promise);
 
     const oldBody = omit(makeASongModelDef(), 'artist');
+    mockBuildURL.mockReturnValue(
+      TestUrlWithId(TestSongCollectionURL, oldBody.id),
+    );
     const model = SongModel.from<SongData, SongModel>(oldBody, {
       keepId: true,
     });
@@ -170,6 +176,9 @@ describe('SongModel', () => {
     // If the class extension is done correctly, TypeScript should just handle this.
     const baseDef = makeADef('table1');
     const songDef = makeASongModelDef();
+    mockBuildURL.mockReturnValue(
+      TestUrlWithId(TestSongCollectionURL, songDef.id),
+    );
 
     const baseModel = new ModelBase({ data: baseDef });
     const songModel = new SongModel({ data: songDef });
@@ -190,6 +199,7 @@ describe('SongModel', () => {
     });
 
     const def = makeASongModelDef();
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestSongCollectionURL, def.id));
     const model = new SongModel({
       data: def,
       artist: artistModel,
@@ -208,6 +218,7 @@ describe('SongModel', () => {
     });
 
     const def = makeASongModelDef();
+    mockBuildURL.mockReturnValue(TestUrlWithId(TestSongCollectionURL, def.id));
     const model = new SongModel({
       data: def,
     });
