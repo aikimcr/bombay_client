@@ -53,7 +53,7 @@ export function buildURL(args = {}) {
   console.log('buildUrl', serverProtocol, serverHost, serverBasePath, serverPort);
   let { hostname, path, protocol, port } = {
     hostname: serverHost,
-    path: '/',
+    path: serverBasePath,
     protocol: serverProtocol,
     port: serverPort === 'default' ? null : serverPort,
     ...args,
@@ -82,7 +82,7 @@ export function buildURL(args = {}) {
 
 export const prepareURLFromArgs = (path, query) => {
   const requestUrl = new URL(buildURL());
-  requestUrl.pathname = normalizeAndJoinPath(serverBasePath, path);
+  requestUrl.pathname = path;
 
   for (const param in query) {
     requestUrl.searchParams.set(param, query[param]);
