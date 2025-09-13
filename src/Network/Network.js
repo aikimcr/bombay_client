@@ -82,7 +82,7 @@ export function buildURL(args = {}) {
 
 export const prepareURLFromArgs = (path, query) => {
   const requestUrl = new URL(buildURL());
-  requestUrl.pathname = path;
+  requestUrl.pathname = normalizeAndJoinPath(serverBasePath, path);
 
   for (const param in query) {
     requestUrl.searchParams.set(param, query[param]);
