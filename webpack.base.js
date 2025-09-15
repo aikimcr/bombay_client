@@ -34,8 +34,9 @@ module.exports = {
     alias: {
       dist: path.join(__dirname, './dist'),
       src: path.join(__dirname, './src'),
-      public: path.join(__dirname, './public'),
-      styles: path.resolve(__dirname, './src/utils/styles'),
+      '@styles': path.resolve(__dirname, './src/styles'),
+      '@utilities': path.resolve(__dirname, './src/utilities'),
+      '@network': path.resolve(__dirname, './src/Network'),
     },
   },
   module: {

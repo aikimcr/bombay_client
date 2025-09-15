@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 import { ClearButton } from '.';
 
-jest.useFakeTimers();
-
-it('should show a simple labeled input', async () => {
+it('should show a simple labeled input', () => {
   const clickHandler = jest.fn();
 
   const { asFragment } = render(<ClearButton onClick={clickHandler} />);
@@ -13,7 +11,7 @@ it('should show a simple labeled input', async () => {
   expect(asFragment).toMatchSnapshot();
 });
 
-it('should call the click handler', async () => {
+it('should call the click handler', () => {
   const clickHandler = jest.fn();
 
   render(<ClearButton onClick={clickHandler} />);

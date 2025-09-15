@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test ModelPickerList component should match snapshot 1`] = `
+<DocumentFragment>
+  <dialog
+    class="model-picker-list"
+    data-testid="model-picker-list"
+    id="model-picker-list"
+    popover="auto"
+  >
+    <ul
+      class="model-picker-list__list"
+      data-testid="model-picker-list-list"
+    >
+      <li
+        data-modelid="1"
+      >
+        fellow
+      </li>
+      <li
+        data-modelid="2"
+      >
+        property
+      </li>
+      <li
+        data-modelid="3"
+      >
+        yet
+      </li>
+      <li
+        data-modelid="4"
+      >
+        article
+      </li>
+      <li
+        data-modelid="5"
+      >
+        held
+      </li>
+      <li
+        data-modelid="6"
+      >
+        transportation
+      </li>
+      <li
+        data-modelid="7"
+      >
+        scene
+      </li>
+      <li
+        data-modelid="8"
+      >
+        current
+      </li>
+      <li
+        data-modelid="9"
+      >
+        life
+      </li>
+      <li
+        data-modelid="10"
+      >
+        printed
+      </li>
+    </ul>
+  </dialog>
+  <button
+    class="change-test-login"
+    data-testid="change-test-login"
+  >
+    Change Login
+  </button>
+</DocumentFragment>
+`;

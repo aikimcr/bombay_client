@@ -1,0 +1,72 @@
+@mixin standard-container {
+  background-color: var(--container-background-color);
+  color: var(--black-50);
+  border: var(--container-border);
+  padding: 1rem;
+  border-radius: 2rem;
+}
+
+@mixin form-container {
+  background-color: var(--color-peach-255);
+  color: var(--black-50);
+  border: var(--form-container-border);
+  border-radius: 2rem;
+  padding: 2.5rem;
+}
+
+@mixin utiliity-component-background {
+
+  a {
+      color: white;
+      font-size: 2rem;
+      ;
+  }
+}
+
+// Parent element must have height specificed.  100% should work.
+@mixin scrollListContainer($overflow-x: hidden) {
+    // height: 100%;
+    width: 100%;
+    overflow: $overflow-x auto;
+    scrollbar-width: thin;
+}
+
+@mixin ellipsisText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin inputBorder($borderRadius: 2rem, $borderStyle: ridge, $borderWidth: .25rem) {
+  border-color: var(--input-background-color);
+  border-radius: $borderRadius;
+  border-style: $borderStyle;
+  border-width: $borderWidth;
+}
+
+@mixin buttonBase($borderRadius: 2rem, $borderStyle: ridge, $borderWidth: .25rem) {
+  color: var(--button-color);
+  background-color: var(--button-background-color);
+  border-color: var(--button-background-color);
+  border-radius: $borderRadius;
+  border-style: $borderStyle;
+  border-width: $borderWidth;
+  font-size: var(--button-font-size);
+  line-height: 1;
+  padding: .25em .5em;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-style: outset;
+  }
+
+  &:active:not(:disabled) {
+    border-style: inset;
+  }
+
+  &:disabled {
+    cursor: default;
+    color: rgb(50%, 50%, 50%);
+    opacity: .5;
+  }
+}

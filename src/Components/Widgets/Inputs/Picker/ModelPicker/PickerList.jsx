@@ -1,8 +1,8 @@
 import React, { createRef, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import BombayLoginContext from '../../Context/BombayLoginContext';
-import { useModelCollection } from '../../Hooks/useModelCollection';
+import BombayLoginContext from '../../../../../Context/BombayLoginContext';
+import { useModelCollection } from '../../../../../Hooks/useModelCollection';
 
 export function PickerList({ pickModel, isOpen, initialCollection }) {
   const topRef = createRef();

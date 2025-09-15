@@ -14,10 +14,10 @@ import {
   mockDefaultAPIServer,
   mockDefaultAPIBasePath,
   mockBuildURL,
-} from '../../Network/testing';
+} from '../../../../../Network/testing';
 
-jest.mock('../../Network/Login', () => {
-  const originalModule = jest.requireActual('../../Network/Login');
+jest.mock('../../../../../Network/Login', () => {
+  const originalModule = jest.requireActual('../../../../../Network/Login');
 
   return {
     __esModule: true,
@@ -29,8 +29,8 @@ jest.mock('../../Network/Login', () => {
   };
 });
 
-jest.mock('../../Network/Network', () => {
-  const originalModule = jest.requireActual('../../Network/Network');
+jest.mock('../../../../../Network/Network', () => {
+  const originalModule = jest.requireActual('../../../../../Network/Network');
 
   return {
     __esModule: true,
@@ -45,17 +45,19 @@ jest.mock('../../Network/Network', () => {
   };
 });
 
-import { mockIntersectionObserver } from '../../Hooks/testing';
+import { mockIntersectionObserver } from '../../../../../Hooks/testing';
 
-import BombayLoginContext from '../../Context/BombayLoginContext';
+import BombayLoginContext from '../../../../../Context/BombayLoginContext';
 
-import { MockTestCollection, mockFetchBody, mockModels } from './testing';
+import {
+  MockTestCollection,
+  mockFetchBody,
+  mockModels,
+} from '../../../testing';
 
 import PickerList from './PickerList.jsx';
-import {
-  setupTestCollectionOneFetch,
-  TestCollectionOne,
-} from '../../Model/testing';
+import { setupTestCollectionOneFetch } from '../../../../../Model/testing';
+import { TestCollectionOne } from '../../../../../testHelpers';
 
 function TestWrapper({ loggedIn, children }) {
   const [loginState, setLoginState] = useState({ loggedIn });

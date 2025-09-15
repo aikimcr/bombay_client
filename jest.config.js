@@ -9,8 +9,7 @@ module.exports = {
     '^.+\\.[jt]sx?$': 'babel-jest',
     '.+\\.(scss|css)$': 'jest-css-modules-transform',
   },
-  // transformIgnorePatterns: ["/node_modules/(?!(get-browser-fingerprint)/)"],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-fixed-jsdom',
   testEnvironmentOptions: {
     customExportConditions: [''],
   },
@@ -25,4 +24,9 @@ module.exports = {
     '<rootDir>/scripts/',
     '<rootDir>/config/',
   ],
+  moduleNameMapper: {
+    '\\.(css|scss)$': 'identity-obj-proxy',
+    '^@utilities/(.*)$': '<rootDir>/src/utilities/$1',
+    '^@network/(.*)$': '<rootDir>/src/Network/$1',
+  },
 };

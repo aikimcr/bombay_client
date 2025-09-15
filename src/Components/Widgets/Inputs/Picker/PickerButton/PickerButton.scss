@@ -1,0 +1,20 @@
+@use '@styles/mixins.scss';
+
+.picker-button {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  justify-content: start;
+  align-items: center;
+  anchor-name: --picker-button;
+
+  @include mixins.buttonBase($borderRadius: 1rem, $borderStyle: solid, $borderWidth: 1px);
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--color-white-200) 2px 2px 1px 1px
+  }
+
+  &:active:not(:disabled) {
+    box-shadow: var(--color-white-200) 2px 2px 1px 1px inset
+  }
+}

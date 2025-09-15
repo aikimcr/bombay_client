@@ -65,15 +65,17 @@ jest.mock('jwt-decode');
 
 import {
   setupTestCollectionOneFetch,
-  TestCollectionOne,
-  TestCollectionOneURL,
-  TestModelOne,
   TestUrlWithOffsets,
 } from '../Model/testing';
 
 import BombayLoginContext from '../Context/BombayLoginContext';
 import { useModelCollection } from './useModelCollection';
-import { ContextChanger } from '../testHelpers';
+import {
+  ContextChanger,
+  TestCollectionOne,
+  TestCollectionOneURL,
+  TestModelOne,
+} from '../testHelpers';
 
 interface TestAppProps {
   initialCollection: TestCollectionOne;
