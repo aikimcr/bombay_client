@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test ModelPicker should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="model-picker"
+    id="test-picker"
+  >
+    <button
+      aria-controls="test-picker-popover"
+      aria-expanded="false"
+      aria-haspopup="menu"
+      class="picker-button"
+      data-testid="picker-button"
+      id="test-picker-button"
+      popovertarget="test-picker-popover"
+      popovertargetaction="toggle"
+      type="button"
+    >
+      dummy
+      <i
+        class="fa-solid fa-caret-down"
+      />
+    </button>
+    <dialog
+      class="model-picker-list"
+      data-testid="model-picker-list"
+      id="test-picker-popover"
+      popover="auto"
+    >
+      <ul
+        class="model-picker-list__list"
+        data-testid="model-picker-list-list"
+      />
+    </dialog>
+  </div>
+  <button
+    class="change-test-login"
+    data-testid="change-test-login"
+  >
+    Change Login
+  </button>
+</DocumentFragment>
+`;

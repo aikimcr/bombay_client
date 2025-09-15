@@ -1,5 +1,5 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
+// import storybook from "eslint-plugin-storybook";
 
 module.exports = [
   {
@@ -15,6 +15,7 @@ module.exports = [
       'jsx-a11y': require('eslint-plugin-jsx-a11y'),
       'no-only-tests': require('eslint-plugin-no-only-tests'),
       prettier: require('eslint-plugin-prettier'),
+      storybook: require('eslint-plugin-storybook'),
     },
     rules: {
       'jsx-a11y/alt-text': 1,

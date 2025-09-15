@@ -19,6 +19,12 @@ import {
   mockPrepareURLFromArgs,
   mockPutToURLString,
 } from '../Network/testing';
+import {
+  TestCollectionOne,
+  TestCollectionOneURL,
+  TestModelOne,
+  TestModelOneData,
+} from '../testHelpers';
 
 jest.mock('../Network/Network', () => {
   const originalModule = jest.requireActual('../Network/Network');
@@ -37,12 +43,8 @@ jest.mock('../Network/Network', () => {
 });
 
 import {
-  TestCollectionOne,
-  TestModelOne,
-  TestModelOneData,
   setupTestCollectionOneFetch,
   setupTestCollectionOneModels,
-  TestCollectionOneURL,
   TestUrlWithOffsets,
 } from './testing';
 

@@ -56,11 +56,11 @@ export const buildURL = ({
 }: buildUrlProps = {}) => {
   const allPaths = [...applicationPaths];
 
-  if (server === 'default') {
+  if (!server || server === 'default') {
     server = 'http://localhost:2001';
   }
 
-  if (basePath !== 'default') {
+  if (basePath && basePath !== 'default') {
     allPaths.unshift(basePath);
   }
 

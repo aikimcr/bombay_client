@@ -31,13 +31,12 @@ jest.mock('../Network/Network', () => {
 
 import * as Network from '../Network/Network';
 
+import { setupTestModelOneFetch, TestUrlWithId } from './testing';
 import {
-  setupTestModelOneFetch,
   TestCollectionOneURL,
   TestModelOne,
   TestModelOneData,
-  TestUrlWithId,
-} from './testing';
+} from '../testHelpers';
 
 describe('ModelBase', () => {
   describe('Basic creation', () => {

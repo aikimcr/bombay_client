@@ -9,7 +9,7 @@ import { ArtistCollection } from '../../Model/ArtistCollection';
 import {
   LabeledInput,
   LabeledRange,
-  PickerButton,
+  ModelPicker,
   SelectInput,
   TextAreaInput,
   TextInput,
@@ -21,6 +21,7 @@ export const Song = ({ song }) => {
   const { getBootstrap } = useContext(BombayUtilityContext);
 
   const [artistModel, setArtistModel] = useState(song ? song.artist : null);
+  const artistCollection = new ArtistCollection({});
 
   const { keySignatures } = getBootstrap();
   const keyOptions = keySignatures.map((key) => {
@@ -38,14 +39,9 @@ export const Song = ({ song }) => {
           defaultValue: song?.name,
         }}
       />
-      <PickerButton
-        modelName="artist"
-        targetField="artist_id"
-        fieldName="id"
-        labelText="Artist"
-        collectionClass={ArtistCollection}
-        model={artistModel}
-        onModelPicked={setArtistModel}
+      <ModelPicker
+        id="artist-ref-picker"
+        initialCollection={artistCollection}
       />
       <LabeledInput
         labelText="Key"
