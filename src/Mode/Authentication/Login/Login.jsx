@@ -109,7 +109,7 @@ export const Login = () => {
           <Button
             className="clear"
             disabled={false}
-            role="secondary"
+            category="secondary"
             text="Clear All Fields"
             type="reset"
           />

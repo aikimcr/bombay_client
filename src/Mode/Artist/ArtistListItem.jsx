@@ -1,40 +1,30 @@
-import React, { useState } from 'react';
+import React, { createRef, useRef, useState } from 'react';
 
 import './ArtistList.scss';
 
-import { Artist } from './Artist.jsx';
-import FormModal from '../../Modal/FormModal.jsx';
+import { ArtistForm } from './ArtistEditor/ArtistForm';
 
-function ArtistListItem(props) {
-  const [showEdit, setShowEdit] = useState(false);
-  const [displayName, setDisplayName] = useState(props.artist.name);
+export const ArtistListItem = ({ artist }) => {
+  const dialogRef = createRef();
 
-  async function updateArtist(modelDef) {
-    await props.artist.set(modelDef).save();
-    setDisplayName(props.artist.get('name'));
-  }
+  const [displayName, setDisplayName] = useState(artist.name);
+
+  const handleEditClose = (artist) => {
+    setDisplayName(artist.name);
+  };
+
+  const showAddForm = () => {
+    dialogRef.current?.showModal();
+  };
 
   return (
     <React.Fragment>
-      <li
-        className="card"
-        data-testid="artist-list-card"
-        onClick={() => setShowEdit(true)}
-      >
+      <li className="card" data-testid="artist-list-card" onClick={showAddForm}>
         <div className="header">Artist</div>
         <div className="name">{displayName}</div>
         <div className="details"></div>
+        <ArtistForm artist={artist} ref={dialogRef} onClose={handleEditClose} />
       </li>
-      <FormModal
-        title="Edit Artist"
-        onClose={() => setShowEdit(false)}
-        onSubmit={updateArtist}
-        open={showEdit}
-      >
-        <Artist artist={props.artist} />
-      </FormModal>
     </React.Fragment>
   );
-}
-
-export default ArtistListItem;
+};

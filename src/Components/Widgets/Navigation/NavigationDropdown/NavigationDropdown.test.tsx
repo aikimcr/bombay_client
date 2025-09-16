@@ -132,9 +132,7 @@ describe('Test NavigationDropdown', () => {
     it('should close the popover when an item is clicked', () => {
       const mockHidePopover = jest.fn();
 
-      // @ts-expect-error Jest doesn't know about hidePopover
       if (!HTMLElement.prototype.hidePopover) {
-        // @ts-expect-error Jest doesn't know about hidePopover
         HTMLElement.prototype.hidePopover = mockHidePopover;
       }
 

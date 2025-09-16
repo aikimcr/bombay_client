@@ -4,16 +4,15 @@ import './ArtistList.scss';
 
 import { ArtistCollection } from '../../Model/ArtistCollection';
 
-import ArtistListItem from './ArtistListItem.jsx';
-import Artist from './Artist.jsx';
-import FormModal from '../../Modal/FormModal.jsx';
+import { ArtistListItem } from './ArtistListItem.jsx';
 import { useModelCollection } from '../../Hooks/useModelCollection';
-import { ProtectedRoute } from '../../Components';
+import { Button, ProtectedRoute } from '../../Components';
+import { ArtistForm } from './ArtistEditor';
 
 export const ArtistList = (props) => {
   const topRef = createRef();
+  const dialogRef = createRef();
 
-  const [showAdd, setShowAdd] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [artistCollection] = useState(new ArtistCollection({}));
   const { refreshCollection } = useModelCollection({
@@ -26,37 +25,41 @@ export const ArtistList = (props) => {
     setIsMounted(true);
   }, []);
 
-  async function submitNewArtist(artistDef) {
-    await artistCollection.save(artistDef);
+  const handleEditorClose = () => {
     refreshCollection();
-  }
+  };
+
+  const showAddForm = () => {
+    dialogRef.current?.showModal();
+  };
+
+  let nextKey = 1;
 
   return (
     <ProtectedRoute>
       <div className="list-component" data-testid="artist-list-component">
         <div className="list-controls">
-          <button className="btn" onClick={() => setShowAdd(true)}>
-            New
-          </button>
+          <Button
+            text="New Artist"
+            category="secondary"
+            type="button"
+            onClick={showAddForm}
+          />
           <div className="title">Artists</div>
-          <button className="btn" onClick={refreshCollection}>
-            Refresh
-          </button>
-          <FormModal
-            title="Add Artist"
-            onClose={() => setShowAdd(false)}
-            onSubmit={submitNewArtist}
-            open={showAdd}
-          >
-            <Artist />
-          </FormModal>
+          <Button
+            text="Refresh"
+            category="secondary"
+            type="button"
+            onClick={refreshCollection}
+          />
+          <ArtistForm ref={dialogRef} onClose={handleEditorClose} />
         </div>
         <div className="artist-list-container list-container" ref={topRef}>
           <ul className="artist-list card-list">
             {artistCollection == null
               ? ''
               : artistCollection.map((artist) => {
-                  const key = `artist-list-${artist.id}`;
+                  const key = nextKey++;
                   return <ArtistListItem className key={key} artist={artist} />;
                 })}
           </ul>

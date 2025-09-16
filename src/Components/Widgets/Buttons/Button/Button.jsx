@@ -6,14 +6,14 @@ import classnames from 'classnames';
 export const Button = ({
   className,
   text,
-  role = 'primary',
-  onClick,
+  category = 'primary',
+  onClick = () => undefined,
   type = 'button',
   ...rest
 }) => {
   const classNames = classnames([className, 'button'], {
-    button__primary: role === 'primary',
-    button__secondary: role === 'secondary',
+    button__primary: category === 'primary',
+    button__secondary: category === 'secondary',
   });
   return (
     <button {...rest} type={type} className={classNames} onClick={onClick}>
