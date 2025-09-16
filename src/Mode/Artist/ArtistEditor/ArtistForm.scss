@@ -1,0 +1,19 @@
+@use '@styles/mixins.scss';
+
+.artist-form {
+  @include mixins.standard-dialog;
+
+  &__form {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1rem;
+    padding: 1rem;
+
+    & > .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+  }
+}

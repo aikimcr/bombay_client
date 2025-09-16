@@ -19,11 +19,54 @@ exports[`Component should match snapshot 1`] = `
     <div
       class="details"
     />
+    <div
+      data-testid="mock-artist-form"
+    >
+      <p
+        data-testid="mock-component-name"
+      >
+        Name Artist
+      </p>
+      <div
+        data-testid="mock-component-props"
+      >
+        <div>
+          <span>
+            name
+          </span>
+          : 
+          <span>
+            Artist
+          </span>
+        </div>
+        <div>
+          <span>
+            classname
+          </span>
+          : 
+          <span>
+            mock-artist-form
+          </span>
+        </div>
+        <div>
+          <span>
+            testId
+          </span>
+          : 
+          <span>
+            mock-artist-form
+          </span>
+        </div>
+      </div>
+      <div
+        data-testid="mock-component-children"
+      >
+        <p />
+        <p>
+          Alessia Koelpin
+        </p>
+      </div>
+    </div>
   </li>
-  <div
-    data-testid="edit-artist-modal"
-  >
-    Form Modal
-  </div>
 </DocumentFragment>
 `;

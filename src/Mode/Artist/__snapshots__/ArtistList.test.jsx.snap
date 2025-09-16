@@ -10,9 +10,10 @@ exports[`Component should match snapshot 1`] = `
       class="list-controls"
     >
       <button
-        class="btn"
+        class="button button__secondary"
+        type="button"
       >
-        New
+        New Artist
       </button>
       <div
         class="title"
@@ -20,10 +21,82 @@ exports[`Component should match snapshot 1`] = `
         Artists
       </div>
       <button
-        class="btn"
+        class="button button__secondary"
+        type="button"
       >
         Refresh
       </button>
+      <dialog
+        class="artist-form"
+        closedby="any"
+      >
+        <div
+          class="dialog-layout"
+        >
+          <header
+            class="dialog-layout__header"
+          >
+            <h3>
+              Artist Editor
+            </h3>
+            <button
+              class="close-button"
+              data-testid="close-button"
+              type="button"
+            >
+              <i
+                class="fa-regular fa-circle-xmark"
+              />
+            </button>
+          </header>
+          <div
+            class="dialog-layout__content"
+          >
+            <form
+              class="artist-form__form"
+              data-testid="artist-form-form"
+            >
+              <div
+                class="info"
+              >
+                <div
+                  class="labeled-input"
+                >
+                  <label
+                    class="labeled-input__label"
+                    for="name"
+                  >
+                    Artist Name
+                  </label>
+                  <input
+                    autocomplete="artist-name"
+                    class="text-input undefined"
+                    id="name"
+                    name="name"
+                  />
+                </div>
+              </div>
+              <div
+                class="controls"
+              >
+                <button
+                  class="clear button button__secondary"
+                  type="reset"
+                >
+                  Clear Form
+                </button>
+                <button
+                  class="login button button__primary"
+                  disabled=""
+                  type="submit"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
     <div
       class="artist-list-container list-container"
@@ -48,6 +121,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="4 Non Blondes"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -66,6 +211,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="AC/DC"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -84,6 +301,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Aretha Franklin"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -102,6 +391,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Aerosmith"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -120,6 +481,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Al Green"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -138,6 +571,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Alanis Morisette"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -156,6 +661,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="B.B. King"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -174,6 +751,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Beatles"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -192,6 +841,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Bee Gees"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
         <li
           class="card"
@@ -210,6 +931,78 @@ exports[`Component should match snapshot 1`] = `
           <div
             class="details"
           />
+          <dialog
+            class="artist-form"
+            closedby="any"
+          >
+            <div
+              class="dialog-layout"
+            >
+              <header
+                class="dialog-layout__header"
+              >
+                <h3>
+                  Artist Editor
+                </h3>
+                <button
+                  class="close-button"
+                  data-testid="close-button"
+                  type="button"
+                >
+                  <i
+                    class="fa-regular fa-circle-xmark"
+                  />
+                </button>
+              </header>
+              <div
+                class="dialog-layout__content"
+              >
+                <form
+                  class="artist-form__form"
+                  data-testid="artist-form-form"
+                >
+                  <div
+                    class="info"
+                  >
+                    <div
+                      class="labeled-input"
+                    >
+                      <label
+                        class="labeled-input__label"
+                        for="name"
+                      >
+                        Artist Name
+                      </label>
+                      <input
+                        autocomplete="artist-name"
+                        class="text-input undefined"
+                        id="name"
+                        name="name"
+                        value="Ben E. King"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="controls"
+                  >
+                    <button
+                      class="clear button button__secondary"
+                      type="reset"
+                    >
+                      Clear Form
+                    </button>
+                    <button
+                      class="login button button__primary"
+                      disabled=""
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </li>
       </ul>
     </div>

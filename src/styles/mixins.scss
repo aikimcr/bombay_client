@@ -14,6 +14,13 @@
   padding: 2.5rem;
 }
 
+@mixin standard-dialog {
+  max-height: 75vh;
+  max-width: 75vw;
+  background: transparent;
+  border: none;
+}
+
 @mixin utiliity-component-background {
 
   a {

@@ -45,7 +45,10 @@ export const artistNameIterator = () => {
   return getGenericTestIterator('artist_name', testArtistNames);
 };
 
-export const setupArtistModelFetch = () => {
+export const setupArtistModelFetch = (): [
+  ReturnType<typeof PromiseWithResolvers>,
+  ArtistData,
+] => {
   const nextArtistName = artistNameIterator();
 
   const getPromise = PromiseWithResolvers();

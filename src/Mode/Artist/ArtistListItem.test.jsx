@@ -27,23 +27,14 @@ jest.mock('../../Network/Network', () => {
   };
 });
 
-jest.mock('./Artist');
-jest.mock('../../Modal/FormModal', () => {
-  const originalModule = jest.requireActual('../../Modal/FormModal');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => <div data-testid="edit-artist-modal">Form Modal</div>,
-  };
-});
+jest.mock('./ArtistEditor/ArtistForm');
 
 import * as Network from '../../Network/Network';
 
 import { makeADef, makeAModelFromDef } from '../../testHelpers/modelTools';
-
-import ArtistListItem from './ArtistListItem.jsx';
 import { TestArtistCollectionURL, TestUrlWithId } from '../../Model/testing';
+
+import { ArtistListItem } from './ArtistListItem';
 
 jest.useFakeTimers();
 
@@ -96,7 +87,7 @@ it('should open the editor modal', async () => {
     fireEvent.click(card);
   });
 
-  expect(screen.getByTestId('edit-artist-modal')).toBeInTheDocument();
+  expect(screen.getByTestId('mock-artist-form')).toBeInTheDocument();
 });
 
 // Move this to the model editor

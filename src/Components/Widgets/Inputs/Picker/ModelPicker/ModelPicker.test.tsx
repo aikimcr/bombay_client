@@ -17,6 +17,7 @@ const fetchItems: Record<
   string,
   ReturnType<typeof setupTestCollectionOneFetch>
 > = {};
+
 const handlers = [
   http.get(TestCollectionOneURL, ({ request }) => {
     const requestUrl = new URL(request.url);

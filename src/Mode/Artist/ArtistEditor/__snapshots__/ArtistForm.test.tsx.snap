@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Test Artist editor form should match snapshot 1`] = `
+<DocumentFragment>
+  <dialog
+    class="artist-form"
+    closedby="any"
+  >
+    <div
+      class="dialog-layout"
+    >
+      <header
+        class="dialog-layout__header"
+      >
+        <h3>
+          Artist Editor
+        </h3>
+        <button
+          class="close-button"
+          data-testid="close-button"
+          type="button"
+        >
+          <i
+            class="fa-regular fa-circle-xmark"
+          />
+        </button>
+      </header>
+      <div
+        class="dialog-layout__content"
+      >
+        <form
+          class="artist-form__form"
+          data-testid="artist-form-form"
+        >
+          <div
+            class="info"
+          >
+            <div
+              class="labeled-input"
+            >
+              <label
+                class="labeled-input__label"
+                for="name"
+              >
+                Artist Name
+              </label>
+              <input
+                autocomplete="artist-name"
+                class="text-input undefined"
+                id="name"
+                name="name"
+                value="Spencer Davis Group"
+              />
+            </div>
+          </div>
+          <div
+            class="controls"
+          >
+            <button
+              class="clear button button__secondary"
+              type="reset"
+            >
+              Clear Form
+            </button>
+            <button
+              class="login button button__primary"
+              disabled=""
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+  <button
+    class="change-test-login"
+    data-testid="change-test-login"
+  >
+    Change Login
+  </button>
+</DocumentFragment>
+`;
