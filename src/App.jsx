@@ -77,7 +77,7 @@ export const App = () => {
               <AppLayout
                 header={
                   <HeaderLayout
-                    title="Bombay Band Manager"
+                    title="PDQ Band Manager"
                     footer={<LoginStatusDisplay />}
                   />
                 }
