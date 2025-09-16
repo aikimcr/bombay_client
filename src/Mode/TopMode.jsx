@@ -10,7 +10,7 @@ export const TopMode = () => {
   return (
     <div className="top-mode">
       <h3 className="top-mode__title">
-        Welcome to the Bombay Band Manager System
+        Welcome to the PDQ Band Manager System
       </h3>
       <div className="top-mode__content">
         <Outlet />

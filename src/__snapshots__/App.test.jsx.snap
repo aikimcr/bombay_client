@@ -21,7 +21,7 @@ exports[`Test App Compoment matches snapshopt 1`] = `
           <header
             class="header-layout__title"
           >
-            Bombay Band Manager
+            PDQ Band Manager
           </header>
           <div
             class="header-layout__content"
@@ -46,7 +46,7 @@ exports[`Test App Compoment matches snapshopt 1`] = `
           <h3
             class="top-mode__title"
           >
-            Welcome to the Bombay Band Manager System
+            Welcome to the PDQ Band Manager System
           </h3>
           <div
             class="top-mode__content"

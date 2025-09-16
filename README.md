@@ -1,1 +1,1 @@
-A client for the Bombay Band Management system.
+A client for the PDQ Band Management system.
